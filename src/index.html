@@ -1,0 +1,3465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Webbased Academy Creator V16.3 – HARD RESET</title>
+<style>
+:root{
+  --bg:#071018; --panel:#0d1b26; --panel2:#102432; --line:#1f3a4d;
+  --text:#eef6fb; --muted:#8fa8b8; --accent:#4cc8ff; --accent2:#8be0ff;
+  --ok:#68d391; --danger:#ff8a8a;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,select,textarea,input{font:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+.sidebar{background:#08131c;border-right:1px solid var(--line);padding:22px 16px}
+.brand{margin-bottom:26px}
+.brand .small{font-size:11px;letter-spacing:.26em;color:var(--muted)}
+.brand .title{font-size:23px;font-weight:700;line-height:1.05}
+.brand .claim{font-size:10px;color:#6f8b9e;margin-top:6px;letter-spacing:.14em}
+.nav button{width:100%;text-align:left;border:0;background:transparent;color:var(--muted);padding:11px 12px;border-radius:10px;margin:2px 0}
+.nav button.active{background:#153247;color:#fff}
+.nav button:hover{background:#102635;color:#fff}
+.main{padding:18px;min-width:0}
+.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+.topbar h1{font-size:17px;margin:0}
+.topbar .sub{font-size:12px;color:var(--muted);margin-top:3px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid #29495d;background:#112635;color:var(--text);border-radius:10px;padding:9px 12px}
+.btn:hover{background:#17364a}
+.btn.primary{background:#155075;border-color:#2a7ca8}
+.btn.primary:hover{background:#1d618b}
+.workspace{display:grid;grid-template-columns:210px minmax(0,1fr) 300px;gap:14px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.panel h2{font-size:13px;margin:0 0 10px;color:#d9e9f2}
+.scene-list{display:flex;flex-direction:column;gap:7px}
+.scene{border:1px solid #203b4e;background:#0c1a24;border-radius:10px;padding:9px}
+.scene.active{border-color:#3b97c4;background:#10293a}
+.scene .n{font-size:11px;color:var(--muted)}
+.scene .t{font-size:13px;margin-top:2px}
+.add-scene{width:100%;margin-top:10px}
+.monitor-card{padding:10px}
+.monitor-toolbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.segment{display:flex;gap:6px;flex-wrap:wrap}
+.segment .btn.active{background:#184e6b;border-color:#2c789d}
+.stage{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid #20384a;background:
+ radial-gradient(circle at 50% 16%,#285069 0%,#122a39 38%,#0a1720 78%)}
+.stage .brandmark{position:absolute;top:18px;left:20px;color:#b3d7e7;font-size:11px;letter-spacing:.18em;opacity:.55}
+.stage .floor{position:absolute;left:-8%;right:-8%;bottom:-24%;height:50%;background:linear-gradient(#1b2c37,#091116);transform:perspective(550px) rotateX(63deg);transform-origin:bottom;border-top:1px solid rgba(255,255,255,.08)}
+.avatar{position:absolute;left:23%;bottom:8%;width:98px;height:285px;transition:.45s ease;transform-origin:50% 100%}
+.avatar.medium{height:220px;bottom:-1%;transform:scale(1.25)}
+.avatar.hidden{opacity:0;transform:scale(.92)}
+.head{width:55px;height:55px;border-radius:50%;background:linear-gradient(#e5c7ad,#c89b7a);margin:0 auto}
+.body{width:76px;height:112px;border-radius:24px 24px 10px 10px;background:linear-gradient(90deg,#0f1820,#2a3b47,#101820);margin:-2px auto 0;position:relative}
+.arm{position:absolute;top:68px;width:17px;height:94px;background:#1a2832;border-radius:12px;transform-origin:top center;transition:.35s}
+.arm.l{left:4px;transform:rotate(7deg)} .arm.r{right:4px;transform:rotate(-7deg)}
+.avatar.point .arm.r{transform:rotate(-70deg)}
+.legs{display:flex;justify-content:center;gap:14px}
+.leg{width:21px;height:110px;background:#142029;border-radius:0 0 12px 12px}
+.media{position:absolute;right:16%;top:22%;width:210px;height:210px;display:grid;place-items:center;opacity:0;transform:scale(.6);transition:.55s}
+.media.show{opacity:1;transform:scale(1)}
+.media.zoom{opacity:1;transform:scale(1.35)}
+.media.rotate .cube{animation:spin 4s linear infinite}
+.media.float{animation:float 2.8s ease-in-out infinite}
+.cube{width:105px;height:105px;border:1px solid rgba(120,220,255,.58);border-radius:24px;background:linear-gradient(135deg,rgba(61,171,221,.5),rgba(133,91,255,.25));box-shadow:0 0 50px rgba(73,183,255,.18),inset 0 0 28px rgba(255,255,255,.08);transform:rotate(28deg);position:relative}
+.cube:before,.cube:after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,255,255,.32);border-radius:15px;transform:rotate(32deg)}
+.cube:after{inset:34px;transform:rotate(-25deg)}
+.bgScene{position:absolute;inset:0;opacity:0;transition:.6s;background:
+ linear-gradient(180deg,#5a859d 0 40%,#d6e4e9 41% 48%,#62846b 49% 64%,#274335 65%)}
+.bgScene.show{opacity:.58}
+.fullGraphic{position:absolute;inset:0;display:none;place-items:center;background:
+ radial-gradient(circle at 50% 45%,#153f55,#09151f 65%);z-index:4}
+.fullGraphic.show{display:grid}
+.chart{width:68%;height:62%;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:28px;background:rgba(5,14,20,.45)}
+.bars{height:72%;display:flex;align-items:flex-end;gap:7%;justify-content:center}
+.bar{width:14%;border-radius:10px 10px 0 0;background:linear-gradient(#69d5ff,#1f6f96)}
+.bar:nth-child(1){height:48%}.bar:nth-child(2){height:74%}.bar:nth-child(3){height:57%}.bar:nth-child(4){height:88%}
+.chart h3{margin:0 0 12px;font-size:16px}
+.cue{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 10px;font-size:11px;z-index:7}
+.timeline{margin-top:14px}
+.track{display:grid;grid-template-columns:85px 1fr;gap:10px;align-items:center;margin:8px 0}
+.track label{font-size:11px;color:var(--muted)}
+.line{height:16px;border-radius:999px;background:#09151e;position:relative;overflow:hidden}
+.clip{position:absolute;top:2px;bottom:2px;border-radius:999px}
+.c1{left:2%;width:94%;background:#445f70}.c2{left:4%;width:88%;background:#365970}.c3{left:31%;width:25%;background:#60758c}.c4{left:50%;width:12%;background:#8192a0}.c5{left:65%;width:16%;background:#486b82}
+.controls label{display:block;font-size:11px;color:var(--muted);margin:11px 0 5px}
+.controls select,.controls textarea{width:100%;background:#0b1a24;border:1px solid #234052;color:var(--text);border-radius:10px;padding:10px}
+.controls textarea{min-height:110px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.status{font-size:11px;color:var(--muted);border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+.placeholder{padding:36px;background:var(--panel);border:1px solid var(--line);border-radius:16px;text-align:center;color:var(--muted)}
+@keyframes spin{to{transform:rotate(388deg)}}
+@keyframes float{50%{transform:translateY(-12px)}}
+@media (max-width:1100px){.workspace{grid-template-columns:190px minmax(0,1fr)}.controls{grid-column:1/-1}.controls .panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.controls .status{grid-column:1/-1}}
+@media (max-width:760px){.app{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line)}.nav{display:flex;gap:5px;overflow:auto}.nav button{white-space:nowrap;width:auto}.workspace{grid-template-columns:1fr}.scenecol{order:2}.centercol{order:1}.controls{order:3}.topbar{align-items:flex-start;flex-direction:column}}
+
+/* V3 Timeline & Szenensteuerung */
+.timeline-v3{margin-top:14px;background:#0d1b26;border:1px solid #1f3a4d;border-radius:16px;padding:14px}
+.timeline-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.timeline-tools{display:flex;gap:6px;flex-wrap:wrap}
+.ruler{margin-left:100px;height:24px;position:relative;border-bottom:1px solid #294556;color:#7893a5;font-size:10px}
+.ruler span{position:absolute;bottom:4px;transform:translateX(-50%)}
+.trow{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center;margin:6px 0}
+.tlabel{font-size:11px;color:#8fa8b8;display:flex;align-items:center;gap:6px}
+.eye{border:0;background:transparent;color:#8fa8b8;padding:0;cursor:pointer}
+.tlane{height:26px;background:#08151e;border:1px solid #172d3c;border-radius:7px;position:relative;overflow:hidden}
+.tclip{position:absolute;top:3px;height:18px;border-radius:5px;padding:2px 7px;font-size:10px;white-space:nowrap;overflow:hidden;color:#eef6fb;cursor:pointer;border:1px solid rgba(255,255,255,.08)}
+.tclip.selected{outline:2px solid #70d4ff}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:#75dcff;left:36%;z-index:8;box-shadow:0 0 8px #75dcff}
+.playhead:before{content:"";position:absolute;top:-1px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #75dcff}
+.scene-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.scene-meta{font-size:10px;color:#7893a5;margin-top:4px}
+.property-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.small-input{width:100%;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:8px}
+.tafel-card{margin-top:12px;border:1px solid #294556;border-radius:12px;padding:10px;background:#0a1821}
+.tafel-preview{height:105px;border:6px solid #4d4034;border-radius:5px;background:#17231f;color:#f1eee4;padding:10px;font-family:Georgia,serif;position:relative;overflow:hidden}
+.tafel-preview .chalk-title{font-size:14px}
+.tafel-preview .chalk-chart{position:absolute;right:12px;bottom:12px;display:flex;align-items:flex-end;gap:5px;height:48px}
+.tafel-preview .chalk-chart i{display:block;width:12px;background:#d9e5df;border-radius:2px 2px 0 0}
+.tafel-preview .chalk-chart i:nth-child(1){height:45%}.tafel-preview .chalk-chart i:nth-child(2){height:80%}.tafel-preview .chalk-chart i:nth-child(3){height:62%}
+
+
+/* V4 Medienbibliothek */
+.media-library{margin-top:14px}
+.media-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.media-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.media-item{min-height:82px;border:1px solid #234052;background:#0a1821;border-radius:10px;padding:8px;cursor:grab;position:relative;overflow:hidden}
+.media-item:hover{border-color:#4aa5d1}
+.media-item .thumb{height:48px;border-radius:7px;background:linear-gradient(135deg,#24495f,#122733);display:grid;place-items:center;font-size:20px}
+.media-item .name{font-size:10px;margin-top:6px;color:#cfe0e9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dropzone{border:1px dashed #3c7898;border-radius:10px;padding:9px;text-align:center;color:#78a9c1;font-size:10px;margin-top:9px}
+.dropzone.drag{background:#12334a;color:white}
+.stage-media-img{position:absolute;right:13%;top:18%;max-width:35%;max-height:48%;border-radius:12px;z-index:5;box-shadow:0 15px 45px rgba(0,0,0,.35)}
+@media(max-width:760px){.media-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* V5 freie Medienpositionierung, Zielzonen, Ebenen & Animationen */
+.v5-tools{margin-top:12px;border-top:1px solid #1f3a4d;padding-top:12px}
+.v5-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.range-wrap{display:grid;grid-template-columns:70px 1fr 44px;gap:8px;align-items:center;margin:8px 0}
+.range-wrap label{margin:0!important}
+.range-wrap input[type=range]{width:100%}
+.range-val{font-size:10px;color:#8fa8b8;text-align:right}
+.target-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.target-tabs button.active{background:#155075;border-color:#2a7ca8}
+.layer-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.layer-item{display:grid;grid-template-columns:24px 1fr 30px 30px;gap:6px;align-items:center;padding:7px;border:1px solid #203b4e;background:#0a1821;border-radius:9px;font-size:10px}
+.layer-item.active{border-color:#4aa5d1;background:#10293a}
+.layer-item button{border:0;background:transparent;color:#9bb4c4;cursor:pointer;padding:2px}
+.stage-object{position:absolute;left:58%;top:27%;width:220px;max-height:250px;z-index:5;transform-origin:center;transition:opacity .35s ease, transform .35s ease}
+.stage-object img{display:block;width:100%;height:auto;max-height:250px;object-fit:contain;border-radius:10px;box-shadow:0 15px 45px rgba(0,0,0,.35)}
+.stage-object.hidden{opacity:0;pointer-events:none}
+.stage-object.selected{outline:2px solid #70d4ff;outline-offset:4px}
+.stage-object .handle{position:absolute;right:-7px;bottom:-7px;width:16px;height:16px;border-radius:50%;background:#70d4ff;border:2px solid #08202d;cursor:nwse-resize}
+.stage-object.float{animation:v5float 2.8s ease-in-out infinite}
+.stage-object.rotate{animation:v5spin 5s linear infinite}
+.stage-object.pulse{animation:v5pulse 1.8s ease-in-out infinite}
+.stage-object.fade-in{animation:v5fadein .7s ease both}
+.stage-object.zoom-in{animation:v5zoomin .7s ease both}
+.board-overlay{position:absolute;left:47%;top:19%;width:40%;height:48%;z-index:3;display:none;border:10px solid #564a3c;border-radius:4px;background:#1d2a25;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+.board-overlay.show{display:block}
+.board-overlay .board-content{position:absolute;inset:12px;color:#f3efe4;font-family:Georgia,serif}
+.board-object{position:absolute;left:14%;top:34%;width:34%;max-height:45%;object-fit:contain;filter:saturate(.85)}
+.board-text{position:absolute;left:8%;top:10%;right:8%;font-size:16px}
+.fullscreen-object{position:absolute;inset:0;z-index:9;display:none;place-items:center;background:#09151f}
+.fullscreen-object.show{display:grid}
+.fullscreen-object img{max-width:92%;max-height:88%;object-fit:contain}
+.anim-badge{font-size:10px;color:#80cbed;margin-top:6px}
+@keyframes v5float{50%{transform:translateY(-14px) scale(var(--scale,1)) rotate(var(--rot,0deg))}}
+@keyframes v5spin{to{transform:scale(var(--scale,1)) rotate(calc(var(--rot,0deg) + 360deg))}}
+@keyframes v5pulse{50%{transform:scale(calc(var(--scale,1) * 1.08)) rotate(var(--rot,0deg))}}
+@keyframes v5fadein{from{opacity:0}to{opacity:1}}
+@keyframes v5zoomin{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(var(--scale,1)) rotate(var(--rot,0deg))}}
+
+
+/* V6 Regie-Engine */
+.regie-engine{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.regie-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.regie-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+.cue-list{display:flex;flex-direction:column;gap:7px;max-height:280px;overflow:auto}
+.cue-item{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:8px}
+.cue-time{font-size:11px;color:#78c8ee;font-variant-numeric:tabular-nums}
+.cue-text{font-size:11px;color:#dceaf1}
+.cue-item button{border:0;background:transparent;color:#91a9b8;cursor:pointer}
+.regie-form{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:10px}
+.regie-form label{display:block;font-size:10px;color:#8fa8b8;margin:8px 0 4px}
+.regie-form input,.regie-form select,.regie-form textarea{width:100%;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:8px}
+.regie-form textarea{min-height:76px;resize:vertical}
+.time-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.play-status{font-size:10px;color:#8fa8b8;margin-top:7px}
+.regie-marker{position:absolute;top:0;bottom:0;width:2px;background:#ffcd70;z-index:7;opacity:.85}
+.regie-marker:after{content:"";position:absolute;top:2px;left:-3px;width:8px;height:8px;border-radius:50%;background:#ffcd70}
+@media(max-width:900px){.regie-grid{grid-template-columns:1fr}}
+
+
+/* V7 Text-/Audio-Synchronisation */
+.sync-panel{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.sync-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.transcript-box{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:10px}
+.transcript-box textarea{width:100%;min-height:180px;background:#08151e;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:10px;resize:vertical}
+.transcript-tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.anchor-list{display:flex;flex-direction:column;gap:7px;max-height:240px;overflow:auto}
+.anchor-item{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:8px}
+.anchor-item.active{border-color:#62c9f4;background:#102b3d}
+.anchor-top{display:grid;grid-template-columns:80px 1fr auto;gap:8px;align-items:center}
+.anchor-time{font-size:10px;color:#78c8ee}
+.anchor-phrase{font-size:11px;color:#dceaf1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.anchor-actions{display:flex;gap:5px}
+.anchor-actions button{border:0;background:transparent;color:#91a9b8;cursor:pointer}
+.audio-box{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:10px}
+.audio-box audio{width:100%;margin-top:8px}
+.sync-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sync-form label{display:block;font-size:10px;color:#8fa8b8;margin:0 0 4px}
+.sync-form input,.sync-form select{width:100%;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:8px}
+.sync-wide{grid-column:1/-1}
+.word-timeline{margin-top:10px;border:1px solid #203b4e;background:#08151e;border-radius:10px;padding:10px;min-height:54px;font-size:12px;line-height:1.7}
+.word-timeline mark{background:#1f5a7c;color:#fff;border-radius:4px;padding:1px 3px}
+.sync-status{font-size:10px;color:#8fa8b8;margin-top:8px}
+@media(max-width:900px){.sync-grid{grid-template-columns:1fr}}
+
+
+/* V8 Projektverwaltung & Szenenzustände */
+.project-panel{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.project-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.project-actions{display:flex;gap:6px;flex-wrap:wrap}
+.project-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.project-meta label{display:block;font-size:10px;color:#8fa8b8;margin-bottom:4px}
+.project-meta input{width:100%;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:8px}
+.scene-state{margin-top:10px;border-top:1px solid #1f3a4d;padding-top:10px}
+.state-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.state-card{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:8px}
+.state-card.active{border-color:#4aa5d1;background:#10293a}
+.state-card strong{display:block;font-size:11px}
+.state-card span{display:block;font-size:9px;color:#8fa8b8;margin-top:4px}
+.project-status{font-size:10px;color:#8fa8b8;margin-top:8px}
+@media(max-width:900px){.project-meta{grid-template-columns:1fr}.state-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* V9 Storyboard & Vortragsablauf */
+.storyboard{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.story-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.story-actions{display:flex;gap:6px;flex-wrap:wrap}
+.story-track{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin}
+.story-card{min-width:180px;max-width:180px;border:1px solid #203b4e;background:#0a1821;border-radius:12px;padding:9px;cursor:pointer;position:relative}
+.story-card.active{border-color:#62c9f4;background:#102b3d}
+.story-card .thumb{height:92px;border-radius:8px;background:radial-gradient(circle at 50% 20%,#294f67,#0b1821 72%);position:relative;overflow:hidden}
+.story-card .thumb:before{content:"";position:absolute;left:17%;bottom:8px;width:30px;height:58px;border-radius:12px 12px 5px 5px;background:#243844}
+.story-card .thumb.board:after{content:"";position:absolute;right:10%;top:18%;width:55%;height:44%;border:5px solid #55493b;background:#1d2a25}
+.story-card .thumb.fullscreen{background:linear-gradient(135deg,#183f56,#0b1821)}
+.story-card .thumb.fullscreen:after{content:"GROSSBILD";position:absolute;inset:0;display:grid;place-items:center;color:#7fdcff;font-size:10px;letter-spacing:.12em}
+.story-card .meta{font-size:9px;color:#8fa8b8;margin-top:6px}
+.story-card .name{font-size:11px;margin-top:4px;color:#eef6fb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.story-card .duration{font-size:10px;color:#78c8ee;margin-top:3px}
+.story-card .remove-story{position:absolute;top:6px;right:6px;border:0;background:rgba(0,0,0,.35);color:#c4d4dd;border-radius:50%;width:22px;height:22px;cursor:pointer}
+.story-properties{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-top:10px}
+.story-properties label{display:block;font-size:10px;color:#8fa8b8;margin-bottom:4px}
+.story-properties input,.story-properties select{width:100%;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:8px}
+.play-progress{height:8px;border-radius:999px;background:#08151e;overflow:hidden;margin-top:10px;border:1px solid #172d3c}
+.play-progress > div{height:100%;width:0;background:#59c9f7;transition:width .1s linear}
+.story-status{font-size:10px;color:#8fa8b8;margin-top:7px}
+@media(max-width:900px){.story-properties{grid-template-columns:1fr 1fr}.story-properties .story-wide{grid-column:1/-1}}
+
+
+/* V10 durchgehende Regie */
+.master-regie{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.master-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.master-clock{font-variant-numeric:tabular-nums;font-size:18px;color:#7fdcff;font-weight:600}
+.master-strip{height:42px;background:#08151e;border:1px solid #172d3c;border-radius:10px;margin-top:10px;position:relative;overflow:hidden}
+.master-scene{position:absolute;top:5px;bottom:5px;border-radius:6px;background:#24495f;border:1px solid #376d8b;padding:7px;font-size:9px;overflow:hidden;white-space:nowrap}
+.master-scene.active{background:#17618b;border-color:#75dcff}
+.master-cue{position:absolute;top:0;bottom:0;width:2px;background:#ffcf70;z-index:4}
+.master-playhead{position:absolute;top:0;bottom:0;width:2px;background:#75dcff;z-index:8;box-shadow:0 0 8px #75dcff}
+.master-status{font-size:10px;color:#8fa8b8;margin-top:7px}
+
+
+/* V11 Einfach-Modus + KI-Regieassistent */
+.simplebar{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.simple-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mode-switch{display:flex;gap:6px}
+.mode-switch .active{background:#155075;border-color:#2a7ca8}
+.simple-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:12px}
+.flow-step{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:9px;text-align:center;font-size:10px;color:#a9bfcc}
+.flow-step.active{border-color:#62c9f4;color:#fff;background:#102b3d}
+.ai-director{margin-top:12px;border:1px solid #284b5d;border-radius:12px;padding:12px;background:#091923}
+.ai-director textarea{width:100%;min-height:86px;background:#07131b;border:1px solid #28516a;color:#eef6fb;border-radius:10px;padding:11px;resize:vertical;font-size:12px}
+.ai-actions{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.ai-result{margin-top:10px;border:1px solid #203b4e;background:#08151e;border-radius:10px;padding:10px;font-size:11px;color:#cfe0e9;display:none}
+.ai-result.show{display:block}
+.ai-result strong{color:#7fdcff}
+.quick-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.simple-mode .timeline-v3,
+.simple-mode .regie-engine,
+.simple-mode .sync-panel,
+.simple-mode .master-regie,
+.simple-mode .v5-tools{display:none!important}
+.simple-mode .media-library{margin-top:10px}
+.simple-mode .project-panel{margin-top:10px}
+.simple-mode .storyboard{margin-top:10px}
+.advanced-note{font-size:10px;color:#7893a5}
+@media(max-width:900px){.simple-flow{grid-template-columns:1fr 1fr}.simple-flow .flow-step:last-child{grid-column:1/-1}}
+
+
+/* V12 KI-Produktionszentrale */
+.production-hub{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.production-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.production-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.prod-card{border:1px solid #203b4e;background:#0a1821;border-radius:12px;padding:11px;min-height:135px;position:relative}
+.prod-card.ready{border-color:#3f7c62}
+.prod-card.active{border-color:#62c9f4;background:#102b3d}
+.prod-num{font-size:10px;color:#78c8ee}
+.prod-card h3{font-size:12px;margin:5px 0}
+.prod-card p{font-size:10px;color:#8fa8b8;line-height:1.4;margin:0 0 9px}
+.prod-status{font-size:9px;color:#7fb696;position:absolute;bottom:9px;left:11px}
+.production-settings{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.production-settings label{font-size:10px;color:#8fa8b8;display:block;margin-bottom:4px}
+.production-settings select,.production-settings input{width:100%;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:9px;padding:8px}
+.production-summary{margin-top:10px;border:1px solid #203b4e;background:#08151e;border-radius:10px;padding:10px;font-size:10px;color:#b9ced9}
+@media(max-width:900px){.production-flow{grid-template-columns:1fr 1fr}.production-settings{grid-template-columns:1fr}}
+
+
+/* V13 lokale Projekt- und Dateistruktur */
+.filehub{margin-top:14px;border:1px solid #1f3a4d;background:#0d1b26;border-radius:16px;padding:14px}
+.filehub-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.folder-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}
+.folder{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:9px;text-align:center;cursor:pointer;min-height:70px}
+.folder.active{border-color:#62c9f4;background:#102b3d}
+.folder .ico{font-size:20px}.folder .fn{font-size:10px;margin-top:5px}.folder .count{font-size:9px;color:#7893a5;margin-top:3px}
+.file-area{display:grid;grid-template-columns:1.2fr .8fr;gap:10px;margin-top:10px}
+.file-list{border:1px solid #203b4e;background:#08151e;border-radius:10px;padding:9px;min-height:130px}
+.file-row{display:grid;grid-template-columns:1fr auto;gap:8px;border-bottom:1px solid #172d3c;padding:7px 3px;font-size:10px}
+.file-row:last-child{border-bottom:0}.file-row span:last-child{color:#7893a5}
+.project-path{border:1px solid #203b4e;background:#0a1821;border-radius:10px;padding:10px;font-size:10px;color:#9eb4c0}
+.filehub-status{font-size:10px;color:#8fa8b8;margin-top:8px}
+@media(max-width:950px){.folder-grid{grid-template-columns:repeat(4,1fr)}.file-area{grid-template-columns:1fr}}
+
+
+/* V14 Alpha 1: Version, Backup, Update Center */
+.alpha-banner{margin-top:14px;border:1px solid #2b536a;background:#0d1b26;border-radius:16px;padding:14px}
+.alpha-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.version-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #2c789d;background:#102b3d;color:#dff5ff;border-radius:999px;padding:7px 10px;font-size:10px}
+.alpha-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:11px}
+.alpha-card{border:1px solid #203b4e;background:#0a1821;border-radius:11px;padding:10px}
+.alpha-card h3{font-size:11px;margin:0 0 5px}.alpha-card p{font-size:9px;line-height:1.45;color:#8fa8b8;margin:0 0 8px}
+.alpha-status{font-size:9px;color:#7fb696;margin-top:7px}
+.update-log{font-size:9px;color:#9fb5c2;border-top:1px solid #1b3444;margin-top:9px;padding-top:8px;line-height:1.55}
+@media(max-width:900px){.alpha-grid{grid-template-columns:1fr}}
+
+
+/* V14.1 responsive desktop fix */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{min-width:0!important}
+.app,.shell,.workspace,.main,.content,main{max-width:100%;min-width:0}
+img,video,canvas,svg{max-width:100%;height:auto}
+.stage,.stage-wrap,.preview,.viewer{max-width:100%;min-width:0}
+*{box-sizing:border-box}
+@media (max-width:1400px){
+  .layout,.workspace,.main-grid{grid-template-columns:minmax(190px,240px) minmax(0,1fr)!important}
+  .folder-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .production-flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:1100px){
+  .layout,.workspace,.main-grid{grid-template-columns:1fr!important}
+  aside,.sidebar{position:relative!important;width:100%!important;max-width:none!important;height:auto!important}
+  .scene-grid,.cards,.alpha-grid,.sync-grid,.regie-grid,.file-area{grid-template-columns:1fr!important}
+  .folder-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .state-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  body{font-size:14px}
+  .topbar,.header,.simple-head,.production-head,.filehub-head,.project-head,.story-head,.master-head,.alpha-head,.regie-head,.sync-head{
+    flex-direction:column!important;align-items:stretch!important
+  }
+  .simple-flow,.production-flow,.project-meta,.story-properties,.folder-grid,.state-list{
+    grid-template-columns:1fr!important
+  }
+  .btn,button,select,input{min-height:38px}
+  .stage,.preview,.viewer{min-height:300px!important;height:auto!important;aspect-ratio:16/9}
+}
+
+
+/* V14.2 Breitbild / Ultrawide */
+:root{--wac-max:2560px;--wac-side:clamp(210px,13vw,300px);--wac-tools:clamp(260px,18vw,390px)}
+body{margin:0;overflow-x:hidden}
+body > .app, body > .shell, body > .layout, body > main{
+  width:min(100%,var(--wac-max));margin-inline:auto;
+}
+@media (min-width:1600px){
+  .layout,.workspace,.main-grid{
+    width:100%!important;
+    max-width:var(--wac-max)!important;
+    margin-inline:auto!important;
+    grid-template-columns:var(--wac-side) minmax(760px,1fr)!important;
+    gap:14px!important;
+  }
+  main,.main,.content{min-width:0!important;max-width:none!important;width:100%!important}
+  .stage,.stage-wrap,.preview,.viewer{
+    width:100%!important;max-width:none!important;
+    aspect-ratio:16/9!important;height:auto!important;
+    min-height:0!important;
+  }
+  .scene-grid,.alpha-grid,.sync-grid,.regie-grid,.file-area{
+    gap:12px!important;
+  }
+  .production-flow{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .folder-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important}
+  .simple-flow{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  .state-list{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media (min-width:2100px){
+  :root{--wac-max:3200px;--wac-side:clamp(240px,12vw,340px)}
+  .layout,.workspace,.main-grid{grid-template-columns:var(--wac-side) minmax(1100px,1fr)!important}
+  .stage,.stage-wrap,.preview,.viewer{max-height:72vh!important;object-fit:contain}
+  .story-track{min-height:150px}
+}
+@media (min-aspect-ratio:21/9) and (min-width:1600px){
+  .layout,.workspace,.main-grid{padding-inline:clamp(10px,1.2vw,28px)!important}
+  .topbar,.header{max-width:var(--wac-max);margin-inline:auto}
+}
+
+
+/* V14.3 – gezielte Optimierung für 3440 × 1440 Ultrawide
+   Wichtig: überschreibt frühere, widersprüchliche Responsive-Regeln. */
+@media (min-width: 2200px) and (min-aspect-ratio: 2/1) {
+  html, body {
+    width: 100% !important;
+    max-width: none !important;
+    overflow-x: hidden !important;
+  }
+
+  body {
+    margin: 0 !important;
+  }
+
+  /* Äußerste App: linke Hauptnavigation + kompletter Arbeitsbereich */
+  .app {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    display: grid !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    min-height: 100vh !important;
+  }
+
+  .sidebar {
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    height: 100vh !important;
+    position: sticky !important;
+    top: 0 !important;
+    overflow-y: auto !important;
+    border-right: 1px solid #1f3a4d !important;
+    border-bottom: 0 !important;
+  }
+
+  .main {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    padding: 16px 20px 28px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Kernarbeitsbereich wieder korrekt DREISPALTIG:
+     Szenen | Regiemonitor | Regie/Medien */
+  .workspace {
+    display: grid !important;
+    grid-template-columns: 230px minmax(0, 1fr) 360px !important;
+    gap: 14px !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .scenecol {
+    grid-column: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .centercol {
+    grid-column: 2 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .controls {
+    grid-column: 3 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Regiemonitor: groß, aber nicht höher als der Bildschirm sinnvoll zulässt */
+  .monitor-card {
+    width: 100% !important;
+  }
+
+  .stage {
+    width: min(100%, 1660px) !important;
+    max-width: 1660px !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9 !important;
+    margin: 0 auto !important;
+  }
+
+  /* Untere Werkzeuge nutzen die Breite, ohne riesige Einzelkarten zu erzeugen */
+  .production-flow {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .folder-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  }
+
+  .simple-flow {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .alpha-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .sync-grid,
+  .regie-grid,
+  .file-area {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .project-meta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .state-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  /* Storyboard horizontal, Timeline und Master-Regie volle Inhaltsbreite */
+  .storyboard,
+  .timeline-v3,
+  .regie-engine,
+  .sync-panel,
+  .master-regie,
+  .project-panel,
+  .filehub,
+  .production-hub,
+  .simplebar,
+  .alpha-banner,
+  .media-library {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .story-track {
+    width: 100% !important;
+  }
+
+  /* verhindert, dass ältere <=1100/1400 Regeln über Grid-Positionen nachwirken */
+  .controls .panel {
+    display: block !important;
+  }
+}
+
+/* Falls Windows-Anzeigeskalierung 125–150 % die CSS-Breite reduziert:
+   bereits ab 1800 CSS-px dieselbe Desktoplogik verwenden. */
+@media (min-width: 1800px) and (max-width: 2199px) and (min-aspect-ratio: 2/1) {
+  .app {
+    width: 100% !important;
+    max-width: none !important;
+    display: grid !important;
+    grid-template-columns: 230px minmax(0, 1fr) !important;
+  }
+
+  .sidebar {
+    width: 230px !important;
+    min-width: 230px !important;
+    max-width: 230px !important;
+    border-right: 1px solid #1f3a4d !important;
+    border-bottom: 0 !important;
+  }
+
+  .main {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .workspace {
+    display: grid !important;
+    grid-template-columns: 205px minmax(0, 1fr) 315px !important;
+    gap: 12px !important;
+  }
+
+  .scenecol { grid-column: 1 !important; }
+  .centercol { grid-column: 2 !important; min-width: 0 !important; }
+  .controls { grid-column: 3 !important; min-width: 0 !important; }
+
+  .stage {
+    width: min(100%, 1450px) !important;
+    max-width: 1450px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9 !important;
+    margin: 0 auto !important;
+  }
+
+  .controls .panel { display: block !important; }
+}
+
+
+/* V14.4 – Viewport-Fit für 3440×1440 / Ultrawide
+   Die Höhe des sichtbaren Fensters bestimmt nun die maximale Bühnengröße. */
+@media (min-width:1800px) and (min-aspect-ratio:2/1) {
+  .main{padding-top:12px!important}
+  .workspace{align-items:start!important}
+
+  .centercol{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    min-width:0!important;
+  }
+
+  .monitor-card{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+  }
+
+  .stage{
+    /* Browser-/Header-/Bedienleisten werden von der verfügbaren Höhe abgezogen */
+    height:min(calc(100vh - 235px), 850px)!important;
+    width:auto!important;
+    max-width:100%!important;
+    min-height:420px!important;
+    aspect-ratio:16/9!important;
+    margin:0 auto!important;
+  }
+
+  /* Falls die Bühne durch die verfügbare Spaltenbreite begrenzt wird */
+  @supports (width:min(100px, 10vw)) {
+    .stage{
+      width:min(100%, calc((100vh - 235px) * 16 / 9))!important;
+      height:auto!important;
+      max-height:850px!important;
+      min-height:0!important;
+    }
+  }
+
+  .scenecol,.controls{
+    max-height:calc(100vh - 150px)!important;
+    overflow-y:auto!important;
+    scrollbar-width:thin;
+  }
+
+  .controls{padding-right:2px!important}
+}
+
+/* Sehr niedrige nutzbare Fensterhöhe, z.B. Browserleisten + Windows Taskbar */
+@media (min-width:1800px) and (max-height:1050px) {
+  .stage{
+    width:min(100%, calc((100vh - 205px) * 16 / 9))!important;
+    max-height:720px!important;
+  }
+}
+
+/* Größere 1440p-Fensterhöhe */
+@media (min-width:2200px) and (min-height:1150px) {
+  .stage{
+    width:min(100%, calc((100vh - 215px) * 16 / 9))!important;
+    max-height:900px!important;
+  }
+}
+
+
+/* V14.5 – robuste dynamische Bühnengröße */
+@media (min-width:1600px) {
+  .stage{
+    min-height:0!important;
+    max-height:none!important;
+    max-width:none!important;
+  }
+  .centercol{min-width:0!important}
+  .monitor-card{min-width:0!important;overflow:hidden!important}
+}
+
+
+/* V14.6 – Kompakter 3440×1440-Arbeitsmodus
+   Ziel: Bühne + erste Produktionswerkzeuge gleichzeitig im sichtbaren Bereich. */
+@media (min-width:1800px) and (min-aspect-ratio:2/1) {
+  .main{
+    padding:10px 14px 20px!important;
+  }
+
+  .topbar{
+    padding:10px 12px!important;
+    margin-bottom:8px!important;
+  }
+
+  .workspace{
+    grid-template-columns:210px minmax(0,1fr) 330px!important;
+    gap:10px!important;
+  }
+
+  .panel{
+    padding:10px!important;
+  }
+
+  .monitor-toolbar{
+    margin-bottom:6px!important;
+  }
+
+  /* Bühne bewusst kompakter, damit Timeline/weitere Bereiche sichtbar werden */
+  .stage{
+    width:min(100%, calc(54vh * 16 / 9))!important;
+    height:auto!important;
+    max-height:54vh!important;
+    min-height:0!important;
+    aspect-ratio:16/9!important;
+    margin:0 auto!important;
+  }
+
+  .scenecol,.controls{
+    max-height:65vh!important;
+    overflow-y:auto!important;
+  }
+
+  .timeline-v3,
+  .media-library,
+  .production-hub,
+  .simplebar,
+  .filehub,
+  .project-panel,
+  .storyboard,
+  .master-regie,
+  .regie-engine,
+  .sync-panel,
+  .alpha-banner{
+    margin-top:8px!important;
+  }
+
+  .timeline-v3{
+    padding:10px!important;
+  }
+
+  .trow{
+    margin:4px 0!important;
+  }
+
+  .story-card{
+    min-width:150px!important;
+    max-width:150px!important;
+  }
+}
+
+
+/* V16.3 – feste Arbeitsfläche für 3440×1440:
+   Bühne UND Medienbibliothek gleichzeitig sichtbar, ohne Seitenscrollen. */
+@media (min-width:1600px) {
+  body{
+    overflow:hidden!important;
+  }
+
+  .app{
+    height:100vh!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+
+  .main{
+    height:100vh!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    padding:10px 14px!important;
+  }
+
+  #vortragView{
+    height:calc(100vh - 20px)!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) 205px!important;
+    gap:8px!important;
+    overflow:hidden!important;
+  }
+
+  #vortragView > .topbar{
+    margin:0!important;
+    min-height:56px!important;
+    padding:9px 12px!important;
+  }
+
+  #vortragView > .workspace{
+    min-height:0!important;
+    height:100%!important;
+    overflow:hidden!important;
+    grid-template-columns:210px minmax(0,1fr) 330px!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+
+  .scenecol,
+  .centercol,
+  .controls{
+    min-height:0!important;
+    height:100%!important;
+    max-height:none!important;
+  }
+
+  .scenecol,
+  .controls{
+    overflow-y:auto!important;
+    scrollbar-width:thin;
+  }
+
+  .centercol{
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) 170px!important;
+    gap:8px!important;
+    align-items:stretch!important;
+  }
+
+  .monitor-card{
+    min-height:0!important;
+    height:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    padding:8px!important;
+    overflow:hidden!important;
+  }
+
+  .monitor-toolbar{
+    flex:0 0 auto!important;
+    margin-bottom:6px!important;
+  }
+
+  .stage{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    width:auto!important;
+    height:100%!important;
+    max-width:100%!important;
+    max-height:100%!important;
+    aspect-ratio:16/9!important;
+    margin:auto!important;
+  }
+
+  .timeline-v3{
+    margin:0!important;
+    padding:8px!important;
+    min-height:0!important;
+    height:170px!important;
+    overflow:hidden!important;
+  }
+
+  .timeline-v3 .timeline-head{margin-bottom:4px!important}
+  .timeline-v3 .ruler{height:17px!important}
+  .timeline-v3 .trow{margin:2px 0!important}
+  .timeline-v3 .tlane{height:18px!important}
+  .timeline-v3 .tclip{height:12px!important;top:2px!important;font-size:8px!important;padding:1px 5px!important}
+
+  #vortragView > .media-library{
+    margin:0!important;
+    height:205px!important;
+    min-height:0!important;
+    padding:10px!important;
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+  }
+
+  .media-library .media-head{margin-bottom:6px!important}
+  .media-library .media-grid{
+    grid-template-columns:repeat(8,minmax(0,1fr))!important;
+    gap:7px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+
+  .media-library .media-item{
+    min-height:0!important;
+    height:105px!important;
+    padding:6px!important;
+  }
+
+  .media-library .media-item .thumb{
+    height:70px!important;
+  }
+
+  .media-library .dropzone{
+    margin-top:5px!important;
+    padding:5px!important;
+  }
+}
+
+/* Windows scaling fallback: still keep lower dock visible */
+@media (min-width:1200px) and (max-height:900px) {
+  #vortragView{
+    grid-template-rows:auto minmax(0,1fr) 165px!important;
+  }
+  #vortragView > .media-library{height:165px!important}
+  .media-library .media-item{height:78px!important}
+  .media-library .media-item .thumb{height:48px!important}
+  .centercol{grid-template-rows:minmax(0,1fr) 135px!important}
+  .timeline-v3{height:135px!important}
+}
+
+
+#v148diag{
+  position:fixed;right:10px;bottom:10px;z-index:99999;
+  background:#0b6fa4;color:white;border:2px solid #7fdcff;
+  border-radius:9px;padding:7px 10px;font:600 11px/1.2 Segoe UI,Arial,sans-serif;
+  box-shadow:0 6px 20px rgba(0,0,0,.35)
+}
+
+
+/* V16.3 – optimierte Größenverhältnisse für 3440×1440 */
+@media (min-width:1600px) {
+  body{overflow:hidden!important}
+
+  .app{
+    height:100vh!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+
+  .main{
+    height:100vh!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    padding:8px 12px!important;
+  }
+
+  #vortragView{
+    height:calc(100vh - 16px)!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) 150px!important;
+    gap:7px!important;
+    overflow:hidden!important;
+  }
+
+  #vortragView > .topbar{
+    margin:0!important;
+    min-height:50px!important;
+    padding:8px 11px!important;
+  }
+
+  #vortragView > .workspace{
+    height:100%!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    grid-template-columns:205px minmax(0,1fr) 320px!important;
+    gap:9px!important;
+    align-items:stretch!important;
+  }
+
+  .scenecol,.controls{
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    scrollbar-width:thin;
+  }
+
+  .centercol{
+    height:100%!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-rows:minmax(0,1fr) 135px!important;
+    gap:7px!important;
+  }
+
+  .monitor-card{
+    min-height:0!important;
+    height:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    padding:7px!important;
+    overflow:hidden!important;
+  }
+
+  .monitor-toolbar{
+    margin-bottom:5px!important;
+    flex:0 0 auto!important;
+  }
+
+  .stage{
+    flex:1 1 auto!important;
+    height:100%!important;
+    width:auto!important;
+    max-height:100%!important;
+    max-width:100%!important;
+    min-height:0!important;
+    aspect-ratio:16/9!important;
+    margin:auto!important;
+  }
+
+  .timeline-v3{
+    height:135px!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:7px!important;
+    overflow:hidden!important;
+  }
+
+  .timeline-v3 .timeline-head{margin-bottom:3px!important}
+  .timeline-v3 .ruler{height:15px!important}
+  .timeline-v3 .trow{margin:1px 0!important}
+  .timeline-v3 .tlane{height:16px!important}
+  .timeline-v3 .tclip{height:11px!important;top:2px!important;font-size:8px!important;padding:1px 4px!important}
+
+  #vortragView > .media-library{
+    height:150px!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:8px!important;
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+  }
+
+  .media-library .media-head{margin-bottom:4px!important}
+
+  .media-library .media-grid{
+    grid-template-columns:repeat(8,minmax(0,1fr))!important;
+    gap:6px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+
+  .media-library .media-item{
+    min-height:0!important;
+    height:82px!important;
+    padding:5px!important;
+  }
+
+  .media-library .media-item .thumb{
+    height:52px!important;
+  }
+
+  .media-library .dropzone{
+    margin-top:3px!important;
+    padding:3px!important;
+    font-size:9px!important;
+  }
+
+  /* etwas mehr Bühne, weniger tote Fläche */
+  .panel{padding:9px!important}
+}
+
+/* Fallback bei Chrome-Zoom/Windows-Skalierung */
+@media (min-width:1400px) and (max-height:900px) {
+  #vortragView{grid-template-rows:auto minmax(0,1fr) 125px!important}
+  #vortragView > .media-library{height:125px!important}
+  .media-library .media-item{height:64px!important}
+  .media-library .media-item .thumb{height:38px!important}
+  .centercol{grid-template-rows:minmax(0,1fr) 115px!important}
+  .timeline-v3{height:115px!important}
+}
+
+
+.v15-core{border-color:#24536c!important}.v15-statusrow{display:flex;align-items:center;gap:7px;font-size:9px;color:#8fb3c5;margin:0 0 8px}
+.v15-dot{width:7px;height:7px;border-radius:50%;background:#55b87a;box-shadow:0 0 8px rgba(85,184,122,.45)}
+.v15-avatar-modes{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;margin-top:5px}
+.v15-avatar-modes .btn{font-size:8px!important;padding:6px 3px!important}.v15-avatar-modes .btn.active{border-color:#4da8d5!important;background:#12354a!important}
+.v15-last{font-size:8px;color:#6f8d9e;margin-top:7px;line-height:1.35}.avatar.demo-v15 .head{background:linear-gradient(#d9b39b,#b98770)!important}
+.avatar.demo-v15 .body{background:linear-gradient(90deg,#233d51,#365c76)!important}
+
+
+/* V16.3 Update-Center */
+.v151-update{border-color:#2a617d!important}
+.v151-current{font-size:9px;color:#8fb3c5;margin:0 0 7px}
+.v151-info{font-size:8px;line-height:1.4;color:#6f8d9e;background:#07141d;border:1px solid #17374a;border-radius:6px;padding:7px;margin-top:6px;min-height:30px}
+.v151-info.ok{color:#8ed0a7;border-color:#285b3c}.v151-info.warn{color:#e4bd72;border-color:#6a5427}.v151-info.bad{color:#e48d8d;border-color:#6b3030}
+.v151-actions{grid-template-columns:1fr 1fr!important;gap:5px!important;margin-top:6px}
+.v151-note{font-size:7.5px;color:#557486;margin-top:6px;line-height:1.35}
+
+
+/* V16.3 – Lesbarkeit ohne Aufblasen des 3440×1440-Layouts */
+.controls h2,.panel h2{font-size:13px!important;line-height:1.2!important}
+.controls label,.panel label{font-size:11px!important;line-height:1.3!important;color:#9db8c7!important}
+.controls select,.controls textarea,.controls input,.panel select,.panel textarea,.panel input{
+  font-size:12px!important;line-height:1.35!important
+}
+.controls .btn,.panel .btn{font-size:11px!important;line-height:1.2!important}
+.v151-current,.v15-statusrow{font-size:11px!important;color:#a8c5d4!important}
+.v151-info{font-size:11px!important;line-height:1.45!important;color:#9fb8c6!important;min-height:34px!important}
+.v151-note,.v15-last{font-size:10px!important;line-height:1.4!important;color:#829eae!important}
+.v15-avatar-modes .btn{font-size:9px!important}
+.controls textarea{font-size:12px!important}
+@media (min-width:1600px){
+  .controls{font-size:11px!important}
+  .controls .panel{padding:10px!important}
+}
+
+/* V16.3 – kompakter erster Produktions-Test */
+.v152-test{border-color:#32627a!important}
+.v152-test p{font-size:10px;line-height:1.4;color:#89a7b7;margin:5px 0 8px}
+.v152-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:6px 0}
+.v152-step{font-size:9px;padding:5px;border:1px solid #1e4358;border-radius:5px;text-align:center;color:#89a7b7}
+.v152-step.on{background:#12354a;border-color:#4da8d5;color:#d7edf7}
+
+
+/* V16.3 – nochmals deutlich größere Bedien- und Hilfsschriften */
+.controls h2,.panel h2{font-size:16px!important;line-height:1.25!important}
+.controls label,.panel label{font-size:14px!important;line-height:1.35!important}
+.controls select,.controls textarea,.controls input,.panel select,.panel textarea,.panel input{
+  font-size:14px!important;line-height:1.4!important
+}
+.controls .btn,.panel .btn{font-size:13px!important;line-height:1.25!important}
+.v151-current,.v15-statusrow{font-size:13px!important}
+.v151-info{font-size:13px!important;line-height:1.5!important;min-height:40px!important}
+.v151-note,.v15-last{font-size:12px!important;line-height:1.45!important}
+.v15-avatar-modes .btn{font-size:11px!important}
+.v152-test p{font-size:12px!important;line-height:1.45!important}
+.v152-step{font-size:11px!important}
+
+
+/* V16.3 – automatische Zeitregie */
+.v160-regie{border-color:#39708a!important}
+.v160-clock{font-size:22px;font-weight:700;letter-spacing:.04em;color:#d8eef7;text-align:center;margin:5px 0}
+.v160-track{position:relative;height:12px;background:#07141d;border:1px solid #20485e;border-radius:8px;overflow:hidden;margin:7px 0}
+.v160-progress{height:100%;width:0;background:linear-gradient(90deg,#1b668c,#3a9cc8);transition:width .1s linear}
+.v160-phases{display:grid;grid-template-columns:10fr 15fr 8fr 7fr;gap:3px;margin:5px 0}
+.v160-phase{font-size:10px;text-align:center;padding:5px 2px;border:1px solid #1d4053;border-radius:5px;color:#7898aa}
+.v160-phase.on{background:#12384d;border-color:#55a9d1;color:#e0f4fc}
+.v160-buttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand" style="display:flex;align-items:center;gap:10px;background:transparent;padding:0">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InkiPjxzdG9wIHN0b3AtY29sb3I9IiNGRkU0NUIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGNEEwMDAiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iciI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGNUI1QiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0M0MDAxMiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJnIj48c3RvcCBzdG9wLWNvbG9yPSIjNTBFNTZBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDc4QTMwIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImIiPjxzdG9wIHN0b3AtY29sb3I9IiM1OUQ5RkYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwNzUwQjgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMDcxMzFGIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjU2IDI1Nikgc2NhbGUoMS40NSkiPjxwYXRoIGQ9Ik0tMTIwLC02NSBDLTc1LC0xMzUsMzUsLTE0NSwxMDAsLTgyIEMzMCwtMTA4LC00MiwtOTEsLTgwLC0zMyBaIiBmaWxsPSJ1cmwoI3kpIi8+PHBhdGggZD0iTTMwLC0xMjggQzExMCwtMTEyLDE0NSwtMjUsMTExLDQ4IEMxMTIsLTI1LDc3LC03NSwyMCwtOTEgWiIgZmlsbD0idXJsKCNyKSIvPjxwYXRoIGQ9Ik0xMjIsLTUgQzEzMiw3Niw2MCwxMzcsLTIxLDEyMyBDNDUsOTgsODAsNTUsODMsLTQgWiIgZmlsbD0idXJsKCNnKSIvPjxwYXRoIGQ9Ik0tMTUsMTI0IEMtOTYsMTE4LC0xNDUsNDIsLTExNywtMzQgQy0xMDYsMzgsLTY1LDc5LC03LDg0IFoiIGZpbGw9InVybCgjYikiLz48L2c+PC9zdmc+Cg==" alt="Webbased Academy Icon" style="width:54px;height:54px;display:block">
+      <div>
+        <div class="small">WEBBASED</div>
+        <div class="title" style="font-size:19px">ACADEMY</div>
+        <div class="claim">TIMELESS · MOBILE · PROFESSIONAL</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav">
+      <button data-view="intro">Intro / Outro</button>
+      <button class="active" data-view="vortrag">Vortrag</button>
+      <button data-view="skripten">Skripten</button>
+      <button data-view="cartoons">Cartoons</button>
+      <button data-view="coaching">Coaching</button>
+      <button data-view="feedback">Feedback</button>
+      <button data-view="podcast">Podcast</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div id="vortragView">
+      <div class="topbar">
+        <div><h1>Creator · Vortrag V1.0 <span id="runtimeVersionTop" style="margin-left:8px;padding:3px 7px;border-radius:999px;background:#155075;color:white;font-size:10px;vertical-align:middle">Version wird geladen…</span></h1><div class="sub">Projekt: Körpersprache verstehen · Offline-Prototyp</div></div>
+        <div class="actions"><button class="btn" id="preview">▶ Vorschau</button><button class="btn primary">Vortrag produzieren</button></div>
+      </div>
+
+      <div class="workspace">
+        <section class="scenecol panel">
+          <h2>Szenen</h2>
+          <div class="scene-list" id="sceneList">
+            <div class="scene active"><div class="n">01</div><div class="t">Avatar · Full</div></div>
+            <div class="scene"><div class="n">02</div><div class="t">Avatar + 3D</div></div>
+            <div class="scene"><div class="n">03</div><div class="t">Großbild</div></div>
+            <div class="scene"><div class="n">04</div><div class="t">Environment</div></div>
+          </div>
+          <button class="btn add-scene" id="addScene">+ Szene</button>
+    <div class="scene-tools">
+      <button class="btn" id="duplicateScene">Duplizieren</button>
+      <button class="btn" id="deleteScene">Löschen</button>
+      <button class="btn" id="moveUp">↑ Hoch</button>
+      <button class="btn" id="moveDown">↓ Runter</button>
+    </div>
+        </section>
+
+        <section class="centercol">
+          <div class="panel monitor-card">
+            <div class="monitor-toolbar">
+              <div class="segment">
+                <button class="btn active" data-camera="full">Ganzkörper</button>
+                <button class="btn" data-camera="medium">Bis Nabel</button>
+                <button class="btn" data-camera="hidden">Ohne Avatar</button>
+              </div>
+              <div class="segment">
+                <button class="btn" id="fullGraphicBtn">Großbild</button>
+                <button class="btn" id="bgBtn">Hintergrund</button>
+              </div>
+            </div>
+            <div class="stage" id="stage">
+              <div class="bgScene" id="bgScene"></div>
+              <div class="brandmark" style="opacity:.92;left:20px;top:18px"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InkiPjxzdG9wIHN0b3AtY29sb3I9IiNGRkU0NUIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGNEEwMDAiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iciI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGNUI1QiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0M0MDAxMiIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJnIj48c3RvcCBzdG9wLWNvbG9yPSIjNTBFNTZBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDc4QTMwIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImIiPjxzdG9wIHN0b3AtY29sb3I9IiM1OUQ5RkYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwNzUwQjgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMDcxMzFGIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjU2IDI1Nikgc2NhbGUoMS40NSkiPjxwYXRoIGQ9Ik0tMTIwLC02NSBDLTc1LC0xMzUsMzUsLTE0NSwxMDAsLTgyIEMzMCwtMTA4LC00MiwtOTEsLTgwLC0zMyBaIiBmaWxsPSJ1cmwoI3kpIi8+PHBhdGggZD0iTTMwLC0xMjggQzExMCwtMTEyLDE0NSwtMjUsMTExLDQ4IEMxMTIsLTI1LDc3LC03NSwyMCwtOTEgWiIgZmlsbD0idXJsKCNyKSIvPjxwYXRoIGQ9Ik0xMjIsLTUgQzEzMiw3Niw2MCwxMzcsLTIxLDEyMyBDNDUsOTgsODAsNTUsODMsLTQgWiIgZmlsbD0idXJsKCNnKSIvPjxwYXRoIGQ9Ik0tMTUsMTI0IEMtOTYsMTE4LC0xNDUsNDIsLTExNywtMzQgQy0xMDYsMzgsLTY1LDc5LC03LDg0IFoiIGZpbGw9InVybCgjYikiLz48L2c+PC9zdmc+Cg==" alt="WA" style="width:48px;height:48px;display:block"></div>
+              <div class="floor"></div>
+
+              <div class="avatar" id="avatar">
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="arm l"></div><div class="arm r"></div>
+                <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+              </div>
+
+              <div class="media" id="media"><div class="cube"></div></div>
+
+              <div class="fullGraphic" id="fullGraphic">
+                <div class="chart">
+                  <h3>Kompetenzentwicklung</h3>
+                  <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+                </div>
+              </div>
+              
+<div class="board-overlay" id="boardOverlay">
+  <div class="board-content">
+    <div class="board-text" id="boardStageText">WISSEN VERSTEHEN.</div>
+    <img class="board-object" id="boardStageImage" alt="" style="display:none">
+  </div>
+</div>
+<div class="fullscreen-object" id="fullscreenObject"><img id="fullscreenImage" alt=""></div>
+
+<div class="cue" id="cue">Szene 01 · Avatar spricht frontal</div>
+            </div>
+          </div>
+
+          <div class="timeline-v3">
+  <div class="timeline-head">
+    <div><h2 style="margin:0;font-size:13px">Timeline & Szenensteuerung</h2><div style="font-size:10px;color:#7893a5;margin-top:3px">00:00:18.4 / 00:00:52.0</div></div>
+    <div class="timeline-tools">
+      <button class="btn" id="playTimeline">▶</button>
+      <button class="btn" id="stopTimeline">■</button>
+      <button class="btn" id="zoomTimeline">Timeline +</button>
+    </div>
+  </div>
+  <div class="ruler"><span style="left:0%">0s</span><span style="left:20%">10s</span><span style="left:40%">20s</span><span style="left:60%">30s</span><span style="left:80%">40s</span><span style="left:99%">52s</span></div>
+  <div id="timelineRows" style="position:relative">
+    <div class="playhead" id="playhead"></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Sprache/Ton</div><div class="tlane"><div class="tclip" style="left:1%;width:94%;background:#435f70">Originalton / Stimme</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Avatar</div><div class="tlane"><div class="tclip" style="left:2%;width:53%;background:#315a73">Ganzkörper</div><div class="tclip" style="left:59%;width:31%;background:#315a73">Bis Nabel</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Kamera</div><div class="tlane"><div class="tclip" style="left:2%;width:34%;background:#4b6375">CAM A</div><div class="tclip" style="left:59%;width:31%;background:#4b6375">CAM B</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Academy-Raum</div><div class="tlane"><div class="tclip" style="left:0%;width:96%;background:#284b5d">Standardraum</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Schultafel</div><div class="tlane"><div class="tclip" id="boardClip" style="left:18%;width:27%;background:#536258">Tafel + Inhalt</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>2D-Grafik</div><div class="tlane"><div class="tclip" style="left:20%;width:20%;background:#667b8b">Diagramm</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>3D-Objekt</div><div class="tlane"><div class="tclip" style="left:45%;width:23%;background:#596b8b">3D Kompetenzmodell</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Video</div><div class="tlane"><div class="tclip" style="left:70%;width:17%;background:#485d70">Großbild</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Animation</div><div class="tlane"><div class="tclip" style="left:18%;width:8%;background:#776a85">Fade</div><div class="tclip" style="left:45%;width:15%;background:#776a85">Schweben</div><div class="tclip" style="left:62%;width:7%;background:#776a85">Zoom</div></div></div>
+    <div class="trow"><div class="tlabel"><button class="eye">●</button>Regie</div><div class="tlane"><div class="tclip" style="left:47%;width:17%;background:#7d8791">Blick → Zeigen</div></div></div>
+  </div>
+</div>
+        </section>
+
+        <aside class="controls">
+          <div class="panel v151-update">
+            <h2>Update-Center · <span id="runtimeVersionUpdate">Version wird geladen…</span></h2>
+            <div class="v151-current">Installiert: <b id="v151Installed">Version wird geladen…</b></div>
+            <button class="btn primary" id="v151ChooseUpdate" type="button">Update-Datei auswählen</button>
+            <input id="v151UpdateFile" type="file" accept=".wacupdate,application/json" hidden>
+            <div id="v151UpdateInfo" class="v151-info">Keine Update-Datei ausgewählt.</div>
+            <div class="grid2 v151-actions">
+              <button class="btn" id="v151BackupBtn" type="button" disabled>Sicherung laden</button>
+              <button class="btn primary" id="v151InstallBtn" type="button" disabled>Update vorbereiten</button>
+            </div>
+            <div class="v151-note">Projekte und Medien werden vom Programm-Update nicht verändert.</div>
+          </div>
+
+          <div class="panel v15-core">
+            <h2>Projekt & Testavatar · V15</h2>
+            <div class="v15-statusrow"><span class="v15-dot"></span><span id="v15SaveStatus">Automatisches Speichern aktiv</span></div>
+            <label>Testavatar</label>
+            <select id="v15AvatarProfile"><option value="demo">Neutraler Demo-Avatar</option><option value="own" disabled>Eigener Avatar · später</option></select>
+            <label>Darstellung</label>
+            <div class="grid3 v15-avatar-modes">
+              <button class="btn active" type="button" data-v15mode="full">Ganzkörper</button>
+              <button class="btn" type="button" data-v15mode="medium">Bis Nabel</button>
+              <button class="btn" type="button" data-v15mode="hidden">Ohne Avatar</button>
+            </div>
+            <div class="v15-last" id="v15LastSaved">Noch kein lokaler Projektstand.</div>
+          </div>
+
+          <div class="panel v152-test">
+            <h2>Produktions-Test · 30–60 Sek.</h2>
+            <p>Erster Ablauf: Avatar → Schultafel → Grafik → zurück zum Avatar.</p>
+            <div class="v152-steps">
+              <div class="v152-step on">1 Avatar</div>
+              <div class="v152-step">2 Tafel</div>
+              <div class="v152-step">3 Grafik</div>
+            </div>
+            <button class="btn primary" id="v152PrepareTest" type="button">Testszene vorbereiten</button>
+          </div>
+
+          <div class="panel v160-regie">
+            <h2>Zeitregie · 40 Sekunden</h2>
+            <div class="v160-clock" id="v160Clock">00:00.0</div>
+            <div class="v160-track"><div class="v160-progress" id="v160Progress"></div></div>
+            <div class="v160-phases">
+              <div class="v160-phase on" data-phase="avatar1">Avatar</div>
+              <div class="v160-phase" data-phase="board">Tafel</div>
+              <div class="v160-phase" data-phase="graphic">Grafik</div>
+              <div class="v160-phase" data-phase="avatar2">Avatar</div>
+            </div>
+            <div class="v160-buttons">
+              <button class="btn primary" id="v160Start" type="button">▶ Start</button>
+              <button class="btn" id="v160Pause" type="button">Ⅱ Pause</button>
+              <button class="btn" id="v160Reset" type="button">↺ Reset</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Regie & Medien</h2>
+            <label>Avatar-Aktion</label>
+            <select id="avatarAction">
+              <option value="front">Frontal sprechen</option>
+              <option value="point">Zur Grafik drehen & zeigen</option>
+              <option value="look">Grafik ansehen</option>
+            </select>
+
+            <label>Medienanimation</label>
+            <select id="animSelect">
+              <option value="fade">Ein-/Ausblenden</option>
+              <option value="zoom">Zoom</option>
+              <option value="rotate">Rotation</option>
+              <option value="float">Schweben</option>
+            </select>
+
+            <div class="grid2" style="margin-top:10px">
+              <button class="btn" id="show3d">+ 3D-Grafik</button>
+              <button class="btn" id="hide3d">Ausblenden</button>
+            </div>
+
+            <label>Regieanweisung</label>
+            <textarea id="regieText">Bei „Basisemotionen“ nach rechts drehen, auf die schwebende 3D-Grafik zeigen und danach wieder zum Publikum blicken.</textarea>
+            <button class="btn primary" style="width:100%;margin-top:8px" id="applyRegie">Regie anwenden</button>
+
+            
+
+<div class="v5-tools">
+  <h2 style="margin-bottom:8px">Objektsteuerung V5</h2>
+  <label>Zielbereich</label>
+  <div class="target-tabs">
+    <button class="btn active" type="button" data-target="room">Raum</button>
+    <button class="btn" type="button" data-target="board">Schultafel</button>
+    <button class="btn" type="button" data-target="fullscreen">Großbild</button>
+  </div>
+
+  <div class="range-wrap"><label>Position X</label><input id="posX" type="range" min="0" max="100" value="58"><span class="range-val" id="posXVal">58%</span></div>
+  <div class="range-wrap"><label>Position Y</label><input id="posY" type="range" min="0" max="100" value="27"><span class="range-val" id="posYVal">27%</span></div>
+  <div class="range-wrap"><label>Größe</label><input id="objScale" type="range" min="30" max="220" value="100"><span class="range-val" id="objScaleVal">100%</span></div>
+  <div class="range-wrap"><label>Drehung</label><input id="objRotate" type="range" min="-180" max="180" value="0"><span class="range-val" id="objRotateVal">0°</span></div>
+  <div class="range-wrap"><label>Deckkraft</label><input id="objOpacity" type="range" min="0" max="100" value="100"><span class="range-val" id="objOpacityVal">100%</span></div>
+
+  <label>Einblendung</label>
+  <select id="entryAnim">
+    <option value="none">Ohne</option>
+    <option value="fade-in">Fade In</option>
+    <option value="zoom-in">Zoom In</option>
+  </select>
+  <label>Animation während Anzeige</label>
+  <select id="loopAnim">
+    <option value="none">Statisch</option>
+    <option value="float">Schweben</option>
+    <option value="rotate">Rotation</option>
+    <option value="pulse">Pulsieren</option>
+  </select>
+
+  <div class="v5-grid" style="margin-top:8px">
+    <button class="btn" id="bringFront" type="button">Ebene nach vorn</button>
+    <button class="btn" id="sendBack" type="button">Ebene nach hinten</button>
+  </div>
+  <div class="anim-badge" id="objStatus">Kein importiertes Objekt ausgewählt</div>
+
+  <label>Ebenen</label>
+  <div class="layer-list" id="layerList">
+    <div class="layer-item"><span>●</span><span>Avatar</span><button type="button">↑</button><button type="button">↓</button></div>
+    <div class="layer-item"><span>●</span><span>Schultafel</span><button type="button">↑</button><button type="button">↓</button></div>
+    <div class="layer-item active" id="mediaLayer"><span>●</span><span>Aktuelles Medium</span><button type="button" id="layerUp">↑</button><button type="button" id="layerDown">↓</button></div>
+    <div class="layer-item"><span>●</span><span>Academy-Raum</span><button type="button">↑</button><button type="button">↓</button></div>
+  </div>
+</div>
+
+<div class="tafel-card">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+    <strong style="font-size:12px">Schultafel</strong>
+    <button class="btn" id="toggleBoard">Einblenden</button>
+  </div>
+  <label>Tafeltext</label>
+  <input id="boardText" class="small-input" value="WISSEN VERSTEHEN.">
+  <div class="tafel-preview" id="boardPreview">
+    <div class="chalk-title" id="chalkTitle">WISSEN VERSTEHEN.</div>
+    <div style="font-size:11px;margin-top:6px">Text + Grafik kombinierbar</div>
+    <div class="chalk-chart"><i></i><i></i><i></i></div>
+  </div>
+</div>
+<div class="status">Ausgabe: 4K UHD · 16:9 · Projekt lokal/offline</div>
+          </div>
+        </aside>
+      </div>
+
+<div class="panel media-library">
+  <div class="media-head">
+    <div><h2 style="margin:0;font-size:13px">Medienbibliothek</h2><div style="font-size:10px;color:#7893a5;margin-top:3px">Lokale Medien für Raum, Großbild und Schultafel</div></div>
+    <label class="btn" style="display:inline-block">+ Importieren<input id="mediaInput" type="file" accept="image/*" multiple style="display:none"></label>
+  </div>
+  <div class="media-grid" id="mediaGrid">
+    <div class="media-item" draggable="true" data-kind="3d"><div class="thumb">◇</div><div class="name">3D Kompetenzmodell</div></div>
+    <div class="media-item" draggable="true" data-kind="chart"><div class="thumb">▥</div><div class="name">Diagramm</div></div>
+    <div class="media-item" draggable="true" data-kind="board"><div class="thumb">▰</div><div class="name">Schultafel</div></div>
+    <div class="media-item" draggable="true" data-kind="background"><div class="thumb">▧</div><div class="name">Academy Hintergrund</div></div>
+  </div>
+  <div class="dropzone" id="dropzone">Medium hierher ziehen oder importieren · danach per Klick in die aktuelle Szene einsetzen</div>
+</div>
+
+    </div>
+
+    <div id="placeholderView" style="display:none">
+<div class="regie-engine">
+  <div class="regie-head">
+    <div>
+      <h2 style="margin:0;font-size:13px">Regie-Engine V6</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Zeitgesteuerte Aktionen für Avatar, Medien, Tafel, Kamera und Hintergrund</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn" id="playRegie" type="button">▶ Ablauf testen</button>
+      <button class="btn" id="stopRegie" type="button">■ Stop</button>
+      <button class="btn primary" id="addCue" type="button">+ Regie-Cue</button>
+    </div>
+  </div>
+
+  <div class="regie-grid">
+    <div>
+      <div class="cue-list" id="cueList">
+        <div class="cue-item" data-time="2" data-action="media_show">
+          <div class="cue-time">00:02.0</div><div class="cue-text">3D-Grafik einblenden</div><button type="button" class="removeCue">×</button>
+        </div>
+        <div class="cue-item" data-time="3.5" data-action="avatar_point">
+          <div class="cue-time">00:03.5</div><div class="cue-text">Avatar blickt zur Grafik und zeigt darauf</div><button type="button" class="removeCue">×</button>
+        </div>
+        <div class="cue-item" data-time="6" data-action="media_zoom">
+          <div class="cue-time">00:06.0</div><div class="cue-text">Grafik zoomt näher in den Raum</div><button type="button" class="removeCue">×</button>
+        </div>
+        <div class="cue-item" data-time="8.5" data-action="avatar_front">
+          <div class="cue-time">00:08.5</div><div class="cue-text">Avatar wendet sich wieder dem Publikum zu</div><button type="button" class="removeCue">×</button>
+        </div>
+        <div class="cue-item" data-time="10" data-action="media_hide">
+          <div class="cue-time">00:10.0</div><div class="cue-text">Grafik ausblenden</div><button type="button" class="removeCue">×</button>
+        </div>
+      </div>
+      <div class="play-status" id="regieStatus">Bereit · 5 Regie-Cues</div>
+    </div>
+
+    <div class="regie-form">
+      <div class="time-row">
+        <div>
+          <label>Zeitpunkt (Sek.)</label>
+          <input id="cueTime" type="number" min="0" max="999" step="0.1" value="12.0">
+        </div>
+        <div>
+          <label>Dauer (Sek.)</label>
+          <input id="cueDuration" type="number" min="0" max="999" step="0.1" value="2.0">
+        </div>
+      </div>
+
+      <label>Aktion</label>
+      <select id="cueAction">
+        <option value="media_show">Medium einblenden</option>
+        <option value="media_hide">Medium ausblenden</option>
+        <option value="media_zoom">Medium zoomen</option>
+        <option value="media_float">Medium schweben lassen</option>
+        <option value="avatar_point">Avatar zur Grafik drehen & zeigen</option>
+        <option value="avatar_front">Avatar zurück zur Kamera</option>
+        <option value="avatar_hide">Avatar ausblenden</option>
+        <option value="avatar_show">Avatar einblenden</option>
+        <option value="board_show">Schultafel einblenden</option>
+        <option value="board_hide">Schultafel ausblenden</option>
+        <option value="background_show">Hintergrund einblenden</option>
+        <option value="background_hide">Hintergrund ausblenden</option>
+        <option value="fullscreen_show">Großbild aktivieren</option>
+        <option value="fullscreen_hide">Großbild verlassen</option>
+        <option value="camera_full">Kamera Ganzkörper</option>
+        <option value="camera_medium">Kamera bis Nabel</option>
+      </select>
+
+      <label>Beschreibung / Regieanweisung</label>
+      <textarea id="cueDescription">Bei diesem Satz die Grafik einblenden und Avatar darauf reagieren lassen.</textarea>
+
+      <button class="btn primary" id="saveCue" type="button" style="width:100%;margin-top:9px">Cue speichern</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="sync-panel">
+  <div class="sync-head">
+    <div>
+      <h2 style="margin:0;font-size:13px">Text & Ton synchronisieren · V7</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Regie-Cues wahlweise an Zeitpunkte oder gesprochene Textstellen koppeln</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <label class="btn" style="display:inline-block">Text importieren<input id="textFileInput" type="file" accept=".txt,text/plain" style="display:none"></label>
+      <label class="btn" style="display:inline-block">Ton importieren<input id="audioFileInput" type="file" accept="audio/*" style="display:none"></label>
+      <button class="btn primary" id="createAnchor" type="button">+ Textanker</button>
+    </div>
+  </div>
+
+  <div class="sync-grid">
+    <div class="transcript-box">
+      <div class="transcript-tools">
+        <button class="btn" id="loadDemoText" type="button">Beispieltext</button>
+        <button class="btn" id="clearText" type="button">Text leeren</button>
+      </div>
+      <textarea id="transcriptText" placeholder="Vortragstext hier einfügen oder TXT-Datei importieren..."></textarea>
+      <div class="word-timeline" id="wordTimeline">Noch kein Text geladen.</div>
+    </div>
+
+    <div>
+      <div class="audio-box">
+        <strong style="font-size:12px">Tonspur</strong>
+        <div style="font-size:10px;color:#8fa8b8;margin-top:3px">Lokale MP3/WAV-Datei; bleibt im Browser und wird nicht hochgeladen.</div>
+        <audio id="audioPlayer" controls></audio>
+
+        <div class="sync-form">
+          <div>
+            <label>Trigger-Modus</label>
+            <select id="triggerMode">
+              <option value="phrase">Textstelle / Schlüsselphrase</option>
+              <option value="time">Zeitpunkt</option>
+            </select>
+          </div>
+          <div>
+            <label>Zeitpunkt (Sek.)</label>
+            <input id="anchorTime" type="number" min="0" step="0.1" value="0">
+          </div>
+          <div class="sync-wide">
+            <label>Schlüsselphrase</label>
+            <input id="anchorPhrase" type="text" placeholder='z. B. "sieben Basisemotionen"'>
+          </div>
+          <div>
+            <label>Regie-Aktion</label>
+            <select id="anchorAction">
+              <option value="media_show">Medium einblenden</option>
+              <option value="media_hide">Medium ausblenden</option>
+              <option value="media_zoom">Medium zoomen</option>
+              <option value="avatar_point">Avatar drehen & zeigen</option>
+              <option value="avatar_front">Avatar zur Kamera</option>
+              <option value="board_show">Schultafel einblenden</option>
+              <option value="board_hide">Schultafel ausblenden</option>
+              <option value="fullscreen_show">Großbild aktivieren</option>
+              <option value="fullscreen_hide">Großbild verlassen</option>
+              <option value="camera_full">Kamera Ganzkörper</option>
+              <option value="camera_medium">Kamera bis Nabel</option>
+            </select>
+          </div>
+          <div>
+            <label>Verzögerung nach Trigger</label>
+            <input id="anchorDelay" type="number" min="0" step="0.1" value="0">
+          </div>
+        </div>
+        <button class="btn primary" id="saveAnchor" type="button" style="width:100%;margin-top:8px">Textanker speichern</button>
+        <div class="sync-status" id="syncStatus">Bereit · noch keine Textanker</div>
+      </div>
+
+      <div style="margin-top:10px">
+        <strong style="font-size:12px">Textanker / Cue-Verknüpfungen</strong>
+        <div class="anchor-list" id="anchorList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="project-panel">
+  <div class="project-head">
+    <div>
+      <h2 style="margin:0;font-size:13px">Projektverwaltung · V8</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Projekt lokal sichern, laden und Szenenzustände speichern</div>
+    </div>
+    <div class="project-actions">
+      <button class="btn" id="saveSceneState" type="button">Szene speichern</button>
+      <button class="btn" id="downloadProject" type="button">Projekt exportieren</button>
+      <label class="btn" style="display:inline-block">Projekt laden<input id="loadProjectFile" type="file" accept=".json,application/json" style="display:none"></label>
+      <button class="btn primary" id="newProject" type="button">Neues Projekt</button>
+    </div>
+  </div>
+
+  <div class="project-meta">
+    <div><label>Projektname</label><input id="projectName" value="Körpersprache verstehen"></div>
+    <div><label>Thema</label><input id="projectTopic" value="Mimik und Gestik"></div>
+    <div><label>Zielgruppe</label><input id="projectAudience" value="Führungskräfte"></div>
+  </div>
+
+  <div class="scene-state">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px">
+      <strong style="font-size:12px">Gespeicherte Szenenzustände</strong>
+      <span style="font-size:10px;color:#8fa8b8">Avatar · Kamera · Medien · Tafel · Hintergrund · Animation</span>
+    </div>
+    <div class="state-list" id="stateList"></div>
+  </div>
+  <div class="project-status" id="projectStatus">Projekt noch nicht exportiert.</div>
+</div>
+
+
+<div class="storyboard">
+  <div class="story-head">
+    <div>
+      <h2 style="margin:0;font-size:13px">Storyboard & Vortragsablauf · V9</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Gespeicherte Szenen zu einem vollständigen Vortrag zusammensetzen und abspielen</div>
+    </div>
+    <div class="story-actions">
+      <button class="btn" id="addCurrentToStory" type="button">Aktuelle Szene hinzufügen</button>
+      <button class="btn" id="playStory" type="button">▶ Vortrag abspielen</button>
+      <button class="btn" id="stopStory" type="button">■ Stop</button>
+      <button class="btn primary" id="exportStoryboard" type="button">Storyboard exportieren</button>
+    </div>
+  </div>
+
+  <div class="story-track" id="storyTrack"></div>
+
+  <div class="story-properties">
+    <div>
+      <label>Szenenname</label>
+      <input id="storyName" value="Szene">
+    </div>
+    <div>
+      <label>Dauer (Sek.)</label>
+      <input id="storyDuration" type="number" min="0.5" step="0.5" value="8">
+    </div>
+    <div>
+      <label>Übergang</label>
+      <select id="storyTransition">
+        <option value="cut">Schnitt</option>
+        <option value="fade">Weiche Blende</option>
+        <option value="zoom">Zoom-Übergang</option>
+      </select>
+    </div>
+    <button class="btn story-wide" id="updateStoryScene" type="button">Szene aktualisieren</button>
+  </div>
+
+  <div class="play-progress"><div id="storyProgress"></div></div>
+  <div class="story-status" id="storyStatus">Noch keine Szene im Storyboard.</div>
+</div>
+
+
+
+
+
+
+<div class="alpha-banner">
+  <div class="alpha-head">
+    <div>
+      <h2 style="margin:0;font-size:14px">Webbased Academy Creator · Windows Alpha 1</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Lokale Desktop-Basis mit getrennten Projektdaten, Backups und vorbereitetem Update-System.</div>
+    </div>
+    <div class="version-pill">● Version 0.3.0-alpha</div>
+  </div>
+
+  <div class="alpha-grid">
+    <div class="alpha-card">
+      <h3>Automatische Sicherung</h3>
+      <p>Der aktuelle Arbeitsstand kann als lokale Backup-Datei gespeichert und jederzeit wieder eingelesen werden.</p>
+      <button class="btn" id="alphaBackup" type="button">Backup erstellen</button>
+      <div class="alpha-status" id="backupStatus">Bereit</div>
+    </div>
+    <div class="alpha-card">
+      <h3>Wiederherstellen</h3>
+      <p>Projekt-, Szenen-, Storyboard- und Regiedaten aus einem Alpha-Backup zurückholen.</p>
+      <label class="btn" style="display:inline-block">Backup laden<input id="alphaRestore" type="file" accept=".json,application/json" style="display:none"></label>
+      <div class="alpha-status" id="restoreStatus">Keine Wiederherstellung ausgeführt</div>
+    </div>
+    <div class="alpha-card">
+      <h3>Update-System</h3>
+      <p>Programmupdates werden künftig getrennt von Ihren Projektdaten eingespielt. Ihre Inhalte bleiben erhalten.</p>
+      <button class="btn primary" id="showUpdateInfo" type="button">Update-Info</button>
+      <div class="alpha-status" id="updateStatus">Version 0.3.0-alpha aktuell</div>
+    </div>
+  </div>
+
+  <div class="update-log" id="updateInfo" style="display:none">
+    <strong>Alpha-Updateprinzip:</strong> Neue ChatGPT-Entwicklungsstände werden als Update-Paket geliefert. 
+    Das Windows-Update-Skript ersetzt nur die Programmdatei im lokalen App-Ordner; Projekt- und Backup-Ordner unter „Dokumente\Webbased Academy“ bleiben unangetastet.
+  </div>
+</div>
+
+<div class="filehub">
+  <div class="filehub-head">
+    <div>
+      <h2 style="margin:0;font-size:14px">Projekt & Dateien · V13</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Ein Thema = ein Projekt. Alle Produktionsdateien bleiben übersichtlich zusammen.</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn" id="saveWorkspace" type="button">Projekt sichern</button>
+      <label class="btn" style="display:inline-block">Datei hinzufügen<input id="workspaceFile" type="file" multiple style="display:none"></label>
+    </div>
+  </div>
+
+  <div class="folder-grid" id="folderGrid">
+    <div class="folder active" data-folder="Vortrag"><div class="ico">▣</div><div class="fn">Vortrag</div><div class="count">0 Dateien</div></div>
+    <div class="folder" data-folder="Audio"><div class="ico">♪</div><div class="fn">Audio</div><div class="count">0 Dateien</div></div>
+    <div class="folder" data-folder="Grafiken"><div class="ico">▥</div><div class="fn">Grafiken</div><div class="count">0 Dateien</div></div>
+    <div class="folder" data-folder="3D"><div class="ico">◇</div><div class="fn">3D</div><div class="count">0 Dateien</div></div>
+    <div class="folder" data-folder="Video"><div class="ico">▶</div><div class="fn">Video</div><div class="count">0 Dateien</div></div>
+    <div class="folder" data-folder="Skripten"><div class="ico">▤</div><div class="fn">Skripten</div><div class="count">0 Dateien</div></div>
+    <div class="folder" data-folder="Export"><div class="ico">⇩</div><div class="fn">Export</div><div class="count">0 Dateien</div></div>
+  </div>
+
+  <div class="file-area">
+    <div class="file-list" id="workspaceList"><div style="font-size:10px;color:#7893a5">Ordner „Vortrag“ ist leer.</div></div>
+    <div class="project-path">
+      <strong style="color:#dceaf1">Vorgesehene Windows-Struktur</strong><br><br>
+      Dokumente / Webbased Academy / Projekte / <span id="pathProject">Körpersprache verstehen</span><br>
+      ├─ Vortrag<br>├─ Audio<br>├─ Grafiken<br>├─ 3D<br>├─ Video<br>├─ Skripten<br>└─ Export
+      <br><br><span style="color:#7893a5">V13 simuliert diese Struktur noch browserlokal. V14 übernimmt sie in die installierte Desktop-Anwendung.</span>
+    </div>
+  </div>
+  <div class="filehub-status" id="filehubStatus">Projektstruktur bereit.</div>
+</div>
+
+<div class="production-hub">
+  <div class="production-head">
+    <div>
+      <h2 style="margin:0;font-size:14px">KI-Produktionszentrale · V12</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Vier einfache Schritte – die technische KI-Anbindung arbeitet später im Hintergrund.</div>
+    </div>
+    <button class="btn primary" id="prepareProduction" type="button">Produktion vorbereiten</button>
+  </div>
+
+  <div class="production-flow">
+    <div class="prod-card active" id="prodAvatar">
+      <div class="prod-num">01</div><h3>Mein Avatar</h3>
+      <p>Persönlichen KI-Klon auswählen: Ganzkörper, Mimik, Gestik und Bewegungsprofil.</p>
+      <button class="btn" id="selectAvatar" type="button">Avatar auswählen</button>
+      <div class="prod-status" id="avatarStatus">Noch nicht verbunden</div>
+    </div>
+    <div class="prod-card" id="prodVoice">
+      <div class="prod-num">02</div><h3>Meine Stimme</h3>
+      <p>Eigene Stimme verwenden oder vorhandene Tonaufnahme als Vortragsspur übernehmen.</p>
+      <label class="btn" style="display:inline-block">Ton auswählen<input id="productionAudio" type="file" accept="audio/*" style="display:none"></label>
+      <div class="prod-status" id="voiceStatus">Noch keine Tonspur</div>
+    </div>
+    <div class="prod-card" id="prodContent">
+      <div class="prod-num">03</div><h3>Vortrag</h3>
+      <p>Vortragstext übernehmen, importieren oder die bereits vorbereitete Text-/Tonspur verwenden.</p>
+      <button class="btn" id="useTranscript" type="button">Aktuellen Text verwenden</button>
+      <div class="prod-status" id="contentStatus">Inhalt prüfen</div>
+    </div>
+    <div class="prod-card" id="prodRender">
+      <div class="prod-num">04</div><h3>Produzieren</h3>
+      <p>Avatar, Stimme, Academy-Raum, Medien und Regie zu einer Produktion zusammenführen.</p>
+      <button class="btn primary" id="startProduction" type="button">Produktion starten</button>
+      <div class="prod-status" id="renderStatus">Noch nicht bereit</div>
+    </div>
+  </div>
+
+  <div class="production-settings">
+    <div><label>Avatar-Bildausschnitt</label><select id="productionCamera"><option>Automatisch nach Regie</option><option>Ganzkörper</option><option>Bis Nabel</option></select></div>
+    <div><label>Ausgabe</label><select id="productionQuality"><option>4K UHD · 16:9</option><option>Full HD · 16:9</option><option>Hochformat · 9:16</option></select></div>
+  </div>
+  <div class="production-summary" id="productionSummary">Noch keine Produktion vorbereitet. Die externe Avatar-/Voice-KI wird in einer späteren Integrationsstufe über eine Schnittstelle angebunden.</div>
+</div>
+
+<div class="simplebar">
+  <div class="simple-head">
+    <div>
+      <h2 style="margin:0;font-size:14px">Einfach produzieren · V11</h2>
+      <div class="advanced-note" style="margin-top:3px">Sie beschreiben, was passieren soll. Der Creator bereitet die technische Regie im Hintergrund vor.</div>
+    </div>
+    <div class="mode-switch">
+      <button class="btn active" id="simpleMode" type="button">Einfach</button>
+      <button class="btn" id="advancedMode" type="button">Erweitert</button>
+    </div>
+  </div>
+
+  <div class="simple-flow">
+    <div class="flow-step active">1 · Inhalt</div>
+    <div class="flow-step">2 · Szene</div>
+    <div class="flow-step">3 · Regie</div>
+    <div class="flow-step">4 · Vorschau</div>
+    <div class="flow-step">5 · Produzieren</div>
+  </div>
+
+  <div class="ai-director">
+    <strong style="font-size:12px">KI-Regieassistent</strong>
+    <div class="advanced-note" style="margin:3px 0 8px">Regieanweisung in normaler Sprache eingeben.</div>
+    <textarea id="aiInstruction">Bei diesem Satz die Grafik rechts einblenden. Ich drehe mich zur Grafik und zeige darauf. Danach die Grafik groß darstellen.</textarea>
+    <div class="quick-actions">
+      <button class="btn" data-prompt="Tafel einblenden und den aktuellen Text darauf anzeigen.">Tafel verwenden</button>
+      <button class="btn" data-prompt="Grafik einblenden, Avatar dreht sich zur Grafik und zeigt darauf.">Auf Grafik zeigen</button>
+      <button class="btn" data-prompt="Avatar ausblenden und die aktuelle Grafik als Großbild zeigen.">Grafik groß</button>
+      <button class="btn" data-prompt="Zur Ganzkörperansicht zurückkehren und alle Einblendungen ausblenden.">Zurück zum Avatar</button>
+    </div>
+    <div class="ai-actions">
+      <span class="advanced-note">Technische Cues werden automatisch erzeugt und bleiben im erweiterten Modus editierbar.</span>
+      <button class="btn primary" id="interpretDirection" type="button">Regie übernehmen</button>
+    </div>
+    <div class="ai-result" id="aiResult"></div>
+  </div>
+</div>
+
+<div class="master-regie">
+  <div class="master-head">
+    <div>
+      <h2 style="margin:0;font-size:13px">Master-Regie · V10</h2>
+      <div style="font-size:10px;color:#7893a5;margin-top:3px">Storyboard, Übergänge und alle internen Szenen-Cues in einem Ablauf</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div class="master-clock" id="masterClock">00:00.0</div>
+      <button class="btn primary" id="playMaster" type="button">▶ Gesamtvortrag</button>
+      <button class="btn" id="pauseMaster" type="button">Ⅱ Pause</button>
+      <button class="btn" id="stopMaster" type="button">■ Stop</button>
+    </div>
+  </div>
+  <div class="master-strip" id="masterStrip"><div class="master-playhead" id="masterPlayhead"></div></div>
+  <div class="master-status" id="masterStatus">Storyboard vorbereiten und anschließend den Gesamtvortrag starten.</div>
+</div>
+
+</div>
+  </main>
+</div>
+
+<script>
+(function(){
+  const q=s=>document.querySelector(s), qa=s=>[...document.querySelectorAll(s)];
+  const nav=qa('#nav button'), vortrag=q('#vortragView'), placeholder=q('#placeholderView');
+  const names={
+    intro:'Intro / Outro', skripten:'Skripten', cartoons:'Cartoons',
+    coaching:'Coaching', feedback:'Feedback', podcast:'Podcast'
+  };
+  nav.forEach(b=>b.addEventListener('click',()=>{
+    nav.forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    const v=b.dataset.view;
+    if(v==='vortrag'){vortrag.style.display='block';placeholder.style.display='none';}
+    else{
+      vortrag.style.display='none';placeholder.style.display='block';
+      placeholder.innerHTML='<div class="topbar"><div><h1>'+names[v]+'</h1><div class="sub">Modul im nächsten Entwicklungsschritt</div></div></div><div class="placeholder">Dieses Modul ist bereits in der Hauptnavigation verankert. Die Detailfunktionen werden nach Abschluss von „Vortrag V1.0“ ausgearbeitet.</div>';
+    }
+  }));
+
+  const avatar=q('#avatar'), media=q('#media'), cue=q('#cue'), bg=q('#bgScene'), fullGraphic=q('#fullGraphic');
+  qa('[data-camera]').forEach(b=>b.addEventListener('click',()=>{
+    qa('[data-camera]').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    avatar.classList.remove('medium','hidden');
+    if(b.dataset.camera==='medium') avatar.classList.add('medium');
+    if(b.dataset.camera==='hidden') avatar.classList.add('hidden');
+    cue.textContent='Kamera · '+(b.dataset.camera==='full'?'Ganzkörper':b.dataset.camera==='medium'?'Bis Nabel':'Ohne Avatar');
+  }));
+
+  q('#show3d').addEventListener('click',()=>{media.classList.add('show');cue.textContent='3D-Grafik erscheint im Raum';});
+  q('#hide3d').addEventListener('click',()=>{media.className='media';cue.textContent='3D-Grafik ausgeblendet';});
+  q('#bgBtn').addEventListener('click',()=>{bg.classList.toggle('show');cue.textContent=bg.classList.contains('show')?'Hintergrund eingeblendet':'Academy-Standardraum';});
+  q('#fullGraphicBtn').addEventListener('click',()=>{
+    fullGraphic.classList.toggle('show');
+    if(fullGraphic.classList.contains('show')){avatar.classList.add('hidden'); cue.textContent='Großbildsequenz ohne Avatar';}
+    else{avatar.classList.remove('hidden'); cue.textContent='Zurück zum Academy-Raum';}
+  });
+
+  q('#avatarAction').addEventListener('change',e=>{
+    avatar.classList.remove('point');
+    if(e.target.value==='point'){avatar.classList.add('point');media.classList.add('show');cue.textContent='Avatar zeigt auf die 3D-Grafik';}
+    else if(e.target.value==='look'){media.classList.add('show');cue.textContent='Avatar blickt zur Grafik';}
+    else cue.textContent='Avatar spricht frontal';
+  });
+
+  q('#animSelect').addEventListener('change',e=>{
+    media.classList.remove('zoom','rotate','float'); media.classList.add('show');
+    if(e.target.value==='zoom') media.classList.add('zoom');
+    if(e.target.value==='rotate') media.classList.add('rotate');
+    if(e.target.value==='float') media.classList.add('float');
+    cue.textContent='Animation: '+e.target.options[e.target.selectedIndex].text;
+  });
+
+  q('#applyRegie').addEventListener('click',()=>{
+    media.classList.add('show','float'); avatar.classList.add('point');
+    cue.textContent='Regieanweisung angewendet: Avatar interagiert mit 3D-Grafik';
+  });
+
+  q('#preview').addEventListener('click',()=>{
+    fullGraphic.classList.remove('show'); avatar.classList.remove('hidden','medium','point'); media.className='media'; bg.classList.remove('show');
+    cue.textContent='Vorschau gestartet';
+    setTimeout(()=>{media.classList.add('show','float');cue.textContent='3D-Grafik erscheint';},450);
+    setTimeout(()=>{avatar.classList.add('point');cue.textContent='Avatar reagiert und zeigt auf die Grafik';},1200);
+    setTimeout(()=>{media.classList.add('zoom');cue.textContent='Grafik zoomt in den Raum';},2200);
+  });
+
+  let sceneCount=4;
+  q('#addScene').addEventListener('click',()=>{
+    sceneCount++;
+    const d=document.createElement('div');
+    d.className='scene'; d.innerHTML='<div class="n">'+String(sceneCount).padStart(2,'0')+'</div><div class="t">Neue freie Szene</div>';
+    d.addEventListener('click',selectScene); q('#sceneList').appendChild(d);
+  });
+  function selectScene(e){qa('.scene').forEach(s=>s.classList.remove('active')); e.currentTarget.classList.add('active'); cue.textContent='Szene ausgewählt';}
+  qa('.scene').forEach(s=>s.addEventListener('click',selectScene));
+
+  // V3: scene editing
+  q('#duplicateScene').addEventListener('click',()=>{
+    const active=q('.scene.active'); if(!active) return;
+    sceneCount++;
+    const d=active.cloneNode(true); d.classList.remove('active');
+    d.querySelector('.n').textContent=String(sceneCount).padStart(2,'0');
+    d.querySelector('.t').textContent=active.querySelector('.t').textContent+' · Kopie';
+    d.addEventListener('click',selectScene); active.after(d);
+  });
+  q('#deleteScene').addEventListener('click',()=>{
+    const scenes=qa('.scene'); if(scenes.length<=1) return;
+    const active=q('.scene.active'); const next=active.nextElementSibling || active.previousElementSibling;
+    active.remove(); if(next) next.classList.add('active');
+  });
+  q('#moveUp').addEventListener('click',()=>{const a=q('.scene.active'); if(a&&a.previousElementSibling) a.parentNode.insertBefore(a,a.previousElementSibling);});
+  q('#moveDown').addEventListener('click',()=>{const a=q('.scene.active'); if(a&&a.nextElementSibling) a.parentNode.insertBefore(a.nextElementSibling,a);});
+
+  // V3: chalkboard as independent media surface
+  const boardText=q('#boardText'), chalkTitle=q('#chalkTitle'), boardClip=q('#boardClip');
+  q('#toggleBoard').addEventListener('click',e=>{
+    boardClip.style.display = boardClip.style.display==='none' ? 'block' : 'none';
+    e.target.textContent = boardClip.style.display==='none' ? 'Einblenden' : 'Ausblenden';
+    cue.textContent = boardClip.style.display==='none' ? 'Schultafel ausgeblendet' : 'Schultafel mit Text/Grafik eingeblendet';
+  });
+  boardText.addEventListener('input',()=>chalkTitle.textContent=boardText.value || ' ');
+
+  // V3: timeline interaction
+  qa('.tclip').forEach(c=>c.addEventListener('click',()=>{
+    qa('.tclip').forEach(x=>x.classList.remove('selected')); c.classList.add('selected');
+    cue.textContent='Timeline-Element ausgewählt: '+c.textContent;
+  }));
+  qa('.eye').forEach(e=>e.addEventListener('click',()=>{
+    const lane=e.closest('.trow').querySelector('.tlane');
+    lane.style.opacity = lane.style.opacity==='0.25' ? '1' : '0.25';
+    e.textContent = lane.style.opacity==='0.25' ? '○' : '●';
+  }));
+  let timer=null, pos=36;
+  q('#playTimeline').addEventListener('click',()=>{
+    clearInterval(timer);
+    timer=setInterval(()=>{pos+=0.35;if(pos>99)pos=0;q('#playhead').style.left=pos+'%';},50);
+  });
+  q('#stopTimeline').addEventListener('click',()=>clearInterval(timer));
+  q('#zoomTimeline').addEventListener('click',()=>{
+    const rows=q('#timelineRows'); rows.style.minWidth = rows.style.minWidth ? '' : '1150px';
+    rows.parentElement.style.overflowX='auto';
+  });
+
+
+  // V4 local media library
+  const mediaInput=q('#mediaInput'), mediaGrid=q('#mediaGrid'), dropzone=q('#dropzone'), stage=q('#stage');
+  function addImageFile(file){
+    if(!file || !file.type.startsWith('image/')) return;
+    const url=URL.createObjectURL(file);
+    const item=document.createElement('div');
+    item.className='media-item'; item.draggable=true; item.dataset.kind='image'; item.dataset.url=url;
+    item.innerHTML='<div class="thumb" style="background-image:url('+url+');background-size:cover;background-position:center"></div><div class="name">'+file.name+'</div>';
+    mediaGrid.appendChild(item); bindMedia(item);
+  }
+  mediaInput.addEventListener('change',e=>[...e.target.files].forEach(addImageFile));
+  ['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('drag')}));
+  ['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('drag')}));
+  dropzone.addEventListener('drop',e=>[...e.dataTransfer.files].forEach(addImageFile));
+
+  function bindMedia(item){
+    item.addEventListener('click',()=>{
+      const kind=item.dataset.kind;
+      if(kind==='image'){
+        let img=q('#userStageImage');
+        if(!img){img=document.createElement('img');img.id='userStageImage';img.className='stage-media-img';stage.appendChild(img);}
+        img.src=item.dataset.url; cue.textContent='Importierte Grafik in Szene eingesetzt';
+      } else if(kind==='3d'){media.classList.add('show','float');cue.textContent='3D-Objekt in Szene eingesetzt';}
+      else if(kind==='chart'){fullGraphic.classList.add('show');avatar.classList.add('hidden');cue.textContent='Diagramm als Großbild eingesetzt';}
+      else if(kind==='board'){boardClip.style.display='block';cue.textContent='Schultafel als Präsentationsfläche eingesetzt';}
+      else if(kind==='background'){bg.classList.add('show');cue.textContent='Academy-Hintergrund eingesetzt';}
+    });
+    item.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',item.dataset.kind||'media')});
+  }
+  qa('.media-item').forEach(bindMedia);
+
+
+  // V5 object engine
+  let currentStageObject = null;
+  let currentImageURL = null;
+  let currentTarget = 'room';
+  let currentZ = 5;
+
+  const boardOverlay = q('#boardOverlay');
+  const boardStageText = q('#boardStageText');
+  const boardStageImage = q('#boardStageImage');
+  const fullscreenObject = q('#fullscreenObject');
+  const fullscreenImage = q('#fullscreenImage');
+  const posX = q('#posX'), posY = q('#posY'), objScale = q('#objScale'), objRotate = q('#objRotate'), objOpacity = q('#objOpacity');
+  const posXVal = q('#posXVal'), posYVal = q('#posYVal'), objScaleVal = q('#objScaleVal'), objRotateVal = q('#objRotateVal'), objOpacityVal = q('#objOpacityVal');
+  const entryAnim = q('#entryAnim'), loopAnim = q('#loopAnim'), objStatus = q('#objStatus');
+
+  function ensureStageObject(url){
+    if(currentStageObject) currentStageObject.remove();
+    const wrap = document.createElement('div');
+    wrap.className = 'stage-object selected';
+    wrap.id = 'v5StageObject';
+    const img = document.createElement('img');
+    img.src = url; img.alt = 'Importiertes Medium';
+    const handle = document.createElement('div'); handle.className = 'handle'; handle.title='Skalieren';
+    wrap.appendChild(img); wrap.appendChild(handle); stage.appendChild(wrap);
+    currentStageObject = wrap; currentImageURL = url; currentZ = 5;
+    bindDrag(wrap); bindResize(wrap, handle); updateObject();
+  }
+
+  function updateObject(){
+    posXVal.textContent = posX.value+'%'; posYVal.textContent = posY.value+'%';
+    objScaleVal.textContent = objScale.value+'%'; objRotateVal.textContent = objRotate.value+'°'; objOpacityVal.textContent=objOpacity.value+'%';
+    if(currentStageObject && currentTarget==='room'){
+      currentStageObject.style.left=posX.value+'%';
+      currentStageObject.style.top=posY.value+'%';
+      currentStageObject.style.opacity=Number(objOpacity.value)/100;
+      currentStageObject.style.setProperty('--scale', Number(objScale.value)/100);
+      currentStageObject.style.setProperty('--rot', objRotate.value+'deg');
+      currentStageObject.style.transform='translate(-50%,-50%) scale('+Number(objScale.value)/100+') rotate('+objRotate.value+'deg)';
+      currentStageObject.style.zIndex=currentZ;
+    }
+    if(currentTarget==='board' && boardStageImage.style.display!=='none'){
+      boardStageImage.style.left=Math.max(0,Number(posX.value)-40)+'%';
+      boardStageImage.style.top=Math.max(0,Number(posY.value)-15)+'%';
+      boardStageImage.style.width=Math.min(70,Number(objScale.value)/2.5)+'%';
+      boardStageImage.style.opacity=Number(objOpacity.value)/100;
+      boardStageImage.style.transform='rotate('+objRotate.value+'deg)';
+    }
+    if(currentTarget==='fullscreen' && fullscreenObject.classList.contains('show')){
+      fullscreenImage.style.opacity=Number(objOpacity.value)/100;
+      fullscreenImage.style.transform='scale('+Math.max(.3,Number(objScale.value)/100)+') rotate('+objRotate.value+'deg)';
+    }
+  }
+  [posX,posY,objScale,objRotate,objOpacity].forEach(el=>el.addEventListener('input',updateObject));
+
+  function setTarget(target){
+    currentTarget=target;
+    qa('[data-target]').forEach(b=>b.classList.toggle('active',b.dataset.target===target));
+    if(currentStageObject) currentStageObject.style.display = target==='room' ? 'block' : 'none';
+    boardOverlay.classList.toggle('show',target==='board');
+    fullscreenObject.classList.toggle('show',target==='fullscreen');
+    if(currentImageURL){
+      if(target==='board'){boardStageImage.src=currentImageURL;boardStageImage.style.display='block';cue.textContent='Medium auf Schultafel platziert';}
+      if(target==='fullscreen'){fullscreenImage.src=currentImageURL;cue.textContent='Medium als Großbild platziert';}
+      if(target==='room') cue.textContent='Medium frei im Academy-Raum platziert';
+    }
+    updateObject();
+  }
+  qa('[data-target]').forEach(b=>b.addEventListener('click',()=>setTarget(b.dataset.target)));
+
+  function applyAnimations(){
+    if(!currentStageObject) return;
+    currentStageObject.classList.remove('float','rotate','pulse','fade-in','zoom-in');
+    if(entryAnim.value!=='none') currentStageObject.classList.add(entryAnim.value);
+    if(loopAnim.value!=='none') currentStageObject.classList.add(loopAnim.value);
+    objStatus.textContent='Animation: '+entryAnim.options[entryAnim.selectedIndex].text+' / '+loopAnim.options[loopAnim.selectedIndex].text;
+  }
+  entryAnim.addEventListener('change',applyAnimations);
+  loopAnim.addEventListener('change',applyAnimations);
+
+  q('#bringFront').addEventListener('click',()=>{currentZ=Math.min(20,currentZ+1);updateObject();objStatus.textContent='Ebene '+currentZ;});
+  q('#sendBack').addEventListener('click',()=>{currentZ=Math.max(1,currentZ-1);updateObject();objStatus.textContent='Ebene '+currentZ;});
+  q('#layerUp').addEventListener('click',()=>{currentZ=Math.min(20,currentZ+1);updateObject();});
+  q('#layerDown').addEventListener('click',()=>{currentZ=Math.max(1,currentZ-1);updateObject();});
+
+  function bindDrag(el){
+    let dragging=false, sx=0, sy=0, sl=0, st=0;
+    el.addEventListener('pointerdown',e=>{
+      if(e.target.classList.contains('handle')) return;
+      dragging=true; sx=e.clientX; sy=e.clientY;
+      const rect=stage.getBoundingClientRect(); const er=el.getBoundingClientRect();
+      sl=((er.left + er.width/2 - rect.left)/rect.width)*100;
+      st=((er.top + er.height/2 - rect.top)/rect.height)*100;
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove',e=>{
+      if(!dragging) return;
+      const rect=stage.getBoundingClientRect();
+      posX.value=Math.max(0,Math.min(100,sl + ((e.clientX-sx)/rect.width)*100));
+      posY.value=Math.max(0,Math.min(100,st + ((e.clientY-sy)/rect.height)*100));
+      updateObject();
+    });
+    el.addEventListener('pointerup',()=>dragging=false);
+    el.addEventListener('pointercancel',()=>dragging=false);
+  }
+
+  function bindResize(el,handle){
+    let resizing=false, sx=0, start=100;
+    handle.addEventListener('pointerdown',e=>{resizing=true;sx=e.clientX;start=Number(objScale.value);handle.setPointerCapture(e.pointerId);e.stopPropagation();});
+    handle.addEventListener('pointermove',e=>{if(!resizing)return;objScale.value=Math.max(30,Math.min(220,start+(e.clientX-sx)));updateObject();});
+    handle.addEventListener('pointerup',()=>resizing=false);
+  }
+
+  // make imported image selection use V5 engine
+  mediaGrid.addEventListener('click',e=>{
+    const item=e.target.closest('.media-item[data-kind="image"]');
+    if(!item) return;
+    e.stopPropagation();
+    ensureStageObject(item.dataset.url);
+    setTarget('room');
+    objStatus.textContent='Ausgewählt: '+(item.querySelector('.name')?.textContent || 'Medium');
+    cue.textContent='Medium ausgewählt – frei positionierbar';
+  }, true);
+
+  // sync chalkboard text to stage board
+  boardText.addEventListener('input',()=>{boardStageText.textContent=boardText.value || ' ';});
+
+
+  // V6 Regie-Engine
+  const cueList = q('#cueList');
+  const regieStatus = q('#regieStatus');
+  let regieTimer = null;
+  let regieStart = 0;
+  let fired = new Set();
+
+  function fmtTime(t){
+    const sec = Number(t)||0;
+    const m = Math.floor(sec/60);
+    const s = (sec%60).toFixed(1).padStart(4,'0');
+    return String(m).padStart(2,'0')+':'+s;
+  }
+
+  function currentCues(){
+    return qa('#cueList .cue-item')
+      .map(el=>({el,time:Number(el.dataset.time)||0,action:el.dataset.action}))
+      .sort((a,b)=>a.time-b.time);
+  }
+
+  function cueLabel(action){
+    const map={
+      media_show:'Medium einblenden',
+      media_hide:'Medium ausblenden',
+      media_zoom:'Medium zoomen',
+      media_float:'Medium schweben lassen',
+      avatar_point:'Avatar zur Grafik drehen & zeigen',
+      avatar_front:'Avatar zurück zur Kamera',
+      avatar_hide:'Avatar ausblenden',
+      avatar_show:'Avatar einblenden',
+      board_show:'Schultafel einblenden',
+      board_hide:'Schultafel ausblenden',
+      background_show:'Hintergrund einblenden',
+      background_hide:'Hintergrund ausblenden',
+      fullscreen_show:'Großbild aktivieren',
+      fullscreen_hide:'Großbild verlassen',
+      camera_full:'Kamera Ganzkörper',
+      camera_medium:'Kamera bis Nabel'
+    };
+    return map[action]||action;
+  }
+
+  function executeCue(action){
+    if(action==='media_show'){
+      if(currentStageObject){currentStageObject.style.display='block';currentStageObject.classList.remove('hidden');}
+      media.classList.add('show');
+      cue.textContent='Regie: Medium eingeblendet';
+    }
+    if(action==='media_hide'){
+      if(currentStageObject) currentStageObject.classList.add('hidden');
+      media.classList.remove('show','zoom','float','rotate');
+      cue.textContent='Regie: Medium ausgeblendet';
+    }
+    if(action==='media_zoom'){
+      if(currentStageObject){currentStageObject.classList.remove('hidden');currentStageObject.style.setProperty('--scale','1.35');currentStageObject.style.transform='translate(-50%,-50%) scale(1.35) rotate('+objRotate.value+'deg)';}
+      media.classList.add('show','zoom');
+      cue.textContent='Regie: Medium zoomt';
+    }
+    if(action==='media_float'){
+      if(currentStageObject) currentStageObject.classList.add('float');
+      media.classList.add('show','float');
+      cue.textContent='Regie: Medium schwebt';
+    }
+    if(action==='avatar_point'){avatar.classList.remove('hidden');avatar.classList.add('point');cue.textContent='Regie: Avatar zeigt auf Medium';}
+    if(action==='avatar_front'){avatar.classList.remove('point','hidden');cue.textContent='Regie: Avatar blickt wieder in Kamera';}
+    if(action==='avatar_hide'){avatar.classList.add('hidden');cue.textContent='Regie: Avatar ausgeblendet';}
+    if(action==='avatar_show'){avatar.classList.remove('hidden');cue.textContent='Regie: Avatar eingeblendet';}
+    if(action==='board_show'){boardOverlay.classList.add('show');boardClip.style.display='block';cue.textContent='Regie: Schultafel eingeblendet';}
+    if(action==='board_hide'){boardOverlay.classList.remove('show');boardClip.style.display='none';cue.textContent='Regie: Schultafel ausgeblendet';}
+    if(action==='background_show'){bg.classList.add('show');cue.textContent='Regie: Hintergrund eingeblendet';}
+    if(action==='background_hide'){bg.classList.remove('show');cue.textContent='Regie: Academy-Raum wieder sichtbar';}
+    if(action==='fullscreen_show'){
+      fullscreenObject.classList.add('show');
+      if(currentImageURL) fullscreenImage.src=currentImageURL;
+      avatar.classList.add('hidden');
+      cue.textContent='Regie: Großbild aktiviert';
+    }
+    if(action==='fullscreen_hide'){fullscreenObject.classList.remove('show');avatar.classList.remove('hidden');cue.textContent='Regie: Großbild beendet';}
+    if(action==='camera_full'){
+      avatar.classList.remove('medium','hidden');
+      qa('[data-camera]').forEach(b=>b.classList.toggle('active',b.dataset.camera==='full'));
+      cue.textContent='Regie: Kamera Ganzkörper';
+    }
+    if(action==='camera_medium'){
+      avatar.classList.remove('hidden');avatar.classList.add('medium');
+      qa('[data-camera]').forEach(b=>b.classList.toggle('active',b.dataset.camera==='medium'));
+      cue.textContent='Regie: Kamera bis Nabel';
+    }
+  }
+
+  function bindCueRemove(btn){
+    btn.addEventListener('click',()=>{btn.closest('.cue-item').remove();regieStatus.textContent='Bereit · '+currentCues().length+' Regie-Cues';});
+  }
+  qa('.removeCue').forEach(bindCueRemove);
+
+  q('#saveCue').addEventListener('click',()=>{
+    const time=Math.max(0,Number(q('#cueTime').value)||0);
+    const action=q('#cueAction').value;
+    const desc=q('#cueDescription').value.trim() || cueLabel(action);
+    const item=document.createElement('div');
+    item.className='cue-item';item.dataset.time=String(time);item.dataset.action=action;
+    item.innerHTML='<div class="cue-time">'+fmtTime(time)+'</div><div class="cue-text"></div><button type="button" class="removeCue">×</button>';
+    item.querySelector('.cue-text').textContent=desc;
+    bindCueRemove(item.querySelector('.removeCue'));
+    cueList.appendChild(item);
+
+    const sorted=currentCues().map(x=>x.el);
+    sorted.forEach(el=>cueList.appendChild(el));
+    regieStatus.textContent='Bereit · '+sorted.length+' Regie-Cues';
+  });
+
+  q('#addCue').addEventListener('click',()=>{
+    q('#cueTime').focus();
+  });
+
+  q('#playRegie').addEventListener('click',()=>{
+    clearInterval(regieTimer);
+    fired=new Set();
+    regieStart=performance.now();
+    regieStatus.textContent='Regie läuft…';
+    const cues=currentCues();
+    const end=(cues.length?cues[cues.length-1].time:0)+1.2;
+    regieTimer=setInterval(()=>{
+      const t=(performance.now()-regieStart)/1000;
+      cues.forEach((c,i)=>{
+        if(t>=c.time && !fired.has(i)){fired.add(i);executeCue(c.action);c.el.classList.add('active');setTimeout(()=>c.el.classList.remove('active'),450);}
+      });
+      const pct=Math.min(99,(t/Math.max(end,1))*100);
+      q('#playhead').style.left=pct+'%';
+      regieStatus.textContent='Regie läuft · '+fmtTime(t);
+      if(t>=end){clearInterval(regieTimer);regieStatus.textContent='Regie-Vorschau beendet';}
+    },40);
+  });
+
+  q('#stopRegie').addEventListener('click',()=>{
+    clearInterval(regieTimer);
+    regieStatus.textContent='Regie gestoppt';
+  });
+
+
+  // V7 text/audio cue sync
+  const transcriptText=q('#transcriptText'), textFileInput=q('#textFileInput'), audioFileInput=q('#audioFileInput');
+  const audioPlayer=q('#audioPlayer'), wordTimeline=q('#wordTimeline'), anchorList=q('#anchorList'), syncStatus=q('#syncStatus');
+  const triggerMode=q('#triggerMode'), anchorTime=q('#anchorTime'), anchorPhrase=q('#anchorPhrase'), anchorAction=q('#anchorAction'), anchorDelay=q('#anchorDelay');
+  let textAnchors=[];
+  let syncTimer=null;
+  let lastTranscriptIndex=-1;
+
+  const demoText='Kommunikation wirkt bereits, bevor ein einziges Wort gesprochen wird. Besonders deutlich zeigt sich das bei Mimik und Gestik. Die sieben Basisemotionen helfen uns, Gesichtsausdrücke systematisch zu verstehen. Entscheidend ist jedoch immer der Kontext. Sehen wir uns dazu nun eine Grafik an.';
+  q('#loadDemoText').addEventListener('click',()=>{transcriptText.value=demoText;renderTranscript();});
+  q('#clearText').addEventListener('click',()=>{transcriptText.value='';renderTranscript();});
+  transcriptText.addEventListener('input',renderTranscript);
+
+  textFileInput.addEventListener('change',e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{transcriptText.value=String(reader.result||'');renderTranscript();syncStatus.textContent='Text importiert: '+file.name;};
+    reader.readAsText(file,'utf-8');
+  });
+
+  audioFileInput.addEventListener('change',e=>{
+    const file=e.target.files[0]; if(!file) return;
+    audioPlayer.src=URL.createObjectURL(file);
+    syncStatus.textContent='Ton importiert: '+file.name;
+  });
+
+  function renderTranscript(activePhrase=''){
+    const txt=transcriptText.value.trim();
+    if(!txt){wordTimeline.textContent='Noch kein Text geladen.';return;}
+    if(!activePhrase){wordTimeline.textContent=txt;return;}
+    const low=txt.toLowerCase(), target=activePhrase.toLowerCase();
+    const idx=low.indexOf(target);
+    if(idx<0){wordTimeline.textContent=txt;return;}
+    wordTimeline.innerHTML='';
+    wordTimeline.append(document.createTextNode(txt.slice(0,idx)));
+    const m=document.createElement('mark');m.textContent=txt.slice(idx,idx+activePhrase.length);wordTimeline.append(m);
+    wordTimeline.append(document.createTextNode(txt.slice(idx+activePhrase.length)));
+  }
+
+  function addAnchor(){
+    const mode=triggerMode.value;
+    const phrase=anchorPhrase.value.trim();
+    const time=Math.max(0,Number(anchorTime.value)||0);
+    const delay=Math.max(0,Number(anchorDelay.value)||0);
+    if(mode==='phrase' && !phrase){syncStatus.textContent='Bitte eine Schlüsselphrase eingeben.';return;}
+    textAnchors.push({id:Date.now()+Math.random(),mode,phrase,time,delay,action:anchorAction.value,fired:false});
+    textAnchors.sort((a,b)=>(a.time+a.delay)-(b.time+b.delay));
+    renderAnchors();
+  }
+  q('#saveAnchor').addEventListener('click',addAnchor);
+  q('#createAnchor').addEventListener('click',()=>anchorPhrase.focus());
+
+  function renderAnchors(){
+    anchorList.innerHTML='';
+    textAnchors.forEach(a=>{
+      const el=document.createElement('div');el.className='anchor-item';el.dataset.id=a.id;
+      const when=a.mode==='phrase'?'Phrase':'Zeit';
+      el.innerHTML='<div class="anchor-top"><div class="anchor-time">'+when+'</div><div class="anchor-phrase"></div><div class="anchor-actions"><button type="button" class="testAnchor">▶</button><button type="button" class="removeAnchor">×</button></div></div>';
+      el.querySelector('.anchor-phrase').textContent=a.mode==='phrase' ? '"'+a.phrase+'" → '+cueLabel(a.action) : fmtTime(a.time)+' → '+cueLabel(a.action);
+      el.querySelector('.testAnchor').addEventListener('click',()=>{executeCue(a.action);renderTranscript(a.phrase);el.classList.add('active');setTimeout(()=>el.classList.remove('active'),650);});
+      el.querySelector('.removeAnchor').addEventListener('click',()=>{textAnchors=textAnchors.filter(x=>x.id!==a.id);renderAnchors();});
+      anchorList.appendChild(el);
+    });
+    syncStatus.textContent='Bereit · '+textAnchors.length+' Textanker';
+  }
+
+  function resetAnchorFired(){textAnchors.forEach(a=>a.fired=false);}
+
+  audioPlayer.addEventListener('play',()=>{
+    resetAnchorFired();
+    clearInterval(syncTimer);
+    syncTimer=setInterval(()=>{
+      const t=audioPlayer.currentTime||0;
+      anchorTime.value=t.toFixed(1);
+      const txt=transcriptText.value;
+      // Approximate phrase timing across audio duration if transcript exists.
+      const duration=audioPlayer.duration;
+      textAnchors.forEach(a=>{
+        let fireAt=a.time+a.delay;
+        if(a.mode==='phrase' && txt && isFinite(duration) && duration>0){
+          const idx=txt.toLowerCase().indexOf(a.phrase.toLowerCase());
+          if(idx>=0) fireAt=(idx/Math.max(1,txt.length))*duration+a.delay;
+        }
+        if(t>=fireAt && !a.fired){
+          a.fired=true; executeCue(a.action); renderTranscript(a.phrase);
+          const el=qa('.anchor-item').find(x=>Number(x.dataset.id)===Number(a.id));
+          if(el){el.classList.add('active');setTimeout(()=>el.classList.remove('active'),750);}
+        }
+      });
+      const pct=isFinite(duration)&&duration>0 ? Math.min(99,(t/duration)*100) : 0;
+      q('#playhead').style.left=pct+'%';
+      syncStatus.textContent='Wiedergabe · '+fmtTime(t);
+    },80);
+  });
+  audioPlayer.addEventListener('pause',()=>clearInterval(syncTimer));
+  audioPlayer.addEventListener('ended',()=>{clearInterval(syncTimer);syncStatus.textContent='Wiedergabe beendet';});
+
+  // allow Regie Cues to be created directly from selected transcript text
+  transcriptText.addEventListener('select',()=>{
+    const start=transcriptText.selectionStart, end=transcriptText.selectionEnd;
+    const selected=transcriptText.value.slice(start,end).trim();
+    if(selected){anchorPhrase.value=selected;triggerMode.value='phrase';syncStatus.textContent='Textstelle übernommen: "'+selected.slice(0,50)+'"';}
+  });
+
+  renderTranscript();
+
+
+  // V8 project persistence
+  const projectName=q('#projectName'), projectTopic=q('#projectTopic'), projectAudience=q('#projectAudience');
+  const stateList=q('#stateList'), projectStatus=q('#projectStatus'), loadProjectFile=q('#loadProjectFile');
+  let savedStates=[];
+
+  function captureState(){
+    return {
+      name: q('.scene.active .t') ? q('.scene.active .t').textContent : 'Szene',
+      camera: avatar.classList.contains('medium') ? 'medium' : avatar.classList.contains('hidden') ? 'hidden' : 'full',
+      avatarPoint: avatar.classList.contains('point'),
+      board: boardOverlay.classList.contains('show'),
+      background: bg.classList.contains('show'),
+      fullscreen: fullscreenObject.classList.contains('show'),
+      target: currentTarget,
+      object: currentStageObject ? {
+        url: currentImageURL,
+        x:Number(posX.value), y:Number(posY.value), scale:Number(objScale.value),
+        rotate:Number(objRotate.value), opacity:Number(objOpacity.value),
+        z:currentZ, entry:entryAnim.value, loop:loopAnim.value
+      } : null,
+      boardText: boardText.value,
+      transcript: transcriptText.value,
+      anchors: textAnchors.map(a=>({...a,fired:false})),
+      regieCues: currentCues().map(c=>({
+        time:c.time, action:c.action,
+        text:c.el.querySelector('.cue-text')?.textContent || cueLabel(c.action)
+      }))
+    };
+  }
+
+  function restoreState(s){
+    if(!s) return;
+    avatar.classList.remove('medium','hidden','point');
+    if(s.camera==='medium') avatar.classList.add('medium');
+    if(s.camera==='hidden') avatar.classList.add('hidden');
+    if(s.avatarPoint) avatar.classList.add('point');
+    boardOverlay.classList.toggle('show',!!s.board);
+    bg.classList.toggle('show',!!s.background);
+    fullscreenObject.classList.toggle('show',!!s.fullscreen);
+    boardText.value=s.boardText||'';
+    boardStageText.textContent=boardText.value||' ';
+    transcriptText.value=s.transcript||'';
+    renderTranscript();
+
+    if(s.object && s.object.url){
+      ensureStageObject(s.object.url);
+      posX.value=s.object.x ?? 58; posY.value=s.object.y ?? 27; objScale.value=s.object.scale ?? 100;
+      objRotate.value=s.object.rotate ?? 0; objOpacity.value=s.object.opacity ?? 100; currentZ=s.object.z ?? 5;
+      entryAnim.value=s.object.entry||'none'; loopAnim.value=s.object.loop||'none';
+      setTarget(s.target||'room'); updateObject(); applyAnimations();
+    }
+    textAnchors=(s.anchors||[]).map(a=>({...a,fired:false}));
+    renderAnchors();
+
+    cueList.innerHTML='';
+    (s.regieCues||[]).forEach(c=>{
+      const item=document.createElement('div');
+      item.className='cue-item'; item.dataset.time=String(c.time); item.dataset.action=c.action;
+      item.innerHTML='<div class="cue-time">'+fmtTime(c.time)+'</div><div class="cue-text"></div><button type="button" class="removeCue">×</button>';
+      item.querySelector('.cue-text').textContent=c.text||cueLabel(c.action);
+      bindCueRemove(item.querySelector('.removeCue'));
+      cueList.appendChild(item);
+    });
+    regieStatus.textContent='Bereit · '+currentCues().length+' Regie-Cues';
+    cue.textContent='Szenenzustand geladen';
+  }
+
+  function renderStateCards(){
+    stateList.innerHTML='';
+    savedStates.forEach((s,i)=>{
+      const card=document.createElement('button');
+      card.type='button'; card.className='state-card'; card.style.textAlign='left'; card.style.color='inherit'; card.style.cursor='pointer';
+      card.innerHTML='<strong></strong><span></span>';
+      card.querySelector('strong').textContent=(i+1)+'. '+(s.name||'Szene');
+      const bits=[s.camera==='medium'?'Nabel':s.camera==='hidden'?'ohne Avatar':'Ganzkörper'];
+      if(s.board) bits.push('Tafel'); if(s.background) bits.push('Hintergrund'); if(s.fullscreen) bits.push('Großbild'); if(s.object) bits.push('Medium');
+      card.querySelector('span').textContent=bits.join(' · ');
+      card.addEventListener('click',()=>{
+        qa('.state-card').forEach(x=>x.classList.remove('active')); card.classList.add('active');
+        restoreState(s);
+      });
+      stateList.appendChild(card);
+    });
+  }
+
+  q('#saveSceneState').addEventListener('click',()=>{
+    const s=captureState(); savedStates.push(s); renderStateCards();
+    projectStatus.textContent='Szenenzustand gespeichert · '+savedStates.length+' Szene(n)';
+  });
+
+  function exportProject(){
+    const data={
+      version:'V8',
+      app:'Webbased Academy Creator',
+      project:{
+        name:projectName.value.trim(),
+        topic:projectTopic.value.trim(),
+        audience:projectAudience.value.trim()
+      },
+      states:savedStates.length ? savedStates : [captureState()]
+    };
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const safe=(data.project.name||'Webbased_Academy_Projekt').replace(/[^\w\-]+/g,'_');
+    a.href=url; a.download=safe+'.wac.json'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    projectStatus.textContent='Projektdatei lokal exportiert.';
+  }
+  q('#downloadProject').addEventListener('click',exportProject);
+
+  loadProjectFile.addEventListener('change',e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const data=JSON.parse(String(reader.result||'{}'));
+        projectName.value=data.project?.name||'';
+        projectTopic.value=data.project?.topic||'';
+        projectAudience.value=data.project?.audience||'';
+        savedStates=Array.isArray(data.states)?data.states:[];
+        renderStateCards();
+        if(savedStates[0]) restoreState(savedStates[0]);
+        projectStatus.textContent='Projekt geladen: '+file.name;
+      }catch(err){
+        projectStatus.textContent='Projekt konnte nicht geladen werden.';
+      }
+    };
+    reader.readAsText(file,'utf-8');
+  });
+
+  q('#newProject').addEventListener('click',()=>{
+    if(!confirm('Neues Projekt starten? Nicht exportierte Szenenzustände gehen verloren.')) return;
+    savedStates=[]; renderStateCards();
+    projectName.value='Neues Projekt'; projectTopic.value=''; projectAudience.value='';
+    projectStatus.textContent='Neues lokales Projekt gestartet.';
+  });
+
+
+  // V9 storyboard
+  const storyTrack=q('#storyTrack'), storyName=q('#storyName'), storyDuration=q('#storyDuration'),
+        storyTransition=q('#storyTransition'), storyStatus=q('#storyStatus'), storyProgress=q('#storyProgress');
+  let storyboard=[];
+  let selectedStory=-1;
+  let storyTimer=null;
+  let storyAbort=false;
+
+  function storyThumbClass(state){
+    if(state.fullscreen) return 'thumb fullscreen';
+    if(state.board) return 'thumb board';
+    return 'thumb';
+  }
+
+  function renderStoryboard(){
+    storyTrack.innerHTML='';
+    storyboard.forEach((item,i)=>{
+      const card=document.createElement('div');
+      card.className='story-card'+(i===selectedStory?' active':'');
+      card.dataset.index=i;
+      card.innerHTML='<button type="button" class="remove-story">×</button><div class="'+storyThumbClass(item.state)+'"></div><div class="name"></div><div class="duration"></div><div class="meta"></div>';
+      card.querySelector('.name').textContent=item.name;
+      card.querySelector('.duration').textContent=item.duration.toFixed(1)+' s';
+      const bits=[item.state.camera==='medium'?'Nabel':item.state.camera==='hidden'?'ohne Avatar':'Ganzkörper'];
+      if(item.state.board) bits.push('Tafel');
+      if(item.state.object) bits.push('Medium');
+      if(item.state.fullscreen) bits.push('Großbild');
+      card.querySelector('.meta').textContent=bits.join(' · ')+' · '+item.transition;
+      card.addEventListener('click',e=>{
+        if(e.target.classList.contains('remove-story')) return;
+        selectedStory=i;
+        storyName.value=item.name;
+        storyDuration.value=item.duration;
+        storyTransition.value=item.transition;
+        restoreState(item.state);
+        renderStoryboard();
+        storyStatus.textContent='Storyboard-Szene '+(i+1)+' ausgewählt';
+      });
+      card.querySelector('.remove-story').addEventListener('click',e=>{
+        e.stopPropagation();
+        storyboard.splice(i,1);
+        if(selectedStory>=storyboard.length) selectedStory=storyboard.length-1;
+        renderStoryboard();
+        storyStatus.textContent=storyboard.length?storyboard.length+' Szene(n) im Storyboard':'Noch keine Szene im Storyboard.';
+      });
+      storyTrack.appendChild(card);
+    });
+    storyStatus.textContent=storyboard.length?storyboard.length+' Szene(n) · Gesamtdauer '+storyboard.reduce((a,b)=>a+b.duration,0).toFixed(1)+' s':'Noch keine Szene im Storyboard.';
+  }
+
+  q('#addCurrentToStory').addEventListener('click',()=>{
+    const state=captureState();
+    const baseName=q('.scene.active .t')?q('.scene.active .t').textContent:'Szene '+(storyboard.length+1);
+    storyboard.push({
+      name:storyName.value.trim()||baseName,
+      duration:Math.max(.5,Number(storyDuration.value)||8),
+      transition:storyTransition.value,
+      state
+    });
+    selectedStory=storyboard.length-1;
+    renderStoryboard();
+  });
+
+  q('#updateStoryScene').addEventListener('click',()=>{
+    if(selectedStory<0 || !storyboard[selectedStory]){storyStatus.textContent='Bitte zuerst eine Storyboard-Szene auswählen.';return;}
+    storyboard[selectedStory].name=storyName.value.trim()||storyboard[selectedStory].name;
+    storyboard[selectedStory].duration=Math.max(.5,Number(storyDuration.value)||8);
+    storyboard[selectedStory].transition=storyTransition.value;
+    storyboard[selectedStory].state=captureState();
+    renderStoryboard();
+    storyStatus.textContent='Storyboard-Szene aktualisiert.';
+  });
+
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+  async function applyTransition(type){
+    if(type==='cut') return;
+    stage.style.transition='opacity .35s ease, transform .35s ease';
+    if(type==='fade'){
+      stage.style.opacity='0';
+      await sleep(330);
+      stage.style.opacity='1';
+    } else if(type==='zoom'){
+      stage.style.transform='scale(.96)';
+      stage.style.opacity='.45';
+      await sleep(330);
+      stage.style.transform='scale(1)';
+      stage.style.opacity='1';
+    }
+  }
+
+  async function playStoryboard(){
+    if(!storyboard.length){storyStatus.textContent='Storyboard ist leer.';return;}
+    storyAbort=false;
+    clearInterval(storyTimer);
+    const total=storyboard.reduce((a,b)=>a+b.duration,0);
+    let elapsed=0;
+    storyProgress.style.width='0%';
+
+    for(let i=0;i<storyboard.length;i++){
+      if(storyAbort) break;
+      selectedStory=i; renderStoryboard();
+      const item=storyboard[i];
+      await applyTransition(item.transition);
+      restoreState(item.state);
+      cue.textContent='Storyboard: '+item.name;
+      storyStatus.textContent='Wiedergabe · Szene '+(i+1)+'/'+storyboard.length+' · '+item.name;
+
+      const start=performance.now();
+      await new Promise(resolve=>{
+        storyTimer=setInterval(()=>{
+          const local=(performance.now()-start)/1000;
+          const pct=Math.min(100,((elapsed+Math.min(local,item.duration))/Math.max(total,.1))*100);
+          storyProgress.style.width=pct+'%';
+          if(storyAbort || local>=item.duration){
+            clearInterval(storyTimer); resolve();
+          }
+        },80);
+      });
+      elapsed+=item.duration;
+    }
+    clearInterval(storyTimer);
+    if(storyAbort){storyStatus.textContent='Vortragswiedergabe gestoppt.';}
+    else{storyProgress.style.width='100%';storyStatus.textContent='Vortragswiedergabe beendet.';}
+  }
+
+  q('#playStory').addEventListener('click',playStoryboard);
+  q('#stopStory').addEventListener('click',()=>{
+    storyAbort=true; clearInterval(storyTimer); storyStatus.textContent='Stop angefordert…';
+  });
+
+  q('#exportStoryboard').addEventListener('click',()=>{
+    const data={
+      app:'Webbased Academy Creator',
+      version:'V9',
+      project:{name:projectName.value,topic:projectTopic.value,audience:projectAudience.value},
+      storyboard
+    };
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=(projectName.value.trim()||'Webbased_Academy').replace(/[^\w\-]+/g,'_')+'_Storyboard.wac.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    storyStatus.textContent='Storyboard lokal exportiert.';
+  });
+
+  // include storyboard in project export/load
+  const originalExportProject=exportProject;
+  exportProject=function(){
+    const data={
+      version:'V9',
+      app:'Webbased Academy Creator',
+      project:{name:projectName.value.trim(),topic:projectTopic.value.trim(),audience:projectAudience.value.trim()},
+      states:savedStates.length?savedStates:[captureState()],
+      storyboard
+    };
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const safe=(data.project.name||'Webbased_Academy_Projekt').replace(/[^\w\-]+/g,'_');
+    a.href=url;a.download=safe+'.wac.json';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    projectStatus.textContent='Projekt inklusive Storyboard lokal exportiert.';
+  };
+  q('#downloadProject').replaceWith(q('#downloadProject').cloneNode(true));
+  q('#downloadProject').addEventListener('click',exportProject);
+
+  loadProjectFile.addEventListener('change',e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const data=JSON.parse(String(reader.result||'{}'));
+        projectName.value=data.project?.name||'';
+        projectTopic.value=data.project?.topic||'';
+        projectAudience.value=data.project?.audience||'';
+        savedStates=Array.isArray(data.states)?data.states:[];
+        storyboard=Array.isArray(data.storyboard)?data.storyboard:[];
+        selectedStory=storyboard.length?0:-1;
+        renderStateCards();renderStoryboard();
+        if(savedStates[0]) restoreState(savedStates[0]);
+        else if(storyboard[0]) restoreState(storyboard[0].state);
+        projectStatus.textContent='Projekt geladen: '+file.name;
+      }catch(err){
+        projectStatus.textContent='Projekt konnte nicht geladen werden.';
+      }
+    };
+    reader.readAsText(file,'utf-8');
+  });
+
+
+  // V10 Master-Regie: Storyboard + interne Cues
+  const masterStrip=q('#masterStrip'), masterPlayhead=q('#masterPlayhead'),
+        masterClock=q('#masterClock'), masterStatus=q('#masterStatus');
+  let masterAbort=false, masterPaused=false, masterTimer=null, masterElapsed=0;
+
+  function sceneCues(item){
+    return (item?.state?.regieCues||[]).slice().sort((a,b)=>Number(a.time)-Number(b.time));
+  }
+
+  function renderMasterStrip(activeIndex=-1){
+    [...masterStrip.querySelectorAll('.master-scene,.master-cue')].forEach(x=>x.remove());
+    const total=storyboard.reduce((a,b)=>a+Number(b.duration||0),0);
+    if(!total) return;
+    let offset=0;
+    storyboard.forEach((item,i)=>{
+      const left=(offset/total)*100, width=(Number(item.duration||0)/total)*100;
+      const seg=document.createElement('div');
+      seg.className='master-scene'+(i===activeIndex?' active':'');
+      seg.style.left=left+'%'; seg.style.width=Math.max(width,.5)+'%';
+      seg.textContent=(i+1)+' · '+item.name;
+      masterStrip.appendChild(seg);
+
+      sceneCues(item).forEach(c=>{
+        const absolute=offset+Math.min(Number(c.time||0),Number(item.duration||0));
+        const line=document.createElement('div');
+        line.className='master-cue'; line.style.left=(absolute/total*100)+'%';
+        line.title=cueLabel(c.action)+' @ '+fmtTime(absolute);
+        masterStrip.appendChild(line);
+      });
+      offset+=Number(item.duration||0);
+    });
+    masterStrip.appendChild(masterPlayhead);
+  }
+
+  const oldRenderStoryboard=renderStoryboard;
+  renderStoryboard=function(){
+    oldRenderStoryboard();
+    renderMasterStrip(selectedStory);
+  };
+
+  function waitMaster(ms){
+    return new Promise(resolve=>{
+      const started=performance.now();
+      function tick(){
+        if(masterAbort){resolve(false);return;}
+        if(masterPaused){requestAnimationFrame(tick);return;}
+        if(performance.now()-started>=ms){resolve(true);return;}
+        requestAnimationFrame(tick);
+      }
+      tick();
+    });
+  }
+
+  async function runSceneWithCues(item,index,total,globalStart){
+    selectedStory=index;
+    renderStoryboard();
+    renderMasterStrip(index);
+    await applyTransition(item.transition);
+    if(masterAbort) return false;
+    restoreState(item.state);
+
+    const cues=sceneCues(item);
+    let fired=new Set();
+    const sceneStart=performance.now();
+    const duration=Math.max(.1,Number(item.duration||1));
+
+    return await new Promise(resolve=>{
+      masterTimer=setInterval(()=>{
+        if(masterAbort){clearInterval(masterTimer);resolve(false);return;}
+        if(masterPaused) return;
+
+        const local=(performance.now()-sceneStart)/1000;
+        cues.forEach((c,i)=>{
+          if(local>=Number(c.time||0) && !fired.has(i)){
+            fired.add(i);
+            executeCue(c.action);
+            masterStatus.textContent='Szene '+(index+1)+' · '+item.name+' · '+cueLabel(c.action);
+          }
+        });
+
+        const global=globalStart+Math.min(local,duration);
+        masterElapsed=global;
+        masterClock.textContent=fmtTime(global);
+        masterPlayhead.style.left=Math.min(100,(global/Math.max(total,.1))*100)+'%';
+
+        if(local>=duration){
+          clearInterval(masterTimer);
+          resolve(true);
+        }
+      },40);
+    });
+  }
+
+  async function playMaster(){
+    if(!storyboard.length){masterStatus.textContent='Das Storyboard ist noch leer.';return;}
+    masterAbort=false; masterPaused=false; masterElapsed=0;
+    q('#pauseMaster').textContent='Ⅱ Pause';
+    const total=storyboard.reduce((a,b)=>a+Number(b.duration||0),0);
+    let globalStart=0;
+    masterPlayhead.style.left='0%';
+    masterClock.textContent='00:00.0';
+
+    for(let i=0;i<storyboard.length;i++){
+      if(masterAbort) break;
+      masterStatus.textContent='Szene '+(i+1)+'/'+storyboard.length+' startet · '+storyboard[i].name;
+      const ok=await runSceneWithCues(storyboard[i],i,total,globalStart);
+      if(!ok) break;
+      globalStart+=Number(storyboard[i].duration||0);
+    }
+
+    clearInterval(masterTimer);
+    if(masterAbort){
+      masterStatus.textContent='Gesamtvortrag gestoppt.';
+    }else{
+      masterElapsed=total; masterClock.textContent=fmtTime(total); masterPlayhead.style.left='100%';
+      masterStatus.textContent='Gesamtvortrag beendet · Storyboard und Regie-Cues vollständig abgespielt.';
+    }
+  }
+
+  q('#playMaster').addEventListener('click',playMaster);
+  q('#pauseMaster').addEventListener('click',e=>{
+    masterPaused=!masterPaused;
+    e.target.textContent=masterPaused?'▶ Weiter':'Ⅱ Pause';
+    masterStatus.textContent=masterPaused?'Gesamtvortrag pausiert.':'Gesamtvortrag läuft weiter.';
+  });
+  q('#stopMaster').addEventListener('click',()=>{
+    masterAbort=true; masterPaused=false; clearInterval(masterTimer);
+    masterPlayhead.style.left='0%'; masterClock.textContent='00:00.0';
+    masterStatus.textContent='Gesamtvortrag gestoppt.';
+  });
+
+  renderMasterStrip();
+
+
+  // V11 simple mode and local natural-language director prototype
+  const simpleModeBtn=q('#simpleMode'), advancedModeBtn=q('#advancedMode');
+  const aiInstruction=q('#aiInstruction'), aiResult=q('#aiResult');
+
+  function setUIMode(simple){
+    document.body.classList.toggle('simple-mode',simple);
+    simpleModeBtn.classList.toggle('active',simple);
+    advancedModeBtn.classList.toggle('active',!simple);
+    localStorage.setItem('wac-ui-mode',simple?'simple':'advanced');
+  }
+  simpleModeBtn.addEventListener('click',()=>setUIMode(true));
+  advancedModeBtn.addEventListener('click',()=>setUIMode(false));
+
+  qa('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{
+    aiInstruction.value=b.dataset.prompt;
+    aiInstruction.focus();
+  }));
+
+  function addTechnicalCue(time,action,text){
+    const item=document.createElement('div');
+    item.className='cue-item';item.dataset.time=String(time);item.dataset.action=action;
+    item.innerHTML='<div class="cue-time">'+fmtTime(time)+'</div><div class="cue-text"></div><button type="button" class="removeCue">×</button>';
+    item.querySelector('.cue-text').textContent=text;
+    bindCueRemove(item.querySelector('.removeCue'));
+    cueList.appendChild(item);
+  }
+
+  q('#interpretDirection').addEventListener('click',()=>{
+    const text=aiInstruction.value.trim();
+    if(!text){aiResult.classList.add('show');aiResult.textContent='Bitte zuerst eine Regieanweisung eingeben.';return;}
+    const low=text.toLowerCase();
+    const actions=[];
+    let t=Number(anchorTime.value)||0;
+
+    function push(action,label,offset=0){
+      actions.push({action,label,time:t+offset});
+      addTechnicalCue(t+offset,action,label);
+    }
+
+    if(low.includes('tafel')) push('board_show','Schultafel einblenden');
+    if(low.includes('grafik') && (low.includes('einblend') || low.includes('erschein'))) push('media_show','Grafik einblenden',0.2);
+    if((low.includes('dreh') || low.includes('blick')) && low.includes('grafik')) push('avatar_point','Avatar zur Grafik drehen',0.8);
+    if(low.includes('zeig') && low.includes('grafik')) push('avatar_point','Avatar zeigt auf Grafik',1.2);
+    if(low.includes('groß') || low.includes('grossbild')) push('fullscreen_show','Grafik als Großbild darstellen',2.0);
+    if(low.includes('avatar ausblend')) push('avatar_hide','Avatar ausblenden',0);
+    if(low.includes('ganzkörper')) push('camera_full','Kamera Ganzkörper',0);
+    if(low.includes('nabel')) push('camera_medium','Kamera bis Nabel',0);
+    if(low.includes('zurück') && low.includes('avatar')) {
+      push('fullscreen_hide','Großbild verlassen',0);
+      push('avatar_show','Avatar einblenden',0.2);
+      push('avatar_front','Avatar zur Kamera',0.4);
+    }
+    if(low.includes('ausblend') && low.includes('grafik')) push('media_hide','Grafik ausblenden',2.8);
+
+    if(!actions.length) push('media_show','Regieanweisung als manuellen Cue vorbereiten');
+
+    aiResult.innerHTML='<strong>Regie vorbereitet:</strong><br>'+actions.map(a=>'• '+fmtTime(a.time)+' · '+a.label).join('<br>')+
+      '<br><span style="color:#7893a5">Die Details können bei Bedarf unter „Erweitert“ geändert werden.</span>';
+    aiResult.classList.add('show');
+    regieStatus.textContent='Bereit · '+currentCues().length+' Regie-Cues';
+    cue.textContent='KI-Regieassistent: '+actions.length+' Aktion(en) vorbereitet';
+  });
+
+  // Start in simple mode unless user explicitly chose advanced before.
+  setUIMode(localStorage.getItem('wac-ui-mode')!=='advanced');
+
+
+  // V12 production hub - provider-neutral interface preparation
+  let avatarPrepared=false, voicePrepared=false, contentPrepared=false;
+  const avatarStatus=q('#avatarStatus'), voiceStatus=q('#voiceStatus'), contentStatus=q('#contentStatus'),
+        renderStatus=q('#renderStatus'), productionSummary=q('#productionSummary');
+
+  q('#selectAvatar').addEventListener('click',()=>{
+    avatarPrepared=true;
+    avatarStatus.textContent='Persönlicher Avatar vorgesehen';
+    q('#prodAvatar').classList.add('ready');
+    q('#prodVoice').classList.add('active');
+    productionSummary.textContent='Avatar-Slot vorbereitet. In der installierbaren Alpha-Version wird hier der gewählte Avatar-Dienst angebunden.';
+  });
+
+  q('#productionAudio').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f) return;
+    voicePrepared=true;
+    voiceStatus.textContent='Ton: '+f.name;
+    q('#prodVoice').classList.add('ready');
+    if(!audioPlayer.src) audioPlayer.src=URL.createObjectURL(f);
+    q('#prodContent').classList.add('active');
+  });
+
+  q('#useTranscript').addEventListener('click',()=>{
+    if(!transcriptText.value.trim()){
+      transcriptText.value='Vortragstext hier eingeben oder im Bereich Text & Ton importieren.';
+      renderTranscript();
+    }
+    contentPrepared=true;
+    contentStatus.textContent='Vortragstext übernommen';
+    q('#prodContent').classList.add('ready');
+    q('#prodRender').classList.add('active');
+  });
+
+  q('#prepareProduction').addEventListener('click',()=>{
+    const cues=currentCues().length;
+    const scenes=storyboard.length;
+    productionSummary.innerHTML='<strong>Produktionscheck:</strong> Avatar '+(avatarPrepared?'bereit':'offen')+
+      ' · Stimme '+(voicePrepared?'bereit':'offen')+' · Inhalt '+(contentPrepared?'bereit':'offen')+
+      ' · '+scenes+' Storyboard-Szene(n) · '+cues+' Regie-Cue(s) · Ausgabe '+q('#productionQuality').value+'.';
+  });
+
+  q('#startProduction').addEventListener('click',()=>{
+    if(!contentPrepared){
+      renderStatus.textContent='Bitte zuerst Vortrag übernehmen';
+      return;
+    }
+    renderStatus.textContent='Produktionsauftrag vorbereitet';
+    productionSummary.innerHTML='<strong>Alpha-Produktionsauftrag erstellt.</strong> Der Creator kennt jetzt Inhalt, Regie, Ausgabeformat und die vorgesehenen Avatar-/Voice-Slots. Das tatsächliche KI-Rendering folgt mit der externen Schnittstellenanbindung.';
+    if(storyboard.length) playMaster();
+  });
+
+
+  // V13 browser-local workspace model, ready for V14 filesystem mapping
+  const folders={Vortrag:[],Audio:[],Grafiken:[], '3D':[],Video:[],Skripten:[],Export:[]};
+  let activeFolder='Vortrag';
+  const workspaceList=q('#workspaceList'), filehubStatus=q('#filehubStatus'), workspaceFile=q('#workspaceFile');
+
+  function renderWorkspace(){
+    qa('#folderGrid .folder').forEach(f=>{
+      f.classList.toggle('active',f.dataset.folder===activeFolder);
+      f.querySelector('.count').textContent=(folders[f.dataset.folder]||[]).length+' Dateien';
+    });
+    workspaceList.innerHTML='';
+    const files=folders[activeFolder]||[];
+    if(!files.length){
+      workspaceList.innerHTML='<div style="font-size:10px;color:#7893a5">Ordner „'+activeFolder+'“ ist leer.</div>';
+    } else files.forEach(f=>{
+      const row=document.createElement('div');row.className='file-row';
+      const n=document.createElement('span');n.textContent=f.name;
+      const s=document.createElement('span');s.textContent=f.size ? Math.max(1,Math.round(f.size/1024))+' KB' : f.type;
+      row.append(n,s);workspaceList.appendChild(row);
+    });
+  }
+
+  qa('#folderGrid .folder').forEach(f=>f.addEventListener('click',()=>{
+    activeFolder=f.dataset.folder;renderWorkspace();filehubStatus.textContent='Ordner geöffnet: '+activeFolder;
+  }));
+
+  workspaceFile.addEventListener('change',e=>{
+    [...e.target.files].forEach(file=>{
+      folders[activeFolder].push({name:file.name,size:file.size,type:file.type||'Datei'});
+      if(activeFolder==='Grafiken' && file.type.startsWith('image/')) addImageFile(file);
+      if(activeFolder==='Audio' && file.type.startsWith('audio/')){
+        audioPlayer.src=URL.createObjectURL(file); voicePrepared=true; voiceStatus.textContent='Ton: '+file.name;
+      }
+    });
+    renderWorkspace();filehubStatus.textContent=e.target.files.length+' Datei(en) zu „'+activeFolder+'“ hinzugefügt.';
+    e.target.value='';
+  });
+
+  function workspaceManifest(){
+    const plain={};
+    Object.keys(folders).forEach(k=>plain[k]=folders[k].map(f=>({name:f.name,size:f.size,type:f.type})));
+    return {
+      app:'Webbased Academy Creator',version:'V13',
+      project:{name:projectName.value,topic:projectTopic.value,audience:projectAudience.value},
+      folders:plain,
+      storyboard:storyboard,
+      states:savedStates,
+      current:captureState()
+    };
+  }
+
+  q('#saveWorkspace').addEventListener('click',()=>{
+    const data=workspaceManifest();
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    const safe=(projectName.value.trim()||'Webbased_Academy_Projekt').replace(/[^\w\-]+/g,'_');
+    a.href=url;a.download=safe+'_Workspace.wac.json';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    filehubStatus.textContent='Projektstruktur und Arbeitsstand lokal gesichert.';
+  });
+
+  projectName.addEventListener('input',()=>q('#pathProject').textContent=projectName.value||'Neues Projekt');
+  q('#pathProject').textContent=projectName.value||'Neues Projekt';
+  renderWorkspace();
+
+
+  // V14 Alpha backup / restore / update info
+  const APP_VERSION='0.3.0-alpha';
+
+  function alphaSnapshot(){
+    const folderCopy={};
+    Object.keys(folders).forEach(k=>folderCopy[k]=(folders[k]||[]).map(f=>({name:f.name,size:f.size,type:f.type})));
+    return {
+      format:'WAC_ALPHA_BACKUP',
+      version:APP_VERSION,
+      savedAt:new Date().toISOString(),
+      project:{name:projectName.value,topic:projectTopic.value,audience:projectAudience.value},
+      folders:folderCopy,
+      states:savedStates,
+      storyboard:storyboard,
+      current:captureState(),
+      transcript:transcriptText.value,
+      anchors:textAnchors
+    };
+  }
+
+  q('#alphaBackup').addEventListener('click',()=>{
+    const data=alphaSnapshot();
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    const safe=(projectName.value.trim()||'Webbased_Academy').replace(/[^\w\-]+/g,'_');
+    a.href=url;a.download=safe+'_Backup_'+new Date().toISOString().slice(0,10)+'.wacbackup.json';
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    q('#backupStatus').textContent='Backup erstellt · '+new Date().toLocaleTimeString();
+  });
+
+  q('#alphaRestore').addEventListener('change',e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const data=JSON.parse(String(reader.result||'{}'));
+        if(data.format!=='WAC_ALPHA_BACKUP') throw new Error('Format');
+        projectName.value=data.project?.name||'';
+        projectTopic.value=data.project?.topic||'';
+        projectAudience.value=data.project?.audience||'';
+        savedStates=Array.isArray(data.states)?data.states:[];
+        storyboard=Array.isArray(data.storyboard)?data.storyboard:[];
+        textAnchors=Array.isArray(data.anchors)?data.anchors:[];
+        transcriptText.value=data.transcript||'';
+        renderTranscript();renderAnchors();renderStateCards();renderStoryboard();
+        if(data.current) restoreState(data.current);
+        q('#restoreStatus').textContent='Wiederhergestellt: '+file.name;
+      }catch(err){
+        q('#restoreStatus').textContent='Backup konnte nicht gelesen werden.';
+      }
+    };
+    reader.readAsText(file,'utf-8');
+  });
+
+  q('#showUpdateInfo').addEventListener('click',()=>{
+    const info=q('#updateInfo');
+    info.style.display=info.style.display==='none'?'block':'none';
+  });
+
+
+  // V14.5: Bühnengröße wird direkt aus dem tatsächlich sichtbaren Browserfenster berechnet.
+  // Dadurch funktioniert sie auch bei Windows-Skalierung (125/150/175 %) zuverlässig.
+  function fitAcademyStage(){
+    const s=q('#stage');
+    const center=q('.centercol');
+    if(!s || !center) return;
+
+    // Nur Desktop-/Breitbilddarstellung dynamisch behandeln.
+    if(window.innerWidth < 1200){
+      s.style.removeProperty('width');
+      s.style.removeProperty('height');
+      return;
+    }
+
+    const stageTop=s.getBoundingClientRect().top;
+    const centerWidth=center.getBoundingClientRect().width;
+
+    // Platz bis Unterkante des sichtbaren Browserfensters.
+    // 22 px Luft verhindern Kontakt zur Windows-Taskbar / Browserkante.
+    const availableHeight=Math.max(320, window.innerHeight-stageTop-22);
+    const availableWidth=Math.max(480, centerWidth-4);
+
+    const ratio=16/9;
+    let h=availableHeight;
+    let w=h*ratio;
+
+    // Wenn die verfügbare Mittelspalte schmaler ist, von der Breite zurückrechnen.
+    if(w>availableWidth){
+      w=availableWidth;
+      h=w/ratio;
+    }
+
+    s.style.setProperty('width',Math.floor(w)+'px','important');
+    s.style.setProperty('height',Math.floor(h)+'px','important');
+    s.style.setProperty('max-width','none','important');
+    s.style.setProperty('max-height','none','important');
+    s.style.setProperty('min-height','0','important');
+    s.style.setProperty('aspect-ratio','auto','important');
+    s.style.marginLeft='auto';
+    s.style.marginRight='auto';
+  }
+
+  let fitTimer=null;
+  function scheduleStageFit(){
+    clearTimeout(fitTimer);
+    fitTimer=setTimeout(fitAcademyStage,60);
+  }
+  window.addEventListener('resize',scheduleStageFit);
+  window.addEventListener('load',scheduleStageFit);
+  setTimeout(fitAcademyStage,120);
+  setTimeout(fitAcademyStage,500);
+
+
+  // V14.6: letzte Autorität für Ultrawide-Größe
+  function fitAcademyStageCompact(){
+    const s=q('#stage');
+    const center=q('.centercol');
+    if(!s || !center) return;
+
+    if(window.innerWidth < 1800 || (window.innerWidth/window.innerHeight) < 2){
+      return;
+    }
+
+    const centerWidth=center.getBoundingClientRect().width;
+    const maxH=Math.max(420, Math.min(window.innerHeight*0.54, 700));
+    let h=maxH;
+    let w=h*(16/9);
+
+    if(w > centerWidth-8){
+      w=centerWidth-8;
+      h=w/(16/9);
+    }
+
+    s.style.setProperty('width',Math.floor(w)+'px','important');
+    s.style.setProperty('height',Math.floor(h)+'px','important');
+    s.style.setProperty('max-height',Math.floor(h)+'px','important');
+    s.style.setProperty('min-height','0','important');
+    s.style.setProperty('aspect-ratio','auto','important');
+    s.style.marginLeft='auto';
+    s.style.marginRight='auto';
+  }
+
+  window.addEventListener('resize',()=>setTimeout(fitAcademyStageCompact,80));
+  setTimeout(fitAcademyStageCompact,150);
+  setTimeout(fitAcademyStageCompact,600);
+
+
+  // V16.3: Alte dynamische Bühnen-Fitter deaktivieren.
+  // Die Bühne wird jetzt ausschließlich vom CSS-Grid der sichtbaren Arbeitsfläche bestimmt.
+  window.fitAcademyStage = function(){};
+  window.fitAcademyStageCompact = function(){};
+
+  function v147LayoutCheck(){
+    const s=q('#stage'), lib=q('.media-library'), view=q('#vortragView');
+    if(!s || !lib || !view) return;
+    // Explicitly remove inline dimensions left by older fitters.
+    ['width','height','max-width','max-height','min-height','aspect-ratio'].forEach(prop=>s.style.removeProperty(prop));
+    s.style.setProperty('aspect-ratio','16 / 9','important');
+    s.style.setProperty('max-width','100%','important');
+    s.style.setProperty('max-height','100%','important');
+    s.style.setProperty('width','auto','important');
+    s.style.setProperty('height','100%','important');
+  }
+  setTimeout(v147LayoutCheck,50);
+  setTimeout(v147LayoutCheck,250);
+  setTimeout(v147LayoutCheck,800);
+  window.addEventListener('resize',()=>setTimeout(v147LayoutCheck,50));
+
+
+  // V16.3: Bühne vollständig durch das feste Grid steuern.
+  function v149NormalizeStage(){
+    const s=q('#stage');
+    if(!s) return;
+    ['width','height','max-width','max-height','min-height','aspect-ratio'].forEach(p=>s.style.removeProperty(p));
+    s.style.setProperty('height','100%','important');
+    s.style.setProperty('width','auto','important');
+    s.style.setProperty('max-width','100%','important');
+    s.style.setProperty('max-height','100%','important');
+    s.style.setProperty('min-height','0','important');
+    s.style.setProperty('aspect-ratio','16 / 9','important');
+    s.style.margin='auto';
+  }
+  setTimeout(v149NormalizeStage,80);
+  setTimeout(v149NormalizeStage,350);
+  setTimeout(v149NormalizeStage,900);
+  window.addEventListener('resize',()=>setTimeout(v149NormalizeStage,60));
+
+
+  // V16.3 – Projektmodus + austauschbarer Testavatar
+  const V15_STORAGE_KEY='wac_v15_last_project';
+  const v15SaveStatus=q('#v15SaveStatus'),v15LastSaved=q('#v15LastSaved'),v15AvatarProfile=q('#v15AvatarProfile');
+  const v15ModeButtons=qa('[data-v15mode]');
+  let v15SaveTimer=null,v15Restoring=false;
+  avatar.classList.add('demo-v15');
+
+  function v15CurrentAvatarMode(){return avatar.classList.contains('hidden')?'hidden':avatar.classList.contains('medium')?'medium':'full'}
+  function v15Snapshot(){return {format:'WAC_V15_LOCAL_PROJECT',appVersion:'0.2.0-alpha',savedAt:new Date().toISOString(),
+    project:{name:projectName.value.trim(),topic:projectTopic.value.trim(),audience:projectAudience.value.trim()},
+    avatar:{profile:v15AvatarProfile?.value||'demo',mode:v15CurrentAvatarMode()},states:savedStates,
+    storyboard:typeof storyboard!=='undefined'?storyboard:[],current:captureState(),transcript:transcriptText.value,anchors:textAnchors};}
+  function v15ModeUI(mode){v15ModeButtons.forEach(b=>b.classList.toggle('active',b.dataset.v15mode===mode))}
+  function v15ApplyMode(mode,save=true){avatar.classList.remove('medium','hidden');if(mode==='medium')avatar.classList.add('medium');if(mode==='hidden')avatar.classList.add('hidden');v15ModeUI(mode);if(save)v15ScheduleSave()}
+  v15ModeButtons.forEach(b=>b.addEventListener('click',()=>v15ApplyMode(b.dataset.v15mode)));
+
+  function v15SaveLocal(){
+    if(v15Restoring)return;
+    try{const d=v15Snapshot();localStorage.setItem(V15_STORAGE_KEY,JSON.stringify(d));const t=new Date();
+      v15SaveStatus.textContent='Automatisch gespeichert';v15LastSaved.textContent='Letzte Sicherung: '+t.toLocaleTimeString()+' · '+(d.project.name||'Unbenanntes Projekt');
+    }catch(e){v15SaveStatus.textContent='Lokales Speichern nicht möglich'}
+  }
+  function v15ScheduleSave(){clearTimeout(v15SaveTimer);v15SaveStatus.textContent='Änderung erkannt …';v15SaveTimer=setTimeout(v15SaveLocal,450)}
+  function v15RestoreLast(){
+    try{const raw=localStorage.getItem(V15_STORAGE_KEY);if(!raw){v15ModeUI(v15CurrentAvatarMode());return}
+      const d=JSON.parse(raw);if(d.format!=='WAC_V15_LOCAL_PROJECT')return;v15Restoring=true;
+      projectName.value=d.project?.name||'';projectTopic.value=d.project?.topic||'';projectAudience.value=d.project?.audience||'';
+      savedStates=Array.isArray(d.states)?d.states:[];renderStateCards();
+      if(Array.isArray(d.storyboard)&&typeof storyboard!=='undefined'){storyboard=d.storyboard;if(typeof renderStoryboard==='function')renderStoryboard()}
+      if(d.current)restoreState(d.current);if(d.transcript!=null){transcriptText.value=d.transcript;renderTranscript()}
+      if(Array.isArray(d.anchors)){textAnchors=d.anchors.map(a=>({...a,fired:false}));renderAnchors()}
+      v15ApplyMode(d.avatar?.mode||v15CurrentAvatarMode(),false);
+      v15SaveStatus.textContent='Letztes Projekt wiederhergestellt';v15LastSaved.textContent=d.savedAt?'Gespeichert: '+new Date(d.savedAt).toLocaleString():'Lokaler Projektstand geladen';
+    }catch(e){v15SaveStatus.textContent='Projektstand konnte nicht geladen werden'}finally{v15Restoring=false}
+  }
+  [projectName,projectTopic,projectAudience,transcriptText,boardText,regieText].forEach(el=>{if(el)el.addEventListener('input',v15ScheduleSave)});
+  document.addEventListener('click',e=>{if(e.target.closest('.scene,.btn,.state-card,.story-card'))setTimeout(v15ScheduleSave,80)});
+  window.addEventListener('beforeunload',v15SaveLocal);
+  setTimeout(v15RestoreLast,950);
+
+
+  // V16.3 – integriertes Update-Center.
+  // Browser-Sicherheitsmodell: Eine lokale HTML-App darf ihre eigene Datei nicht still überschreiben.
+  // Daher prüft der Creator .wacupdate-Dateien, sichert den aktuellen Programmstand im Browser
+  // und stellt die neue HTML als einzelne Installationsdatei bereit. Keine ZIP-Datei erforderlich.
+  const V151_VERSION='0.3.0-alpha';
+  const V151_BACKUP_KEY='wac_program_backup_v151';
+  const v151File=q('#v151UpdateFile'),v151Choose=q('#v151ChooseUpdate'),v151Info=q('#v151UpdateInfo');
+  const v151Install=q('#v151InstallBtn'),v151Backup=q('#v151BackupBtn');
+  let v151Pending=null;
+
+  function v151SetInfo(text,kind=''){v151Info.textContent=text;v151Info.className='v151-info'+(kind?' '+kind:'')}
+  function v151VersionParts(v){return String(v||'').replace(/[^0-9.]/g,'').split('.').map(n=>parseInt(n||0,10))}
+  function v151Compare(a,b){const A=v151VersionParts(a),B=v151VersionParts(b);for(let i=0;i<Math.max(A.length,B.length);i++){const x=A[i]||0,y=B[i]||0;if(x!==y)return x>y?1:-1}return 0}
+  function v151Download(name,text,type='text/html'){
+    const blob=new Blob([text],{type:type+';charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  function v151CurrentProgramSnapshot(){
+    // Clone current DOM including runtime-added state only as a safety snapshot for rollback.
+    return '<!DOCTYPE html>\\n'+document.documentElement.outerHTML;
+  }
+  function v151RefreshBackup(){
+    v151Backup.disabled=!localStorage.getItem(V151_BACKUP_KEY);
+  }
+  v151Choose.addEventListener('click',()=>v151File.click());
+  v151File.addEventListener('change',async()=>{
+    const file=v151File.files?.[0];v151Pending=null;v151Install.disabled=true;
+    if(!file)return;
+    try{
+      const raw=await file.text(),pkg=JSON.parse(raw);
+      if(pkg.format!=='WAC_UPDATE_1')throw new Error('Keine gültige WAC-Update-Datei.');
+      if(!pkg.version||!pkg.html)throw new Error('Version oder Programmdatei fehlt.');
+      if(!String(pkg.html).includes('Webbased Academy Creator'))throw new Error('Programmprüfung fehlgeschlagen.');
+      const cmp=v151Compare(pkg.version,V151_VERSION);
+      v151Pending=pkg;v151Install.disabled=false;
+      const relation=cmp>0?'Neue Version':cmp===0?'Gleiche Version':'Ältere Version';
+      v151SetInfo(relation+': '+pkg.version+' · '+(pkg.title||'Webbased Academy Creator Update')+(pkg.notes?' · '+pkg.notes:''),cmp>0?'ok':'warn');
+    }catch(err){v151SetInfo('Update abgelehnt: '+err.message,'bad')}
+  });
+  v151Install.addEventListener('click',()=>{
+    if(!v151Pending)return;
+    try{
+      localStorage.setItem(V151_BACKUP_KEY,v151CurrentProgramSnapshot());
+      v151RefreshBackup();
+      const name='Webbased_Academy_Creator_'+String(v151Pending.version).replace(/[^0-9A-Za-z._-]/g,'_')+'.html';
+      v151Download(name,v151Pending.html);
+      v151SetInfo('Update geprüft und vorbereitet. Die neue Creator-Datei wurde als einzelne HTML-Datei bereitgestellt. Projekte bleiben erhalten.','ok');
+      v151Install.disabled=true;
+    }catch(err){v151SetInfo('Update konnte nicht vorbereitet werden: '+err.message,'bad')}
+  });
+  v151Backup.addEventListener('click',()=>{
+    const backup=localStorage.getItem(V151_BACKUP_KEY);
+    if(!backup)return;
+    v151Download('Webbased_Academy_Creator_BACKUP_V15_1.html',backup);
+    v151SetInfo('Programmsicherung wurde bereitgestellt.','ok');
+  });
+  v151RefreshBackup();
+
+
+  // V16.3 – erster vorbereiteter Produktionsablauf, noch ohne externen Avatar-Dienst.
+  const v152Prepare=q('#v152PrepareTest');
+  if(v152Prepare){
+    v152Prepare.addEventListener('click',()=>{
+      try{
+        if(projectName && !projectName.value.trim()) projectName.value='Produktions-Test 01';
+        if(projectTopic) projectTopic.value='Wissen verstehen';
+        if(regieText) regieText.value='Avatar spricht frontal. Danach Schultafel einblenden, Text und Grafik zeigen, anschließend zurück zum Avatar.';
+        if(boardText) boardText.value='WISSEN VERSTEHEN.\\nText + Grafik kombinierbar';
+        if(transcriptText && !transcriptText.value.trim()){
+          transcriptText.value='Willkommen zu unserem kurzen Academy-Test. Wir verbinden heute gesprochenen Inhalt mit einer klassischen Schultafel und einer modernen Grafik. Danach kehren wir wieder zum Vortrag zurück.';
+          if(typeof renderTranscript==='function') renderTranscript();
+        }
+        if(typeof v15ApplyMode==='function') v15ApplyMode('medium',false);
+        if(typeof v15ScheduleSave==='function') v15ScheduleSave();
+        document.querySelectorAll('.v152-step').forEach((el,i)=>el.classList.toggle('on',i===0));
+        v152Prepare.textContent='Testszene vorbereitet';
+      }catch(e){
+        v152Prepare.textContent='Vorbereitung prüfen';
+      }
+    });
+  }
+
+
+  // V16.3 – 40-Sekunden-Zeitregie: 0–10 Avatar, 10–25 Tafel, 25–33 Grafik, 33–40 Avatar.
+  const v160Clock=q('#v160Clock'),v160Progress=q('#v160Progress');
+  const v160Start=q('#v160Start'),v160Pause=q('#v160Pause'),v160Reset=q('#v160Reset');
+  const v160Phases=qa('.v160-phase');
+  let v160Time=0,v160Running=false,v160Last=0,v160RAF=null,v160PhaseName='avatar1';
+
+  function v160Fmt(t){const s=Math.floor(t),d=Math.floor((t-s)*10);return '00:'+String(s).padStart(2,'0')+'.'+d}
+  function v160Phase(t){return t<10?'avatar1':t<25?'board':t<33?'graphic':'avatar2'}
+  function v160ApplyPhase(name){
+    if(v160PhaseName===name && v160Time>0)return;
+    v160PhaseName=name;
+    v160Phases.forEach(el=>el.classList.toggle('on',el.dataset.phase===name));
+    // Keep the avatar mode and board behavior visible in the prototype.
+    if(typeof v15ApplyMode==='function'){
+      if(name==='avatar1'||name==='avatar2')v15ApplyMode('medium',false);
+      else v15ApplyMode('hidden',false);
+    }
+    if(board){
+      if(name==='board'||name==='graphic')board.classList.add('show');
+      else board.classList.remove('show');
+    }
+    if(name==='board' && boardText) boardText.value='WISSEN VERSTEHEN.\\nText + Grafik kombinierbar';
+    if(name==='graphic' && boardText) boardText.value='WISSEN VERSTEHEN.\\n▥  GRAFIK / DIAGRAMM';
+    if(typeof renderBoard==='function')renderBoard();
+  }
+  function v160Render(){
+    if(v160Clock)v160Clock.textContent=v160Fmt(v160Time);
+    if(v160Progress)v160Progress.style.width=Math.min(100,(v160Time/40)*100)+'%';
+    v160ApplyPhase(v160Phase(v160Time));
+  }
+  function v160Tick(ts){
+    if(!v160Running)return;
+    if(!v160Last)v160Last=ts;
+    v160Time+=Math.min(.25,(ts-v160Last)/1000);v160Last=ts;
+    if(v160Time>=40){v160Time=40;v160Running=false}
+    v160Render();
+    if(v160Running)v160RAF=requestAnimationFrame(v160Tick);
+  }
+  if(v160Start)v160Start.addEventListener('click',()=>{
+    if(v160Time>=40)v160Time=0;
+    if(v160Running)return;
+    v160Running=true;v160Last=0;v160RAF=requestAnimationFrame(v160Tick);
+  });
+  if(v160Pause)v160Pause.addEventListener('click',()=>{v160Running=false;v160Last=0;if(v160RAF)cancelAnimationFrame(v160RAF);v160Render()});
+  if(v160Reset)v160Reset.addEventListener('click',()=>{v160Running=false;v160Last=0;if(v160RAF)cancelAnimationFrame(v160RAF);v160Time=0;v160PhaseName='';v160Render()});
+  v160PhaseName='';v160Render();
+
+})();
+</script>
+<div id="v148diag"><span id="runtimeVersionBottom">Version wird geladen…</span> AKTIV · 3440×1440 FIXED WORKSPACE</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  if (!window.academyDesktop) return;
+  const badge=document.createElement('div');
+  badge.id='desktopBadge';
+  badge.style.cssText='position:fixed;left:12px;bottom:12px;z-index:999999;background:#0c2939;border:1px solid #2d6c8c;color:#d9f1fb;padding:8px 11px;border-radius:8px;font:600 11px Segoe UI';
+  badge.textContent='DESKTOP V16.3 · Auto-Update TEST';
+  document.body.appendChild(badge);
+  window.academyDesktop.onUpdate(s=>{
+    if(s.state==='available'){badge.textContent='Update '+s.version+' verfügbar · wird auf Wunsch geladen';}
+    if(s.state==='downloading'){badge.textContent='Update wird geladen · '+s.percent+' %';}
+    if(s.state==='ready'){badge.textContent='Update '+s.version+' bereit · Neustart erforderlich';}
+    if(s.state==='current'){badge.textContent='DESKTOP V16.3 · aktuell';}
+    if(s.state==='error'){badge.textContent='Update-Server noch nicht eingerichtet';}
+  });
+});
+</script>
+
+
+
+
+
+<style>
+#academyAutoUpdater{position:fixed;right:22px;top:165px;z-index:999999;width:340px;padding:14px;box-sizing:border-box;border:2px solid #4aa4c9;border-radius:12px;background:#09202d;color:#eefaff;box-shadow:0 12px 34px rgba(0,0,0,.45);font-family:"Segoe UI",sans-serif}
+#academyAutoUpdater .badge{display:inline-block;padding:4px 8px;border-radius:6px;background:#17769d;font-weight:800;font-size:13px;margin-bottom:9px}
+#academyAutoUpdater .status{font-size:14px;line-height:1.45;margin:4px 0}
+#academyAutoUpdater .bar{display:none;height:12px;background:#06131a;border:1px solid #356a80;border-radius:7px;overflow:hidden;margin:10px 0}
+#academyAutoUpdater .fill{height:100%;width:0;background:#2f9ac6}
+#academyAutoUpdater button{display:none;width:100%;margin-top:10px;padding:11px;border-radius:8px;border:1px solid #55a5c6;background:#176f99;color:white;font-weight:700;font-size:14px;cursor:pointer}
+</style>
+<div id="academyAutoUpdater">
+ <div class="badge">AUTO-UPDATER 1.0</div>
+ <div id="auStatus" class="status">Suche nach Updates …</div>
+ <div id="auBar" class="bar"><div id="auFill" class="fill"></div></div>
+ <button id="auButton"></button>
+</div>
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+ const st=document.getElementById('auStatus'), bar=document.getElementById('auBar'),
+ fill=document.getElementById('auFill'), btn=document.getElementById('auButton');
+ let phase='';
+ const show=(txt)=>{btn.textContent=txt;btn.style.display='block';btn.disabled=false;};
+
+ function onState(s){
+   if(!s)return;
+   if(s.state==='checking'){st.textContent='Suche nach neuer Version …';}
+   else if(s.state==='available'){
+     phase='available'; st.textContent='Neue Version '+s.version+' verfügbar.'; show('Jetzt aktualisieren');
+   } else if(s.state==='not-available'){
+     st.textContent=(window.__academyDisplayVersion||'Creator')+' ist aktuell.'; btn.style.display='none';
+   } else if(s.state==='downloading'){
+     phase='downloading';
+     const p=Math.max(0,Math.min(100,Number(s.percent)||0));
+     st.textContent='Download läuft: '+p.toFixed(0)+' %';
+     bar.style.display='block'; fill.style.width=p+'%'; btn.style.display='none';
+   } else if(s.state==='ready'){
+     phase='ready'; st.textContent='Update vollständig geladen.';
+     bar.style.display='block'; fill.style.width='100%'; show('Installieren & neu starten');
+   } else if(s.state==='error'){
+     st.textContent='Update-Fehler: '+(s.message||'Unbekannter Fehler'); btn.style.display='none';
+   }
+ }
+
+ if(window.academyDesktop?.onUpdate) window.academyDesktop.onUpdate(onState);
+ else st.textContent='FEHLER: Desktop-Update-Schnittstelle fehlt.';
+
+ btn.onclick=async()=>{
+   try{
+     btn.disabled=true;
+     if(phase==='available'){
+       st.textContent='Download wird gestartet …';
+       await window.academyDesktop.downloadUpdate();
+     }else if(phase==='ready'){
+       st.textContent='Installation wird gestartet …';
+       await window.academyDesktop.installUpdate();
+     }
+   }catch(e){st.textContent='Update-Fehler: '+e.message;btn.disabled=false;}
+ };
+});
+</script>
+
+
+<script>
+window.addEventListener('DOMContentLoaded', async () => {
+  if (!window.academyDesktop?.getAppVersion) return;
+  try {
+    const raw = await window.academyDesktop.getAppVersion();   // e.g. 0.16.6
+    const parts = String(raw).split('.');
+    const display = parts.length >= 3 ? ('V' + Number(parts[1]) + '.' + Number(parts[2])) : ('V' + raw);
+    window.__academyDisplayVersion = display;
+    const set = (id, text) => { const el=document.getElementById(id); if(el) el.textContent=text; };
+    set('runtimeVersionTop', display);
+    set('runtimeVersionUpdate', display);
+    set('runtimeVersionBottom', display);
+    set('v151Installed', raw);
+    document.title = 'Webbased Academy Creator ' + display;
+  } catch (e) {
+    console.error('Version konnte nicht gelesen werden', e);
+  }
+});
+</script>
+
+</body>
+</html>
