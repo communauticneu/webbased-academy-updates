@@ -16,7 +16,9 @@
     const stage=doc.querySelector('.stage');
     const surface=doc.getElementById('presentationSurface');
     if(!stage)return false;
-    const shouldShow=!!surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true';
+    const liveSurface=!!surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true';
+    const exitingSurface=!!stage.querySelector('.presentation-exit-clone');
+    const shouldShow=liveSurface||exitingSurface;
     stage.classList.toggle('v1617-presentation-active',shouldShow);
     return shouldShow;
   }
@@ -88,7 +90,7 @@
 
     watchSurface();
     if(typeof MutationObserver!=='function')return null;
-    const stageObserver=new MutationObserver(()=>watchSurface());
+    const stageObserver=new MutationObserver(()=>{watchSurface();sync();});
     stageObserver.observe(stage,{childList:true,subtree:true});
 
     return {
