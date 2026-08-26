@@ -16,9 +16,18 @@ contextBridge.exposeInMainWorld('academyDesktop', {
   onUpdate: callback => ipcRenderer.on('academy-update', (_event, data) => callback(data))
 });
 
-// V0.16.15 – kleine Renderer-Erweiterung für Medienauswahl im freien Vortrag.
+// Renderer-Erweiterungen werden erst nach fertigem DOM geladen.
 window.addEventListener('DOMContentLoaded', () => {
-  const script = document.createElement('script');
-  script.src = 'media-library-scene-picker.js';
-  document.documentElement.appendChild(script);
+  const style = document.createElement('link');
+  style.rel = 'stylesheet';
+  style.href = 'presentation-stage-v16.17.css';
+  document.head.appendChild(style);
+
+  const stageScript = document.createElement('script');
+  stageScript.src = 'presentation-stage-v16.17.js';
+  document.documentElement.appendChild(stageScript);
+
+  const mediaPickerScript = document.createElement('script');
+  mediaPickerScript.src = 'media-library-scene-picker.js';
+  document.documentElement.appendChild(mediaPickerScript);
 });
