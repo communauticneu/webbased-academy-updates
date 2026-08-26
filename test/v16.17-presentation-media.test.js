@@ -53,6 +53,12 @@ test('Academy stage module exposes a dedicated interchangeable presentation surf
   assert.match(js,/Rahmenlose Academy-Fläche/);
 });
 
+test('supplied chalkboard texture is used as the Academy board surface',()=>{
+  const js=read('src/free-presentation.js');
+  assert.match(js,/assets\/tafel-academy\.jpg/);
+  assert.ok(fs.existsSync(path.join(root,'src','assets','tafel-academy.jpg')));
+});
+
 test('scene editor module exposes medium type position size visibility and effects',()=>{
   const js=read('src/free-presentation.js');
   for(const id of ['ftPresentationMedium','ftMediumPosition','ftMediumSize','ftPresentationVisible','ftMediumEnter','ftMediumExit','ftEffectDuration']){
