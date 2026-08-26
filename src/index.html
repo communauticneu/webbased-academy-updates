@@ -1129,6 +1129,13 @@ body > .app, body > .shell, body > .layout, body > main{
 .v160-phase{font-size:10px;text-align:center;padding:5px 2px;border:1px solid #1d4053;border-radius:5px;color:#7898aa}
 .v160-phase.on{background:#12384d;border-color:#55a9d1;color:#e0f4fc}
 .v160-buttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px}
+.v160-regie select{width:100%;margin:4px 0 2px;background:#0b1a24;border:1px solid #2f6078;color:#eef6fb;border-radius:8px;padding:8px}
+.v169-status{font-size:11px;line-height:1.35;color:#8fb3c5;margin-top:5px;min-height:15px}
+.v169-board-graphic{display:none;position:absolute;left:8%;right:8%;bottom:10%;height:46%;z-index:2;align-items:flex-end;justify-content:center;gap:7%;padding:0 7%;border-left:2px solid rgba(243,239,228,.75);border-bottom:2px solid rgba(243,239,228,.75)}
+.v169-board-graphic.show{display:flex}
+.v169-board-graphic i{display:block;width:16%;border:2px solid rgba(243,239,228,.85);border-bottom:0;background:rgba(243,239,228,.14)}
+.v169-board-graphic i:nth-child(1){height:38%}.v169-board-graphic i:nth-child(2){height:62%}.v169-board-graphic i:nth-child(3){height:84%}.v169-board-graphic i:nth-child(4){height:70%}
+.v160-buttons .btn{font-weight:700;min-height:42px}
 
 </style>
 </head>
@@ -1216,6 +1223,7 @@ body > .app, body > .shell, body > .layout, body > main{
 <div class="board-overlay" id="boardOverlay">
   <div class="board-content">
     <div class="board-text" id="boardStageText">WISSEN VERSTEHEN.</div>
+    <div class="v169-board-graphic" id="v169BoardGraphic" aria-label="Säulengrafik auf der Schultafel"><i></i><i></i><i></i><i></i></div>
     <img class="board-object" id="boardStageImage" alt="" style="display:none">
   </div>
 </div>
@@ -1279,31 +1287,24 @@ body > .app, body > .shell, body > .layout, body > main{
             <div class="v15-last" id="v15LastSaved">Noch kein lokaler Projektstand.</div>
           </div>
 
-          <div class="panel v152-test">
-            <h2>Produktions-Test · 30–60 Sek.</h2>
-            <p>Erster Ablauf: Avatar → Schultafel → Grafik → zurück zum Avatar.</p>
-            <div class="v152-steps">
-              <div class="v152-step on">1 Avatar</div>
-              <div class="v152-step">2 Tafel</div>
-              <div class="v152-step">3 Grafik</div>
-            </div>
-            <button class="btn primary" id="v152PrepareTest" type="button">Testszene vorbereiten</button>
-          </div>
-
           <div class="panel v160-regie">
-            <h2>Zeitregie · 40 Sekunden</h2>
+            <h2>Produktionsmodus · Academy-Test</h2>
+            <div class="v169-status">Vollständiger automatischer Ablauf · 40 Sekunden</div>
             <div class="v160-clock" id="v160Clock">00:00.0</div>
             <div class="v160-track"><div class="v160-progress" id="v160Progress"></div></div>
             <div class="v160-phases">
-              <div class="v160-phase on" data-phase="avatar1">Avatar</div>
-              <div class="v160-phase" data-phase="board">Tafel</div>
-              <div class="v160-phase" data-phase="graphic">Grafik</div>
-              <div class="v160-phase" data-phase="avatar2">Avatar</div>
+              <div class="v160-phase on" data-phase="avatar1">0–10 Avatar</div>
+              <div class="v160-phase" data-phase="board">10–25 Tafel</div>
+              <div class="v160-phase" data-phase="graphic">25–33 Grafik</div>
+              <div class="v160-phase" data-phase="avatar2">33–40 Avatar</div>
             </div>
+            <label for="v169Voice">Systemstimme · technischer Platzhalter</label>
+            <select id="v169Voice"><option value="">Automatische Systemstimme</option></select>
+            <div class="v169-status" id="v169SpeechStatus">Systemstimmen werden geladen …</div>
             <div class="v160-buttons">
-              <button class="btn primary" id="v160Start" type="button">▶ Start</button>
-              <button class="btn" id="v160Pause" type="button">Ⅱ Pause</button>
-              <button class="btn" id="v160Reset" type="button">↺ Reset</button>
+              <button class="btn primary" id="v160Start" type="button">▶ Gesamtablauf testen</button>
+              <button class="btn" id="v160Pause" type="button">Ⅱ Pause/Stop</button>
+              <button class="btn" id="v160Reset" type="button">↺ Zurücksetzen</button>
             </div>
           </div>
 
@@ -1817,6 +1818,7 @@ body > .app, body > .shell, body > .layout, body > main{
   </main>
 </div>
 
+<script src="production-mode.js"></script>
 <script>
 (function(){
   const q=s=>document.querySelector(s), qa=s=>[...document.querySelectorAll(s)];
@@ -3308,7 +3310,8 @@ body > .app, body > .shell, body > .layout, body > main{
   }
 
 
-  // V16.3 – 40-Sekunden-Zeitregie: 0–10 Avatar, 10–25 Tafel, 25–33 Grafik, 33–40 Avatar.
+  // V16.3 – frühere Zeitregie bleibt zur Rückwärtsreferenz erhalten, wird ab V16.9 aber ersetzt.
+  if(false){
   const v160Clock=q('#v160Clock'),v160Progress=q('#v160Progress');
   const v160Start=q('#v160Start'),v160Pause=q('#v160Pause'),v160Reset=q('#v160Reset');
   const v160Phases=qa('.v160-phase');
@@ -3354,6 +3357,90 @@ body > .app, body > .shell, body > .layout, body > main{
   if(v160Pause)v160Pause.addEventListener('click',()=>{v160Running=false;v160Last=0;if(v160RAF)cancelAnimationFrame(v160RAF);v160Render()});
   if(v160Reset)v160Reset.addEventListener('click',()=>{v160Running=false;v160Last=0;if(v160RAF)cancelAnimationFrame(v160RAF);v160Time=0;v160PhaseName='';v160Render()});
   v160PhaseName='';v160Render();
+  }
+
+  // V16.9 – vollständiger 40-Sekunden-Produktionsmodus mit Systemstimme.
+  const productionMode=window.AcademyProductionMode;
+  const v169Clock=q('#v160Clock'),v169Progress=q('#v160Progress');
+  const v169Start=q('#v160Start'),v169Pause=q('#v160Pause'),v169Reset=q('#v160Reset');
+  const v169Phases=qa('.v160-phase'),v169Voice=q('#v169Voice');
+  const v169SpeechStatus=q('#v169SpeechStatus'),v169BoardGraphic=q('#v169BoardGraphic');
+  const browserSynth=window.speechSynthesis||null;
+  const speech=productionMode.createSpeechCoordinator({
+    synth:browserSynth,
+    Utterance:window.SpeechSynthesisUtterance
+  });
+  let v169Last=0,v169RAF=null;
+
+  function v169ApplyPhase(phase,shouldSpeak=true){
+    const name=phase.id==='complete'?'avatar2':phase.id;
+    v169Phases.forEach(el=>el.classList.toggle('on',el.dataset.phase===name));
+    if(typeof v15ApplyMode==='function')v15ApplyMode(name==='avatar1'||name==='avatar2'?'medium':'hidden',false);
+    boardOverlay.classList.toggle('show',name==='board'||name==='graphic');
+    v169BoardGraphic.classList.toggle('show',name==='graphic');
+    boardStageText.textContent=name==='graphic'?'WISSEN VERSTEHEN · ENTWICKLUNG':'WISSEN VERSTEHEN.\nText und Sprache klar verbinden.';
+    cue.textContent=name==='avatar1'?'Produktionsmodus: Avatar bis Nabel':
+      name==='board'?'Produktionsmodus: Schultafel mit Text':
+      name==='graphic'?'Produktionsmodus: Grafik auf der Schultafel':
+      name==='avatar2'?'Produktionsmodus: zurück zum Avatar':'Produktionsmodus abgeschlossen';
+    if(phase.id==='complete')speech.pause();
+    else if(shouldSpeak)speech.enterPhase(phase.id);
+  }
+  function v169RenderTime(time){
+    v169Clock.textContent=productionMode.formatProductionTime(time);
+    v169Progress.style.width=Math.min(100,(time/productionMode.TOTAL_DURATION_SECONDS)*100)+'%';
+  }
+  const v169Timeline=productionMode.createProductionTimeline({
+    onPhaseChange:v169ApplyPhase,
+    onTimeChange:v169RenderTime
+  });
+  function v169Tick(timestamp){
+    if(!v169Timeline.getState().running)return;
+    if(!v169Last)v169Last=timestamp;
+    v169Timeline.advance(productionMode.getFrameDeltaSeconds(v169Last,timestamp));v169Last=timestamp;
+    if(v169Timeline.getState().running)v169RAF=requestAnimationFrame(v169Tick);
+    else v169SpeechStatus.textContent='Gesamtablauf abgeschlossen.';
+  }
+  v169Start.addEventListener('click',()=>{
+    const before=v169Timeline.getState();
+    if(before.running)return;
+    v169Timeline.start();v169Last=0;
+    if(before.time>0&&before.time<40)speech.enterPhase(v169Timeline.getState().phase.id,true);
+    v169SpeechStatus.textContent='Gesamtablauf läuft mit der gewählten Systemstimme.';
+    v169RAF=requestAnimationFrame(v169Tick);
+  });
+  v169Pause.addEventListener('click',()=>{
+    v169Timeline.pause();speech.pause();v169Last=0;
+    if(v169RAF)cancelAnimationFrame(v169RAF);
+    v169SpeechStatus.textContent='Ablauf und Sprache angehalten.';
+  });
+  v169Reset.addEventListener('click',()=>{
+    v169Timeline.reset();speech.reset();v169Last=0;
+    if(v169RAF)cancelAnimationFrame(v169RAF);
+    v169ApplyPhase(productionMode.getProductionPhase(0),false);
+    v169SpeechStatus.textContent='Produktionsmodus bereit.';
+  });
+
+  let v169Voices=[];
+  function v169LoadVoices(){
+    if(!browserSynth){v169SpeechStatus.textContent='Keine Systemstimme verfügbar.';v169Voice.disabled=true;return}
+    v169Voices=browserSynth.getVoices();
+    const current=v169Voice.value;
+    v169Voice.innerHTML='<option value="">Automatische Systemstimme</option>';
+    v169Voices.forEach((voice,index)=>{
+      const option=document.createElement('option');
+      option.value=String(index);option.textContent=voice.name+' · '+voice.lang;
+      v169Voice.appendChild(option);
+    });
+    const germanIndex=v169Voices.findIndex(voice=>String(voice.lang).toLowerCase().startsWith('de'));
+    v169Voice.value=current||String(germanIndex>=0?germanIndex:'');
+    speech.setVoice(v169Voice.value===''?null:(v169Voices[Number(v169Voice.value)]||null));
+    v169SpeechStatus.textContent=v169Voices.length?'Systemstimme auswählbar · Produktionsmodus bereit.':'Automatische Systemstimme wird verwendet.';
+  }
+  v169Voice.addEventListener('change',()=>speech.setVoice(v169Voice.value===''?null:(v169Voices[Number(v169Voice.value)]||null)));
+  if(browserSynth)browserSynth.addEventListener('voiceschanged',v169LoadVoices);
+  v169LoadVoices();
+  v169Timeline.reset();v169ApplyPhase(productionMode.getProductionPhase(0),false);
 
 })();
 </script>
