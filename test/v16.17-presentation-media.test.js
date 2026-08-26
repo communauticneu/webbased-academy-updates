@@ -36,6 +36,40 @@ test('presentation media values are validated for predictable hardware-friendly 
   assert.equal(s.effectDuration,2);
 });
 
+test('scene model supports explicit presentation-medium visibility',()=>{
+  const {normalizeScene}=fresh();
+  assert.equal(normalizeScene({presentationVisible:false}).presentationVisible,false);
+  assert.equal(normalizeScene({}).presentationVisible,true);
+});
+
+test('Academy stage exposes a dedicated interchangeable presentation surface',()=>{
+  const html=read('src/index.html');
+  assert.match(html,/id="presentationSurface"/);
+  assert.match(html,/presentation-surface/);
+  assert.match(html,/presentation-chalkboard/);
+  assert.match(html,/presentation-flipchart/);
+  assert.match(html,/presentation-whiteboard/);
+});
+
+test('scene editor exposes medium type position size visibility and effects',()=>{
+  const html=read('src/index.html');
+  for(const id of ['ftPresentationMedium','ftMediumPosition','ftMediumSize','ftPresentationVisible','ftMediumEnter','ftMediumExit','ftEffectDuration']){
+    assert.match(html,new RegExp(`id="${id}"`));
+  }
+  assert.match(html,/Hineinfahren von links/);
+  assert.match(html,/Herausfahren nach rechts/);
+});
+
+test('free-talk scene application drives the presentation surface without GPU-heavy rendering',()=>{
+  const html=read('src/index.html');
+  assert.match(html,/applyPresentationSurface\(s\)/);
+  assert.match(html,/dataset\.medium=s\.presentationMedium/);
+  assert.match(html,/dataset\.position=s\.mediumPosition/);
+  assert.match(html,/dataset\.size=s\.mediumSize/);
+  assert.match(html,/dataset\.enter=s\.mediumEnter/);
+  assert.doesNotMatch(html,/WebGL|three\.js|canvas\.getContext\(['"]webgl/i);
+});
+
 test('V0.16.17 keeps 40-second technical test unchanged',()=>{
   const {PHASES,TOTAL_DURATION_SECONDS}=require('../src/production-mode');
   assert.equal(TOTAL_DURATION_SECONDS,40);
