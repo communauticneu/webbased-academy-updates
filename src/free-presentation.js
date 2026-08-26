@@ -18,6 +18,7 @@
   const finite=(v,f)=>Number.isFinite(Number(v))?Number(v):f;
   const text=(v,f='')=>typeof v==='string'?v:f;
   const nextId=()=>`scene-${Date.now().toString(36)}-${(++idCounter).toString(36)}`;
+  const activeDocument=()=>typeof document!=='undefined'?document:null;
 
   function normalizeScene(input,index=0){
     const s=input&&typeof input==='object'?input:{};
@@ -55,7 +56,13 @@
     if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];
     const api={
       getScenes:()=>scenes.map(s=>({...s,state:s.state?{...s.state}:null})),
-      get:(i)=>scenes[i]?{...scenes[i],state:scenes[i].state?{...scenes[i].state}:null}:null,
+      get(i){
+        if(!scenes[i])return null;
+        const result={...scenes[i],state:scenes[i].state?{...scenes[i].state}:null};
+        const doc=activeDocument();
+        if(doc){ensurePresentationUi(doc);writePresentationControls(result,doc);applyPresentationSurface(result,doc);}
+        return result;
+      },
       add(scene,index=scenes.length){
         const item=normalizeScene(scene,scenes.length);
         const at=Math.max(0,Math.min(scenes.length,finite(index,scenes.length)));
@@ -82,7 +89,10 @@
       },
       update(index,patch){
         if(!scenes[index])return null;
-        scenes[index]=normalizeScene({...scenes[index],...patch,id:scenes[index].id},index);
+        const doc=activeDocument();
+        const presentationPatch=doc&&doc.getElementById('v1617PresentationControls')?readPresentationControls(doc):{};
+        scenes[index]=normalizeScene({...scenes[index],...patch,...presentationPatch,id:scenes[index].id},index);
+        if(doc)applyPresentationSurface(scenes[index],doc);
         return {...scenes[index]};
       },
       replace(next){
@@ -102,7 +112,10 @@
     function enter(){
       if(sceneIndex<scenes.length&&entered!==sceneIndex){
         entered=sceneIndex;
-        handlers.onSceneEnter?.({...scenes[sceneIndex]},sceneIndex);
+        const current={...scenes[sceneIndex]};
+        const doc=activeDocument();
+        if(doc)applyPresentationSurface(current,doc);
+        handlers.onSceneEnter?.(current,sceneIndex);
       }
     }
     function notify(){handlers.onTick?.(state());}
@@ -202,7 +215,7 @@
       .presentation-whiteboard .presentation-board-text,.presentation-flipchart .presentation-board-text{color:#18242b;font-family:Segoe UI,Arial,sans-serif;text-shadow:none}
       .presentation-surface.is-visible{opacity:1}
       .presentation-surface[data-enter="slide-left"]{transform:translateX(-115%)}.presentation-surface[data-enter="slide-right"]{transform:translateX(115%)}.presentation-surface[data-enter="slide-top"]{transform:translateY(-115%)}.presentation-surface[data-enter="slide-bottom"]{transform:translateY(115%)}
-      .presentation-surface[data-position="center"][data-enter="slide-left"]{transform:translate(-165%,-0%)}.presentation-surface[data-position="center"][data-enter="slide-right"]{transform:translate(65%,-0%)}
+      .presentation-surface[data-position="center"][data-enter="slide-left"]{transform:translate(-165%,0)}.presentation-surface[data-position="center"][data-enter="slide-right"]{transform:translate(65%,0)}
       .presentation-surface.is-visible[data-enter="slide-left"],.presentation-surface.is-visible[data-enter="slide-right"],.presentation-surface.is-visible[data-enter="slide-top"],.presentation-surface.is-visible[data-enter="slide-bottom"]{transform:none}
       .presentation-surface.is-visible[data-position="center"]{transform:translateX(-50%)}
       .v1617-presentation-controls{margin-top:10px;padding-top:10px;border-top:1px solid #294556}.v1617-presentation-controls .v1617-title{font-weight:700;font-size:16px;margin-bottom:6px}.v1617-presentation-controls label{display:block;font-size:14px;margin:6px 0}.v1617-presentation-controls select,.v1617-presentation-controls input[type="number"]{width:100%;min-height:34px;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:8px;padding:6px 8px;font-size:14px}.v1617-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v1617-check{display:flex!important;align-items:center;gap:8px}.v1617-check input{width:auto}.v1617-hint{font-size:12px;color:#8fa8b8;line-height:1.35;margin-top:6px}
@@ -210,14 +223,15 @@
   }
 
   function ensurePresentationUi(doc){
-    if(!doc||doc.getElementById('presentationSurface'))return;
+    if(!doc)return;
     const stage=doc.querySelector('.stage');
-    if(!stage)return;
-    stage.insertAdjacentHTML('beforeend',presentationSurfaceMarkup());
-    const style=doc.createElement('style');
-    style.id='v1617PresentationStyles';
-    style.textContent=presentationStyles();
-    doc.head.appendChild(style);
+    if(stage&&!doc.getElementById('presentationSurface'))stage.insertAdjacentHTML('beforeend',presentationSurfaceMarkup());
+    if(!doc.getElementById('v1617PresentationStyles')){
+      const style=doc.createElement('style');
+      style.id='v1617PresentationStyles';
+      style.textContent=presentationStyles();
+      doc.head.appendChild(style);
+    }
     const drawer=doc.getElementById('freeTalkDrawer')||doc.getElementById('freeTalkEditor');
     if(drawer&&!doc.getElementById('v1617PresentationControls'))drawer.insertAdjacentHTML('beforeend',presentationEditorMarkup());
   }
@@ -264,18 +278,16 @@
     surface.style.transitionDuration=`${s.effectDuration}s`;
     const txt=surface.querySelector('.presentation-board-text');
     if(txt)txt.textContent=s.boardText||'';
-    const shouldShow=s.presentationVisible&&(s.kind==='board'||s.presentationMedium==='custom');
+    const shouldShow=s.presentationVisible&&s.kind==='board';
     surface.setAttribute('aria-hidden',shouldShow?'false':'true');
-    requestAnimationFrame?.(()=>surface.classList.toggle('is-visible',shouldShow));
-    if(typeof requestAnimationFrame!=='function')surface.classList.toggle('is-visible',shouldShow);
+    const toggle=()=>surface.classList.toggle('is-visible',shouldShow);
+    if(typeof requestAnimationFrame==='function')requestAnimationFrame(toggle);else toggle();
   }
 
   function installPresentationUi(doc){
     ensurePresentationUi(doc);
-    if(!doc)return;
-    const observer=typeof MutationObserver==='function'?new MutationObserver(()=>{
-      ensurePresentationUi(doc);
-    }):null;
+    if(!doc)return null;
+    const observer=typeof MutationObserver==='function'?new MutationObserver(()=>ensurePresentationUi(doc)):null;
     observer?.observe(doc.documentElement,{childList:true,subtree:true});
     return observer;
   }
