@@ -151,7 +151,7 @@ test('presentation-stage helper toggles active layout exactly with surface visib
   delete require.cache[require.resolve('../src/presentation-stage-v16.17')];
   const {syncPresentationStage}=require('../src/presentation-stage-v16.17');
   const toggles=[];
-  const stage={classList:{toggle:(name,value)=>toggles.push([name,value])}};
+  const stage={classList:{toggle:(name,value)=>toggles.push([name,value])},querySelector:()=>null};
   const visibleSurface={classList:{contains:name=>name==='is-visible'},getAttribute:()=> 'false'};
   syncPresentationStage({querySelector:()=>stage,getElementById:()=>visibleSurface});
   const hiddenSurface={classList:{contains:()=>false},getAttribute:()=> 'true'};
