@@ -31,3 +31,9 @@ test('mutation history detects a visible-to-next-scene transition even if final 
   assert.match(js,/attributeOldValue:true/);
   assert.match(js,/oldValue.*is-visible/);
 });
+
+test('stage remains in presentation composition while an exit clone is animating',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  assert.match(js,/stage\.querySelector\('\.presentation-exit-clone'\)/);
+  assert.match(js,/stageObserver=new MutationObserver\(\(\)=>\{watchSurface\(\);sync\(\);\}\)/);
+});
