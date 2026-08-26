@@ -129,6 +129,13 @@ test('presentation-stage helper toggles active layout exactly with surface visib
   assert.deepEqual(toggles,[['v1617-presentation-active',true],['v1617-presentation-active',false]]);
 });
 
+test('stage observer is scoped to stage/surface instead of whole application attributes',()=>{
+  const stageJs=read('src/presentation-stage-v16.17.js');
+  assert.match(stageJs,/stageObserver/);
+  assert.match(stageJs,/surfaceObserver/);
+  assert.doesNotMatch(stageJs,/observe\(doc\.documentElement,\{subtree:true,childList:true,attributes:true/);
+});
+
 test('V0.16.17 keeps 40-second technical test unchanged',()=>{
   const {PHASES,TOTAL_DURATION_SECONDS}=require('../src/production-mode');
   assert.equal(TOTAL_DURATION_SECONDS,40);
