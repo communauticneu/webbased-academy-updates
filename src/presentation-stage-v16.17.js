@@ -23,12 +23,36 @@
 
   function install(doc){
     if(!doc)return null;
+    const stage=doc.querySelector('.stage');
+    if(!stage)return null;
     const sync=()=>syncPresentationStage(doc);
-    sync();
+    let surfaceObserver=null;
+    let observedSurface=null;
+
+    function watchSurface(){
+      const surface=doc.getElementById('presentationSurface');
+      if(surface===observedSurface)return;
+      surfaceObserver?.disconnect();
+      surfaceObserver=null;
+      observedSurface=surface||null;
+      if(surface&&typeof MutationObserver==='function'){
+        surfaceObserver=new MutationObserver(sync);
+        surfaceObserver.observe(surface,{attributes:true,attributeFilter:['class','aria-hidden','data-position','data-medium','data-size']});
+      }
+      sync();
+    }
+
+    watchSurface();
     if(typeof MutationObserver!=='function')return null;
-    const observer=new MutationObserver(sync);
-    observer.observe(doc.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','aria-hidden','data-position','data-medium','data-size']});
-    return observer;
+    const stageObserver=new MutationObserver(()=>watchSurface());
+    stageObserver.observe(stage,{childList:true,subtree:true});
+
+    return {
+      disconnect(){
+        stageObserver.disconnect();
+        surfaceObserver?.disconnect();
+      }
+    };
   }
 
   return {syncPresentationStage,install};
