@@ -1241,6 +1241,120 @@ body > .app, body > .shell, body > .layout, body > main{
 }
 </style>
 
+
+<style>
+/* V16.11 – Lesbarkeitskorrektur */
+@media (min-width:1600px) and (min-aspect-ratio:2/1) {
+  #vortragView > .workspace{
+    grid-template-columns:205px minmax(0,1fr) 430px!important;
+    gap:7px!important;
+  }
+
+  .controls{
+    gap:4px!important;
+    overflow:hidden!important;
+  }
+  .controls > .panel{
+    padding:5px 6px!important;
+    border-radius:9px!important;
+  }
+  .controls > .panel h2{
+    font-size:16px!important;
+    line-height:1.1!important;
+    margin:0 0 3px!important;
+  }
+  .controls label{
+    font-size:14px!important;
+    line-height:1.15!important;
+    margin:3px 0 1px!important;
+  }
+  .controls select,.controls input,.controls textarea{
+    font-size:14px!important;
+    line-height:1.15!important;
+    padding:4px 6px!important;
+    border-radius:6px!important;
+  }
+  .controls .btn{
+    font-size:14px!important;
+    line-height:1.1!important;
+    padding:4px 6px!important;
+    border-radius:6px!important;
+  }
+
+  .v15-core{padding:5px 6px!important}
+  .v15-statusrow{font-size:14px!important;line-height:1.15!important;margin-bottom:2px!important}
+  .v15-last{font-size:14px!important;line-height:1.15!important;margin-top:2px!important}
+  .v15-avatar-modes{gap:3px!important;margin-top:2px!important}
+  .v15-avatar-modes .btn{font-size:14px!important;padding:4px 2px!important}
+
+  .v160-regie{padding:5px 6px!important}
+  .v169-status{font-size:14px!important;line-height:1.15!important;margin-top:1px!important;min-height:0!important}
+  .v160-clock{font-size:20px!important;line-height:1!important;margin:1px 0!important}
+  .v160-track{height:7px!important;margin:3px 0!important}
+  .v160-phases{gap:2px!important;margin:2px 0!important}
+  .v160-phase{font-size:14px!important;line-height:1.05!important;padding:3px 1px!important}
+  .v160-regie select{font-size:14px!important;margin:1px 0!important;padding:4px 6px!important}
+  .v160-buttons{gap:3px!important;margin-top:3px!important}
+  .v160-buttons .btn{font-size:14px!important;padding:4px 3px!important;min-height:34px!important}
+
+  .controls > .panel:last-child{
+    padding:5px 6px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .controls > .panel:last-child .grid2{gap:3px!important}
+  .controls textarea{min-height:46px!important;height:46px!important;resize:none!important}
+  .controls #applyRegie{margin-top:3px!important}
+
+  .v5-tools{margin-top:4px!important;padding-top:4px!important}
+  .v5-tools h2{font-size:16px!important;margin-bottom:2px!important}
+  .v5-grid{gap:3px!important}
+  .target-tabs{gap:2px!important;margin:2px 0!important}
+  .range-wrap{grid-template-columns:78px 1fr 46px!important;gap:4px!important;margin:1px 0!important}
+  .range-wrap label{font-size:14px!important;margin:0!important}
+  .range-val{font-size:14px!important;line-height:1!important}
+  .layer-list{gap:1px!important;margin-top:2px!important}
+  .layer-item{padding:2px 4px!important;font-size:14px!important;line-height:1.05!important}
+  .anim-badge{font-size:14px!important;line-height:1.1!important;margin-top:2px!important;padding:3px 5px!important}
+
+  .tafel-card{margin-top:3px!important;padding:4px 5px!important}
+  .tafel-card strong{font-size:16px!important;line-height:1.1!important}
+  .tafel-card label{font-size:14px!important}
+  .tafel-preview{height:48px!important;border-width:2px!important;padding:3px 5px!important;font-size:14px!important}
+  .tafel-preview .chalk-title{font-size:14px!important;line-height:1.05!important}
+  .tafel-preview > div:not(.chalk-title):not(.chalk-chart){font-size:14px!important;margin-top:2px!important}
+  .tafel-preview .chalk-chart{height:22px!important;right:5px!important;bottom:4px!important}
+  .tafel-preview .chalk-chart i{width:7px!important}
+  .controls .status{font-size:14px!important;line-height:1.1!important;margin-top:3px!important;padding-top:3px!important}
+
+  .scenecol{padding:6px!important;overflow:hidden!important}
+  .scenecol h2{font-size:16px!important;line-height:1.1!important;margin-bottom:5px!important}
+  .scene-list{gap:4px!important}
+  .scene{padding:6px!important}
+  .scene .n{font-size:13px!important;line-height:1!important}
+  .scene .t{font-size:14px!important;line-height:1.15!important;margin-top:1px!important}
+  .scene-meta{font-size:14px!important;line-height:1.1!important;margin-top:2px!important}
+  .scene-tools{gap:3px!important;margin-top:5px!important}
+  .scenecol .btn{font-size:14px!important;padding:5px 6px!important}
+
+  #vortragView > .media-library{height:140px!important;padding:5px 7px!important}
+  .media-library .media-head{margin-bottom:3px!important}
+  .media-library h2{font-size:16px!important;line-height:1.1!important}
+  .media-library .media-head > div > div{font-size:14px!important;line-height:1.1!important;margin-top:1px!important}
+  .media-library .btn{font-size:14px!important;padding:4px 7px!important}
+  .media-library .media-grid{gap:5px!important}
+  .media-library .media-item{height:61px!important;padding:3px 5px!important}
+  .media-library .media-item .thumb{height:32px!important;font-size:18px!important}
+  .media-library .name{font-size:14px!important;line-height:1.05!important;margin-top:2px!important}
+  .media-library .dropzone{font-size:14px!important;line-height:1.05!important;margin-top:2px!important;padding:2px 4px!important}
+
+  #academyAutoUpdater.compact-current:not(.expanded-current) .status{
+    font-size:14px!important;
+    line-height:1.2!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">

@@ -6,8 +6,8 @@ const path = require('node:path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'src', 'index.html'), 'utf8');
 const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 
-test('declares version 0.16.10', () => {
-  assert.equal(pkg.version, '0.16.10');
+test('keeps the V16.10 ultrawide layout foundation in later versions', () => {
+  assert.match(html, /V16\.10 – Ultrawide Layoutkorrektur/);
 });
 
 test('adds the V16.10 ultrawide no-scroll layout rules', () => {
