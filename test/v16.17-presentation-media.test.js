@@ -20,6 +20,7 @@ test('V0.16.17 scene model supports interchangeable presentation media',()=>{
 test('older scenes receive safe presentation-medium defaults',()=>{
   const {normalizeScene}=fresh(); const s=normalizeScene({kind:'board'});
   assert.equal(s.presentationMedium,'chalkboard');
+  assert.equal(s.presentationVisible,true);
   assert.equal(s.mediumPosition,'right');
   assert.equal(s.mediumSize,'large');
   assert.equal(s.mediumEnter,'fade');
@@ -42,32 +43,43 @@ test('scene model supports explicit presentation-medium visibility',()=>{
   assert.equal(normalizeScene({}).presentationVisible,true);
 });
 
-test('Academy stage exposes a dedicated interchangeable presentation surface',()=>{
-  const html=read('src/index.html');
-  assert.match(html,/id="presentationSurface"/);
-  assert.match(html,/presentation-surface/);
-  assert.match(html,/presentation-chalkboard/);
-  assert.match(html,/presentation-flipchart/);
-  assert.match(html,/presentation-whiteboard/);
+test('Academy stage module exposes a dedicated interchangeable presentation surface',()=>{
+  const js=read('src/free-presentation.js');
+  assert.match(js,/id=\\"presentationSurface\\"/);
+  assert.match(js,/presentation-surface/);
+  assert.match(js,/presentation-chalkboard/);
+  assert.match(js,/presentation-flipchart/);
+  assert.match(js,/presentation-whiteboard/);
+  assert.match(js,/Rahmenlose Academy-Fläche/);
 });
 
-test('scene editor exposes medium type position size visibility and effects',()=>{
-  const html=read('src/index.html');
+test('scene editor module exposes medium type position size visibility and effects',()=>{
+  const js=read('src/free-presentation.js');
   for(const id of ['ftPresentationMedium','ftMediumPosition','ftMediumSize','ftPresentationVisible','ftMediumEnter','ftMediumExit','ftEffectDuration']){
-    assert.match(html,new RegExp(`id="${id}"`));
+    assert.match(js,new RegExp(id));
   }
-  assert.match(html,/Hineinfahren von links/);
-  assert.match(html,/Herausfahren nach rechts/);
+  assert.match(js,/Hineinfahren von links/);
+  assert.match(js,/Herausfahren nach rechts/);
 });
 
-test('free-talk scene application drives the presentation surface without GPU-heavy rendering',()=>{
-  const html=read('src/index.html');
-  assert.match(html,/applyPresentationSurface\(s\)/);
-  assert.match(html,/dataset\.medium=s\.presentationMedium/);
-  assert.match(html,/dataset\.position=s\.mediumPosition/);
-  assert.match(html,/dataset\.size=s\.mediumSize/);
-  assert.match(html,/dataset\.enter=s\.mediumEnter/);
-  assert.doesNotMatch(html,/WebGL|three\.js|canvas\.getContext\(['"]webgl/i);
+test('free-talk stage application drives the presentation surface without GPU-heavy rendering',()=>{
+  const js=read('src/free-presentation.js');
+  assert.match(js,/function applyPresentationSurface\(scene,doc\)/);
+  assert.match(js,/surface\.dataset\.medium=s\.presentationMedium/);
+  assert.match(js,/surface\.dataset\.position=s\.mediumPosition/);
+  assert.match(js,/surface\.dataset\.size=s\.mediumSize/);
+  assert.match(js,/surface\.dataset\.enter=s\.mediumEnter/);
+  assert.doesNotMatch(js,/WebGL|three\.js|canvas\.getContext\(['"]webgl/i);
+});
+
+test('presentation surface uses lightweight CSS transitions for fade and slide effects',()=>{
+  const js=read('src/free-presentation.js');
+  assert.match(js,/transition-property:transform,opacity/);
+  assert.match(js,/slide-left/);
+  assert.match(js,/slide-right/);
+  assert.match(js,/slide-top/);
+  assert.match(js,/slide-bottom/);
+  assert.match(js,/effectDuration/);
 });
 
 test('V0.16.17 keeps 40-second technical test unchanged',()=>{
