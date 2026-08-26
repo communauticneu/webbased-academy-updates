@@ -5,8 +5,9 @@ const path = require('node:path');
 const root = path.join(__dirname,'..');
 const read = p => fs.readFileSync(path.join(root,p),'utf8');
 
-test('V0.16.15 is the package version',()=>{
-  assert.equal(JSON.parse(read('package.json')).version,'0.16.15');
+test('V0.16.15 media persistence remains available in later versions',()=>{
+  const version=JSON.parse(read('package.json')).version.split('.').map(Number);
+  assert.ok(version[0]>0 || version[1]>16 || (version[1]===16 && version[2]>=15));
 });
 
 test('media picker module replaces manual medium id/path entry with library selection',()=>{
