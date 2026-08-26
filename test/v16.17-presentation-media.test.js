@@ -68,7 +68,7 @@ test('presentation settings survive project migration and restoration',()=>{
 
 test('Academy stage module exposes a dedicated interchangeable presentation surface',()=>{
   const js=read('src/free-presentation.js');
-  assert.match(js,/id=\\"presentationSurface\\"/);
+  assert.match(js,/id="presentationSurface"/);
   assert.match(js,/presentation-surface/);
   assert.match(js,/presentation-chalkboard/);
   assert.match(js,/presentation-flipchart/);
