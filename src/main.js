@@ -14,6 +14,7 @@ function createWindow() {
     minWidth: 1280,
     minHeight: 720,
     autoHideMenuBar: true,
+    show: false,
     backgroundColor: '#06131c',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -22,6 +23,10 @@ function createWindow() {
     }
   });
   win.maximize();
+  win.once('ready-to-show', () => {
+    if (!win || win.isDestroyed()) return;
+    win.show();
+  });
   win.loadFile(path.join(__dirname, 'index.html'));
 }
 
