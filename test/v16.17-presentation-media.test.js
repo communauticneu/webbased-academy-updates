@@ -117,6 +117,18 @@ test('confirmed Academy composition keeps board frameless and avatar in foregrou
   assert.match(stageJs,/stage\.classList\.toggle\('v1617-presentation-active',shouldShow\)/);
 });
 
+test('presentation-stage helper toggles active layout exactly with surface visibility',()=>{
+  delete require.cache[require.resolve('../src/presentation-stage-v16.17')];
+  const {syncPresentationStage}=require('../src/presentation-stage-v16.17');
+  const toggles=[];
+  const stage={classList:{toggle:(name,value)=>toggles.push([name,value])}};
+  const visibleSurface={classList:{contains:name=>name==='is-visible'},getAttribute:()=> 'false'};
+  syncPresentationStage({querySelector:()=>stage,getElementById:()=>visibleSurface});
+  const hiddenSurface={classList:{contains:()=>false},getAttribute:()=> 'true'};
+  syncPresentationStage({querySelector:()=>stage,getElementById:()=>hiddenSurface});
+  assert.deepEqual(toggles,[['v1617-presentation-active',true],['v1617-presentation-active',false]]);
+});
+
 test('V0.16.17 keeps 40-second technical test unchanged',()=>{
   const {PHASES,TOTAL_DURATION_SECONDS}=require('../src/production-mode');
   assert.equal(TOTAL_DURATION_SECONDS,40);
