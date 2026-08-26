@@ -78,6 +78,13 @@ test('free-talk stage application drives the presentation surface without GPU-he
   assert.doesNotMatch(js,/WebGL|three\.js|canvas\.getContext\(['"]webgl/i);
 });
 
+test('board scenes can combine board text with the selected media-library graphic',()=>{
+  const js=read('src/free-presentation.js');
+  assert.match(js,/presentation-board-graphic/);
+  assert.match(js,/graphic\.src=s\.mediumUrl/);
+  assert.match(js,/graphic\.hidden=!s\.mediumUrl/);
+});
+
 test('scene completion applies the configured exit effect before the next scene',()=>{
   const js=read('src/free-presentation.js');
   assert.match(js,/function hidePresentationSurface\(scene,doc\)/);
