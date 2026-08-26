@@ -108,6 +108,13 @@ test('board scenes can combine board text with the selected media-library graphi
   assert.match(js,/graphic\.hidden=!s\.mediumUrl/);
 });
 
+test('new presentation surface suppresses legacy small board and floating board graphic',()=>{
+  const css=read('src/presentation-stage-v16.17.css');
+  assert.match(css,/\.stage\.v1617-presentation-active #boardOverlay/);
+  assert.match(css,/\.stage\.v1617-presentation-active #userStageImage/);
+  assert.match(css,/display:\s*none!important/);
+});
+
 test('scene completion applies the configured exit effect before the next scene',()=>{
   const js=read('src/free-presentation.js');
   assert.match(js,/function hidePresentationSurface\(scene,doc\)/);
