@@ -1137,6 +1137,15 @@ body > .app, body > .shell, body > .layout, body > main{
 .v169-board-graphic i:nth-child(1){height:38%}.v169-board-graphic i:nth-child(2){height:62%}.v169-board-graphic i:nth-child(3){height:84%}.v169-board-graphic i:nth-child(4){height:70%}
 .v160-buttons .btn{font-weight:700;min-height:42px}
 
+
+/* V0.16.12 – HeyGen-Verbindungstest; V0.16.11 Layout bleibt maßgeblich. */
+.heygen-test{margin-top:6px;border-top:1px solid var(--line);padding-top:5px}
+.heygen-test input,.heygen-test textarea{width:100%;background:#0b1a24;border:1px solid #234052;color:var(--text);border-radius:7px;padding:5px 7px;font-size:14px}
+.heygen-test textarea{min-height:44px;resize:none}
+.heygen-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px}
+.heygen-warning{font-size:14px;line-height:1.2;color:#d9c99a;margin:5px 0}
+.heygen-stage-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#071018;z-index:6}
+@media (min-width:1600px){.heygen-test{position:fixed!important;right:440px!important;top:145px!important;width:430px!important;max-height:calc(100vh - 175px)!important;overflow:auto!important;z-index:50!important;background:var(--panel)!important;border:1px solid var(--line)!important;border-radius:12px!important;padding:10px!important;box-shadow:0 16px 40px rgba(0,0,0,.4)}.heygen-test label{margin:4px 0 2px!important}.heygen-test .btn{padding:5px 7px!important}.heygen-test .v169-status{margin:3px 0!important}}
 </style>
 
 <style>
@@ -1446,6 +1455,7 @@ body > .app, body > .shell, body > .layout, body > main{
 </div>
 <div class="fullscreen-object" id="fullscreenObject"><img id="fullscreenImage" alt=""></div>
 
+<video id="heygenStageVideo" class="heygen-stage-video" controls playsinline hidden></video>
 <div class="cue" id="cue">Szene 01 · Avatar spricht frontal</div>
             </div>
           </div>
@@ -1494,7 +1504,22 @@ body > .app, body > .shell, body > .layout, body > main{
             <h2>Projekt & Testavatar · V15</h2>
             <div class="v15-statusrow"><span class="v15-dot"></span><span id="v15SaveStatus">Automatisches Speichern aktiv</span></div>
             <label>Testavatar</label>
-            <select id="v15AvatarProfile"><option value="demo">Neutraler Demo-Avatar</option><option value="own" disabled>Eigener Avatar · später</option></select>
+            <select id="v15AvatarProfile"><option value="local">Lokaler Testavatar</option><option value="heygen">HeyGen Testavatar</option></select>
+            <div id="heygenTestPanel" class="heygen-test" hidden>
+              <label for="heygenApiKey">HeyGen API-Schlüssel · sicher lokal</label>
+              <div class="heygen-row"><input id="heygenApiKey" type="password" autocomplete="off" placeholder="API-Schlüssel eingeben"><button class="btn" id="heygenSaveKey" type="button">Schlüssel speichern</button></div>
+              <div class="v169-status" id="heygenKeyStatus">Kein API-Schlüssel gespeichert.</div>
+              <button class="btn" id="heygenLoadOptions" type="button">Testavatare & Stimmen laden</button>
+              <label for="heygenAvatarId">HeyGen Avatar-ID</label>
+              <input id="heygenAvatarId" list="heygenAvatarList" placeholder="Avatar-ID auswählen oder eintragen"><datalist id="heygenAvatarList"></datalist>
+              <label for="heygenVoiceId">HeyGen Voice-ID</label>
+              <input id="heygenVoiceId" list="heygenVoiceList" placeholder="Voice-ID auswählen oder eintragen"><datalist id="heygenVoiceList"></datalist>
+              <label for="heygenTestText">Kurzer Test-Sprechtext</label>
+              <textarea id="heygenTestText" rows="2">Willkommen in der Webbased Academy. Dies ist der erste technische Avatar-Test.</textarea>
+              <div class="heygen-warning">Externe HeyGen-Anfrage: Erst der bewusste Klick unten startet eine Videoerzeugung und kann HeyGen-Kontingent verbrauchen.</div>
+              <button class="btn primary" id="heygenGenerate" type="button">Avatar-Test erzeugen</button>
+              <div class="v169-status" id="heygenStatus">Bereit für Verbindungstest.</div>
+            </div>
             <label>Darstellung</label>
             <div class="grid3 v15-avatar-modes">
               <button class="btn active" type="button" data-v15mode="full">Ganzkörper</button>
@@ -3784,6 +3809,37 @@ window.addEventListener('DOMContentLoaded', async () => {
   } catch (e) {
     console.error('Version konnte nicht gelesen werden', e);
   }
+});
+</script>
+
+
+<script>
+// V0.16.12 – separater, bewusst ausgelöster HeyGen-Test. Kein Start-Automatismus.
+window.addEventListener('DOMContentLoaded', async () => {
+  const profile=document.getElementById('v15AvatarProfile'), panel=document.getElementById('heygenTestPanel');
+  const key=document.getElementById('heygenApiKey'), keyStatus=document.getElementById('heygenKeyStatus');
+  const saveKey=document.getElementById('heygenSaveKey'), load=document.getElementById('heygenLoadOptions');
+  const avatarId=document.getElementById('heygenAvatarId'),voiceId=document.getElementById('heygenVoiceId'),text=document.getElementById('heygenTestText');
+  const generate=document.getElementById('heygenGenerate'),status=document.getElementById('heygenStatus'),video=document.getElementById('heygenStageVideo');
+  const localAvatar=document.getElementById('avatar');
+  if(!profile||!panel)return;
+  function localMode(){panel.hidden=true;if(video){video.pause();video.hidden=true;video.removeAttribute('src')}if(localAvatar)localAvatar.style.visibility='';status.textContent='Bereit für Verbindungstest.'}
+  function heygenMode(){panel.hidden=false;if(localAvatar)localAvatar.style.visibility='';}
+  function applyMode(){profile.value==='heygen'?heygenMode():localMode()}
+  profile.addEventListener('change',applyMode); applyMode();
+  try{const state=await window.academyDesktop?.heygenKeyState?.();if(state?.saved)keyStatus.textContent='API-Schlüssel ist sicher lokal gespeichert.'}catch{}
+  saveKey?.addEventListener('click',async()=>{try{await window.academyDesktop.heygenSaveApiKey(key.value);key.value='';keyStatus.textContent='API-Schlüssel ist sicher lokal gespeichert.'}catch(e){keyStatus.textContent=e.message||String(e)}});
+  load?.addEventListener('click',async()=>{try{status.textContent='Avatar wird vorbereitet';const data=await window.academyDesktop.heygenListOptions();const al=document.getElementById('heygenAvatarList'),vl=document.getElementById('heygenVoiceList');al.innerHTML='';vl.innerHTML='';data.avatars.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.label=a.name;al.appendChild(o)});data.voices.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.label=v.name;vl.appendChild(o)});status.textContent=`${data.avatars.length} Avatare und ${data.voices.length} Stimmen verfügbar.`}catch(e){status.textContent=e.message||String(e)}});
+  window.academyDesktop?.onHeygenStatus?.(d=>{if(d?.text)status.textContent=d.text});
+  generate?.addEventListener('click',async()=>{
+    generate.disabled=true; status.textContent='Avatar wird vorbereitet';
+    try{
+      const result=await window.academyDesktop.heygenGenerateTest({avatarId:avatarId.value.trim(),voiceId:voiceId.value.trim(),text:text.value.trim()});
+      status.textContent='Video wird geladen'; video.src=result.videoUrl; video.hidden=false;if(localAvatar)localAvatar.style.visibility='hidden';
+      await video.play(); status.textContent='Avatar-Test bereit';
+    }catch(e){status.textContent=e.message||'HeyGen-Test konnte nicht erzeugt werden.';if(video)video.hidden=true;if(localAvatar)localAvatar.style.visibility=''}
+    finally{generate.disabled=false}
+  });
 });
 </script>
 

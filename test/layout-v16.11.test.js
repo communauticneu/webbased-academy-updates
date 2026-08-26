@@ -6,8 +6,8 @@ const path = require('node:path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'src', 'index.html'), 'utf8');
 const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 
-test('declares version 0.16.11', () => {
-  assert.equal(pkg.version, '0.16.11');
+test('keeps V0.16.11 readability rules while allowing the current version to advance', () => {
+  assert.match(pkg.version, /^0\.16\.(?:1[1-9]|[2-9]\d)$/);
 });
 
 test('adds V16.11 readability rules for ultrawide without scroll', () => {
