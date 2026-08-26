@@ -15,3 +15,10 @@ contextBridge.exposeInMainWorld('academyDesktop', {
   onHeygenStatus: callback => ipcRenderer.on('heygen-test-status', (_event, data) => callback(data)),
   onUpdate: callback => ipcRenderer.on('academy-update', (_event, data) => callback(data))
 });
+
+// V0.16.15 – kleine Renderer-Erweiterung für Medienauswahl im freien Vortrag.
+window.addEventListener('DOMContentLoaded', () => {
+  const script = document.createElement('script');
+  script.src = 'media-library-scene-picker.js';
+  document.documentElement.appendChild(script);
+});
