@@ -1,0 +1,82 @@
+/* V0.16.17 – visuelle Referenz: rahmenlose Präsentationsfläche als Teil des Academy-Raums. */
+.stage .presentation-surface{
+  border:0!important;
+  border-radius:0!important;
+  outline:0;
+  overflow:hidden;
+}
+
+.stage .presentation-surface.presentation-chalkboard{
+  background-color:#262928;
+  background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/tafel-academy.jpg')!important;
+  background-size:cover!important;
+  background-position:center!important;
+  box-shadow:0 22px 52px rgba(0,0,0,.18)!important;
+}
+
+/* Die Tafel wirkt wie eine große Materialfläche im Raum – kein Schulrahmen. */
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
+  top:8%!important;
+  width:70%!important;
+  height:76%!important;
+}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{
+  left:5%!important;
+  right:auto!important;
+}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{
+  right:5%!important;
+  left:auto!important;
+}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{
+  left:50%!important;
+  right:auto!important;
+}
+
+/* Der Avatar bleibt klar im Vordergrund und weicht dem Präsentationsmedium aus. */
+.stage.v1617-presentation-active .avatar{
+  z-index:6;
+  transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease;
+}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar{
+  left:auto!important;
+  right:8%!important;
+}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar{
+  left:10%!important;
+  right:auto!important;
+}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar{
+  left:8%!important;
+  right:auto!important;
+}
+
+/* Text und Grafik sitzen auf der Fläche und bleiben auch auf 3440×1440 gut lesbar. */
+.stage .presentation-content{
+  padding:5.5%!important;
+}
+.stage .presentation-board-text{
+  max-width:100%;
+  font-size:clamp(18px,1.35vw,34px)!important;
+  line-height:1.28;
+}
+.stage .presentation-board-graphic{
+  max-width:100%;
+  max-height:82%;
+  object-fit:contain;
+}
+
+/* Flipchart und Whiteboard bleiben bewusst eigenständige, austauschbare Medien. */
+.stage .presentation-surface.presentation-flipchart,
+.stage .presentation-surface.presentation-whiteboard{
+  border:0!important;
+}
+
+@media (max-width:1599px){
+  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
+    width:66%!important;
+    height:72%!important;
+  }
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar{right:5%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar{left:6%!important}
+}
