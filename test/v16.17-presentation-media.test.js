@@ -6,6 +6,10 @@ const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const fresh=()=>{delete require.cache[require.resolve('../src/free-presentation')];return require('../src/free-presentation');};
 
+test('V0.16.17 package version is set',()=>{
+  assert.equal(JSON.parse(read('package.json')).version,'0.16.17');
+});
+
 test('V0.16.17 scene model supports interchangeable presentation media',()=>{
   const {normalizeScene}=fresh();
   const s=normalizeScene({presentationMedium:'flipchart',mediumPosition:'left',mediumSize:'large',mediumEnter:'slide-left',mediumExit:'fade',effectDuration:0.8});
@@ -41,6 +45,25 @@ test('scene model supports explicit presentation-medium visibility',()=>{
   const {normalizeScene}=fresh();
   assert.equal(normalizeScene({presentationVisible:false}).presentationVisible,false);
   assert.equal(normalizeScene({}).presentationVisible,true);
+});
+
+test('presentation settings survive project migration and restoration',()=>{
+  const {migrateProjectData}=fresh();
+  const restored=migrateProjectData({presentationScenes:[{
+    name:'Tafel Demo',kind:'board',duration:12,presentationMedium:'whiteboard',presentationVisible:true,
+    mediumPosition:'left',mediumSize:'medium',mediumEnter:'slide-left',mediumExit:'slide-right',effectDuration:1.1,
+    boardText:'Wissen verstehen',mediumId:'diagramm',mediumUrl:'data:image/png;base64,abc'
+  }]});
+  const s=restored.presentationScenes[0];
+  assert.deepEqual({
+    presentationMedium:s.presentationMedium,presentationVisible:s.presentationVisible,mediumPosition:s.mediumPosition,
+    mediumSize:s.mediumSize,mediumEnter:s.mediumEnter,mediumExit:s.mediumExit,effectDuration:s.effectDuration,
+    boardText:s.boardText,mediumId:s.mediumId,mediumUrl:s.mediumUrl
+  },{
+    presentationMedium:'whiteboard',presentationVisible:true,mediumPosition:'left',mediumSize:'medium',
+    mediumEnter:'slide-left',mediumExit:'slide-right',effectDuration:1.1,
+    boardText:'Wissen verstehen',mediumId:'diagramm',mediumUrl:'data:image/png;base64,abc'
+  });
 });
 
 test('Academy stage module exposes a dedicated interchangeable presentation surface',()=>{
