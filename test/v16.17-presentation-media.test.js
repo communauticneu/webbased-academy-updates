@@ -78,6 +78,13 @@ test('free-talk stage application drives the presentation surface without GPU-he
   assert.doesNotMatch(js,/WebGL|three\.js|canvas\.getContext\(['"]webgl/i);
 });
 
+test('scene completion applies the configured exit effect before the next scene',()=>{
+  const js=read('src/free-presentation.js');
+  assert.match(js,/function hidePresentationSurface\(scene,doc\)/);
+  assert.match(js,/surface\.dataset\.enter=s\.mediumExit/);
+  assert.match(js,/hidePresentationSurface\(scenes\[sceneIndex\],doc\)/);
+});
+
 test('presentation surface uses lightweight CSS transitions for fade and slide effects',()=>{
   const js=read('src/free-presentation.js');
   assert.match(js,/transition-property:transform,opacity/);
