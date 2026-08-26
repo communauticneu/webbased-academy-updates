@@ -72,6 +72,17 @@
   object-fit:contain;
 }
 
+/* Ein eigenes Präsentationsmedium ist selbst die Fläche und wird nicht doppelt als Grafik darüber gelegt. */
+.stage .presentation-surface.presentation-custom .presentation-board-graphic{
+  display:none!important;
+}
+
+/* Ausgehende Flächen bleiben nur für die Dauer ihres CSS-Effekts bestehen. */
+.stage .presentation-exit-clone{
+  pointer-events:none!important;
+  z-index:4;
+}
+
 /* Flipchart und Whiteboard bleiben bewusst eigenständige, austauschbare Medien. */
 .stage .presentation-surface.presentation-flipchart,
 .stage .presentation-surface.presentation-whiteboard{
