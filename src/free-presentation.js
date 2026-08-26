@@ -40,6 +40,7 @@
       mediumUrl:text(s.mediumUrl,state.object?.url||''),
       transition:VALID_TRANSITIONS.has(s.transition)?s.transition:'cut',
       presentationMedium:VALID_PRESENTATION_MEDIA.has(s.presentationMedium)?s.presentationMedium:'chalkboard',
+      presentationVisible:s.presentationVisible!==false,
       mediumPosition:VALID_MEDIA_POSITIONS.has(s.mediumPosition)?s.mediumPosition:'right',
       mediumSize:VALID_MEDIA_SIZES.has(s.mediumSize)?s.mediumSize:'large',
       mediumEnter:VALID_MEDIA_EFFECTS.has(s.mediumEnter)?s.mediumEnter:'fade',
@@ -55,34 +56,238 @@
     const api={
       getScenes:()=>scenes.map(s=>({...s,state:s.state?{...s.state}:null})),
       get:(i)=>scenes[i]?{...scenes[i],state:scenes[i].state?{...scenes[i].state}:null}:null,
-      add(scene,index=scenes.length){const item=normalizeScene(scene,scenes.length);const at=Math.max(0,Math.min(scenes.length,finite(index,scenes.length)));scenes.splice(at,0,item);return {...item};},
-      duplicate(index){if(!scenes[index])return null;const copy=normalizeScene({...scenes[index],id:nextId(),name:`${scenes[index].name} · Kopie`},index+1);scenes.splice(index+1,0,copy);return {...copy};},
-      remove(index){if(scenes.length<=1||!scenes[index])return false;scenes.splice(index,1);return true;},
-      move(index,delta){const target=index+delta;if(index<0||index>=scenes.length||target<0||target>=scenes.length)return false;const [item]=scenes.splice(index,1);scenes.splice(target,0,item);return true;},
-      update(index,patch){if(!scenes[index])return null;scenes[index]=normalizeScene({...scenes[index],...patch,id:scenes[index].id},index);return {...scenes[index]};},
-      replace(next){scenes=(Array.isArray(next)?next:[]).map(normalizeScene);if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];return api.getScenes();},
+      add(scene,index=scenes.length){
+        const item=normalizeScene(scene,scenes.length);
+        const at=Math.max(0,Math.min(scenes.length,finite(index,scenes.length)));
+        scenes.splice(at,0,item);
+        return {...item};
+      },
+      duplicate(index){
+        if(!scenes[index])return null;
+        const copy=normalizeScene({...scenes[index],id:nextId(),name:`${scenes[index].name} · Kopie`},index+1);
+        scenes.splice(index+1,0,copy);
+        return {...copy};
+      },
+      remove(index){
+        if(scenes.length<=1||!scenes[index])return false;
+        scenes.splice(index,1);
+        return true;
+      },
+      move(index,delta){
+        const target=index+delta;
+        if(index<0||index>=scenes.length||target<0||target>=scenes.length)return false;
+        const [item]=scenes.splice(index,1);
+        scenes.splice(target,0,item);
+        return true;
+      },
+      update(index,patch){
+        if(!scenes[index])return null;
+        scenes[index]=normalizeScene({...scenes[index],...patch,id:scenes[index].id},index);
+        return {...scenes[index]};
+      },
+      replace(next){
+        scenes=(Array.isArray(next)?next:[]).map(normalizeScene);
+        if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];
+        return api.getScenes();
+      },
       totalDuration:()=>scenes.reduce((sum,s)=>sum+s.duration,0)
-    };return api;
+    };
+    return api;
   }
 
   function createPresentationRunner(inputScenes,handlers={}){
     let scenes=(Array.isArray(inputScenes)?inputScenes:[]).map(normalizeScene);
     let running=false,paused=false,stopped=false,sceneIndex=0,sceneTime=0,totalTime=0,entered=-1;
     const totalDuration=()=>scenes.reduce((sum,s)=>sum+s.duration,0);
-    function enter(){if(sceneIndex<scenes.length&&entered!==sceneIndex){entered=sceneIndex;handlers.onSceneEnter?.({...scenes[sceneIndex]},sceneIndex);}}
+    function enter(){
+      if(sceneIndex<scenes.length&&entered!==sceneIndex){
+        entered=sceneIndex;
+        handlers.onSceneEnter?.({...scenes[sceneIndex]},sceneIndex);
+      }
+    }
     function notify(){handlers.onTick?.(state());}
-    function state(){return {running,paused,stopped,sceneIndex,sceneTime,totalTime,totalDuration:totalDuration(),progress:totalDuration()?Math.min(1,totalTime/totalDuration()):0,scene:scenes[sceneIndex]?{...scenes[sceneIndex]}:null};}
-    function start(){if(!scenes.length)return state();if(stopped&&totalTime>=totalDuration())reset();running=true;paused=false;stopped=false;enter();notify();return state();}
+    function state(){
+      return {
+        running,paused,stopped,sceneIndex,sceneTime,totalTime,
+        totalDuration:totalDuration(),
+        progress:totalDuration()?Math.min(1,totalTime/totalDuration()):0,
+        scene:scenes[sceneIndex]?{...scenes[sceneIndex]}:null
+      };
+    }
+    function start(){
+      if(!scenes.length)return state();
+      if(stopped&&totalTime>=totalDuration())reset();
+      running=true;paused=false;stopped=false;enter();notify();return state();
+    }
     function pause(){if(running){running=false;paused=true;}notify();return state();}
     function stop(){running=false;paused=false;stopped=true;handlers.onStop?.(state());notify();return state();}
     function reset(){running=false;paused=false;stopped=false;sceneIndex=0;sceneTime=0;totalTime=0;entered=-1;handlers.onReset?.();notify();return state();}
-    function advance(seconds){if(!running||seconds<=0||sceneIndex>=scenes.length)return state();let remaining=Math.max(0,finite(seconds,0));while(remaining>0&&sceneIndex<scenes.length){enter();const left=Math.max(0,scenes[sceneIndex].duration-sceneTime);const step=Math.min(remaining,left);sceneTime+=step;totalTime+=step;remaining-=step;if(sceneTime>=scenes[sceneIndex].duration-1e-9){handlers.onSceneComplete?.({...scenes[sceneIndex]},sceneIndex);sceneIndex+=1;sceneTime=0;if(sceneIndex<scenes.length){enter();}else{running=false;stopped=true;handlers.onComplete?.(state());break;}}}notify();return state();}
+    function advance(seconds){
+      if(!running||seconds<=0||sceneIndex>=scenes.length)return state();
+      let remaining=Math.max(0,finite(seconds,0));
+      while(remaining>0&&sceneIndex<scenes.length){
+        enter();
+        const left=Math.max(0,scenes[sceneIndex].duration-sceneTime);
+        const step=Math.min(remaining,left);
+        sceneTime+=step;totalTime+=step;remaining-=step;
+        if(sceneTime>=scenes[sceneIndex].duration-1e-9){
+          handlers.onSceneComplete?.({...scenes[sceneIndex]},sceneIndex);
+          sceneIndex+=1;sceneTime=0;
+          if(sceneIndex<scenes.length)enter();
+          else{running=false;stopped=true;handlers.onComplete?.(state());break;}
+        }
+      }
+      notify();return state();
+    }
     return {start,pause,stop,reset,advance,getState:state,setScenes(next){scenes=(Array.isArray(next)?next:[]).map(normalizeScene);return reset();}};
   }
 
-  function storyboardToScenes(storyboard){return (Array.isArray(storyboard)?storyboard:[]).map((item,i)=>normalizeScene({name:item?.name||`Szene ${i+1}`,duration:item?.duration,transition:item?.transition,state:item?.state||{},camera:item?.state?.camera,boardText:item?.state?.boardText,speechText:item?.state?.transcript,avatarPoint:item?.state?.avatarPoint},i));}
-  function migrateProjectData(data){const src=data&&typeof data==='object'?data:{};let scenes=Array.isArray(src.presentationScenes)?src.presentationScenes:null;if(!scenes||!scenes.length)scenes=storyboardToScenes(src.storyboard);if(!scenes.length&&Array.isArray(src.states))scenes=src.states.map((state,i)=>normalizeScene({name:state?.name||`Szene ${i+1}`,state},i));if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];return {...src,presentationScenes:scenes.map(normalizeScene)};}
-  function formatTime(seconds){const s=Math.max(0,finite(seconds,0));const m=Math.floor(s/60);const r=s-m*60;return `${String(m).padStart(2,'0')}:${String(Math.floor(r)).padStart(2,'0')}.${Math.floor((r%1)*10)}`;}
+  function storyboardToScenes(storyboard){
+    return (Array.isArray(storyboard)?storyboard:[]).map((item,i)=>normalizeScene({
+      name:item?.name||`Szene ${i+1}`,
+      duration:item?.duration,
+      transition:item?.transition,
+      state:item?.state||{},
+      camera:item?.state?.camera,
+      boardText:item?.state?.boardText,
+      speechText:item?.state?.transcript,
+      avatarPoint:item?.state?.avatarPoint
+    },i));
+  }
 
-  return {normalizeScene,createPresentationModel,createPresentationRunner,migrateProjectData,storyboardToScenes,formatTime};
+  function migrateProjectData(data){
+    const src=data&&typeof data==='object'?data:{};
+    let scenes=Array.isArray(src.presentationScenes)?src.presentationScenes:null;
+    if(!scenes||!scenes.length)scenes=storyboardToScenes(src.storyboard);
+    if(!scenes.length&&Array.isArray(src.states))scenes=src.states.map((state,i)=>normalizeScene({name:state?.name||`Szene ${i+1}`,state},i));
+    if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];
+    return {...src,presentationScenes:scenes.map(normalizeScene)};
+  }
+
+  function formatTime(seconds){
+    const s=Math.max(0,finite(seconds,0));
+    const m=Math.floor(s/60);const r=s-m*60;
+    return `${String(m).padStart(2,'0')}:${String(Math.floor(r)).padStart(2,'0')}.${Math.floor((r%1)*10)}`;
+  }
+
+  function presentationSurfaceMarkup(){
+    return '<div id="presentationSurface" class="presentation-surface presentation-chalkboard" data-medium="chalkboard" data-position="right" data-size="large" data-enter="fade" aria-hidden="true"><div class="presentation-content"><div class="presentation-board-text"></div></div></div>';
+  }
+
+  function presentationEditorMarkup(){
+    return '<div id="v1617PresentationControls" class="v1617-presentation-controls">'+
+      '<div class="v1617-title">Präsentationsmedium</div>'+
+      '<label>Medium<select id="ftPresentationMedium"><option value="chalkboard">Schultafel</option><option value="flipchart">Flipchart</option><option value="whiteboard">Whiteboard</option><option value="custom">Benutzerdefiniert</option></select></label>'+
+      '<div class="v1617-grid"><label>Position<select id="ftMediumPosition"><option value="left">Links</option><option value="center">Mitte</option><option value="right">Rechts</option></select></label><label>Größe<select id="ftMediumSize"><option value="small">Klein</option><option value="medium">Mittel</option><option value="large">Groß</option></select></label></div>'+
+      '<label class="v1617-check"><input id="ftPresentationVisible" type="checkbox" checked> Medium sichtbar</label>'+
+      '<div class="v1617-grid"><label>Einblend-Effekt<select id="ftMediumEnter"><option value="cut">Direkt</option><option value="fade">Einblenden</option><option value="slide-left">Hineinfahren von links</option><option value="slide-right">Hineinfahren von rechts</option><option value="slide-top">Hineinfahren von oben</option><option value="slide-bottom">Hineinfahren von unten</option></select></label><label>Ausblend-Effekt<select id="ftMediumExit"><option value="cut">Direkt</option><option value="fade">Ausblenden</option><option value="slide-left">Herausfahren nach links</option><option value="slide-right">Herausfahren nach rechts</option><option value="slide-top">Herausfahren nach oben</option><option value="slide-bottom">Herausfahren nach unten</option></select></label></div>'+
+      '<label>Effektdauer (Sek.)<input id="ftEffectDuration" type="number" min="0" max="2" step="0.1" value="0.6"></label>'+
+      '<div class="v1617-hint">Rahmenlose Academy-Fläche; Tafel, Flipchart, Whiteboard oder eigenes Medium pro Szene austauschbar.</div>'+
+      '</div>';
+  }
+
+  function presentationStyles(){
+    return `
+      .presentation-surface{position:absolute;z-index:3;opacity:0;pointer-events:none;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.22);will-change:transform,opacity;transition-property:transform,opacity;transition-timing-function:cubic-bezier(.2,.72,.24,1)}
+      .presentation-surface[data-position="left"]{left:7%;right:auto}.presentation-surface[data-position="center"]{left:50%;right:auto;transform:translateX(-50%)}.presentation-surface[data-position="right"]{right:7%;left:auto}
+      .presentation-surface[data-size="small"]{top:24%;width:34%;height:45%}.presentation-surface[data-size="medium"]{top:17%;width:50%;height:58%}.presentation-surface[data-size="large"]{top:10%;width:68%;height:70%}
+      .presentation-surface.presentation-chalkboard{background-color:#252827;background-image:linear-gradient(rgba(255,255,255,.025),rgba(0,0,0,.08)),radial-gradient(circle at 30% 35%,rgba(255,255,255,.08),transparent 40%),linear-gradient(115deg,#343736,#1f2221 60%,#2b2e2d);border-radius:1px}
+      .presentation-surface.presentation-chalkboard:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(8deg,transparent 0 14px,rgba(255,255,255,.018) 15px 16px),repeating-linear-gradient(96deg,transparent 0 23px,rgba(255,255,255,.012) 24px 25px);mix-blend-mode:screen;opacity:.65}
+      .presentation-surface.presentation-whiteboard{background:linear-gradient(135deg,#f8fbfc,#e8eef1);box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 0 0 1px rgba(20,40,50,.16)}
+      .presentation-surface.presentation-flipchart{width:min(35%,390px)!important;height:67%!important;top:10%!important;background:linear-gradient(#fff,#f1f1ed);border-radius:3px;box-shadow:0 18px 50px rgba(0,0,0,.22)}
+      .presentation-surface.presentation-flipchart:after{content:"";position:absolute;left:48%;top:100%;width:4%;height:26%;background:#88939a;box-shadow:-80px 0 0 #88939a,80px 0 0 #88939a}
+      .presentation-surface.presentation-custom{background:#14232d;border:1px solid rgba(255,255,255,.16)}
+      .presentation-content{position:absolute;inset:0;padding:5.5%;display:flex;align-items:flex-start;justify-content:flex-start}
+      .presentation-board-text{position:relative;z-index:1;color:#f4f1e8;font-family:Georgia,serif;font-size:clamp(18px,1.4vw,34px);line-height:1.28;white-space:pre-wrap;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+      .presentation-whiteboard .presentation-board-text,.presentation-flipchart .presentation-board-text{color:#18242b;font-family:Segoe UI,Arial,sans-serif;text-shadow:none}
+      .presentation-surface.is-visible{opacity:1}
+      .presentation-surface[data-enter="slide-left"]{transform:translateX(-115%)}.presentation-surface[data-enter="slide-right"]{transform:translateX(115%)}.presentation-surface[data-enter="slide-top"]{transform:translateY(-115%)}.presentation-surface[data-enter="slide-bottom"]{transform:translateY(115%)}
+      .presentation-surface[data-position="center"][data-enter="slide-left"]{transform:translate(-165%,-0%)}.presentation-surface[data-position="center"][data-enter="slide-right"]{transform:translate(65%,-0%)}
+      .presentation-surface.is-visible[data-enter="slide-left"],.presentation-surface.is-visible[data-enter="slide-right"],.presentation-surface.is-visible[data-enter="slide-top"],.presentation-surface.is-visible[data-enter="slide-bottom"]{transform:none}
+      .presentation-surface.is-visible[data-position="center"]{transform:translateX(-50%)}
+      .v1617-presentation-controls{margin-top:10px;padding-top:10px;border-top:1px solid #294556}.v1617-presentation-controls .v1617-title{font-weight:700;font-size:16px;margin-bottom:6px}.v1617-presentation-controls label{display:block;font-size:14px;margin:6px 0}.v1617-presentation-controls select,.v1617-presentation-controls input[type="number"]{width:100%;min-height:34px;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:8px;padding:6px 8px;font-size:14px}.v1617-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v1617-check{display:flex!important;align-items:center;gap:8px}.v1617-check input{width:auto}.v1617-hint{font-size:12px;color:#8fa8b8;line-height:1.35;margin-top:6px}
+    `;
+  }
+
+  function ensurePresentationUi(doc){
+    if(!doc||doc.getElementById('presentationSurface'))return;
+    const stage=doc.querySelector('.stage');
+    if(!stage)return;
+    stage.insertAdjacentHTML('beforeend',presentationSurfaceMarkup());
+    const style=doc.createElement('style');
+    style.id='v1617PresentationStyles';
+    style.textContent=presentationStyles();
+    doc.head.appendChild(style);
+    const drawer=doc.getElementById('freeTalkDrawer')||doc.getElementById('freeTalkEditor');
+    if(drawer&&!doc.getElementById('v1617PresentationControls'))drawer.insertAdjacentHTML('beforeend',presentationEditorMarkup());
+  }
+
+  function writePresentationControls(scene,doc){
+    if(!doc)return;
+    const s=normalizeScene(scene||{});
+    const set=(id,v)=>{const el=doc.getElementById(id);if(el)el.value=v;};
+    set('ftPresentationMedium',s.presentationMedium);
+    set('ftMediumPosition',s.mediumPosition);
+    set('ftMediumSize',s.mediumSize);
+    set('ftMediumEnter',s.mediumEnter);
+    set('ftMediumExit',s.mediumExit);
+    set('ftEffectDuration',s.effectDuration);
+    const visible=doc.getElementById('ftPresentationVisible');if(visible)visible.checked=s.presentationVisible;
+  }
+
+  function readPresentationControls(doc){
+    if(!doc)return {};
+    const val=id=>doc.getElementById(id)?.value;
+    return {
+      presentationMedium:val('ftPresentationMedium')||'chalkboard',
+      mediumPosition:val('ftMediumPosition')||'right',
+      mediumSize:val('ftMediumSize')||'large',
+      presentationVisible:doc.getElementById('ftPresentationVisible')?.checked!==false,
+      mediumEnter:val('ftMediumEnter')||'fade',
+      mediumExit:val('ftMediumExit')||'fade',
+      effectDuration:finite(val('ftEffectDuration'),.6)
+    };
+  }
+
+  function applyPresentationSurface(scene,doc){
+    if(!doc)return;
+    ensurePresentationUi(doc);
+    const s=normalizeScene(scene||{});
+    const surface=doc.getElementById('presentationSurface');
+    if(!surface)return;
+    surface.className=`presentation-surface presentation-${s.presentationMedium}`;
+    surface.dataset.medium=s.presentationMedium;
+    surface.dataset.position=s.mediumPosition;
+    surface.dataset.size=s.mediumSize;
+    surface.dataset.enter=s.mediumEnter;
+    surface.dataset.exit=s.mediumExit;
+    surface.style.transitionDuration=`${s.effectDuration}s`;
+    const txt=surface.querySelector('.presentation-board-text');
+    if(txt)txt.textContent=s.boardText||'';
+    const shouldShow=s.presentationVisible&&(s.kind==='board'||s.presentationMedium==='custom');
+    surface.setAttribute('aria-hidden',shouldShow?'false':'true');
+    requestAnimationFrame?.(()=>surface.classList.toggle('is-visible',shouldShow));
+    if(typeof requestAnimationFrame!=='function')surface.classList.toggle('is-visible',shouldShow);
+  }
+
+  function installPresentationUi(doc){
+    ensurePresentationUi(doc);
+    if(!doc)return;
+    const observer=typeof MutationObserver==='function'?new MutationObserver(()=>{
+      ensurePresentationUi(doc);
+    }):null;
+    observer?.observe(doc.documentElement,{childList:true,subtree:true});
+    return observer;
+  }
+
+  if(typeof document!=='undefined'){
+    const boot=()=>installPresentationUi(document);
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  }
+
+  return {
+    normalizeScene,createPresentationModel,createPresentationRunner,migrateProjectData,storyboardToScenes,formatTime,
+    ensurePresentationUi,installPresentationUi,applyPresentationSurface,writePresentationControls,readPresentationControls,
+    presentationSurfaceMarkup,presentationEditorMarkup,presentationStyles
+  };
 });
