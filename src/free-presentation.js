@@ -133,8 +133,16 @@
       running=true;paused=false;stopped=false;enter();notify();return state();
     }
     function pause(){if(running){running=false;paused=true;}notify();return state();}
-    function stop(){running=false;paused=false;stopped=true;handlers.onStop?.(state());notify();return state();}
-    function reset(){running=false;paused=false;stopped=false;sceneIndex=0;sceneTime=0;totalTime=0;entered=-1;handlers.onReset?.();notify();return state();}
+    function stop(){
+      const doc=activeDocument();
+      if(doc&&scenes[sceneIndex])hidePresentationSurface(scenes[sceneIndex],doc);
+      running=false;paused=false;stopped=true;handlers.onStop?.(state());notify();return state();
+    }
+    function reset(){
+      const doc=activeDocument();
+      if(doc&&scenes[sceneIndex])hidePresentationSurface(scenes[sceneIndex],doc);
+      running=false;paused=false;stopped=false;sceneIndex=0;sceneTime=0;totalTime=0;entered=-1;handlers.onReset?.();notify();return state();
+    }
     function advance(seconds){
       if(!running||seconds<=0||sceneIndex>=scenes.length)return state();
       let remaining=Math.max(0,finite(seconds,0));
@@ -144,6 +152,8 @@
         const step=Math.min(remaining,left);
         sceneTime+=step;totalTime+=step;remaining-=step;
         if(sceneTime>=scenes[sceneIndex].duration-1e-9){
+          const doc=activeDocument();
+          if(doc)hidePresentationSurface(scenes[sceneIndex],doc);
           handlers.onSceneComplete?.({...scenes[sceneIndex]},sceneIndex);
           sceneIndex+=1;sceneTime=0;
           if(sceneIndex<scenes.length)enter();
@@ -283,6 +293,17 @@
     if(typeof requestAnimationFrame==='function')requestAnimationFrame(toggle);else toggle();
   }
 
+  function hidePresentationSurface(scene,doc){
+    if(!doc)return;
+    const s=normalizeScene(scene||{});
+    const surface=doc.getElementById('presentationSurface');
+    if(!surface)return;
+    surface.dataset.enter=s.mediumExit;
+    surface.style.transitionDuration=`${s.effectDuration}s`;
+    surface.classList.remove('is-visible');
+    surface.setAttribute('aria-hidden','true');
+  }
+
   function installPresentationUi(doc){
     ensurePresentationUi(doc);
     if(!doc)return null;
@@ -298,7 +319,7 @@
 
   return {
     normalizeScene,createPresentationModel,createPresentationRunner,migrateProjectData,storyboardToScenes,formatTime,
-    ensurePresentationUi,installPresentationUi,applyPresentationSurface,writePresentationControls,readPresentationControls,
+    ensurePresentationUi,installPresentationUi,applyPresentationSurface,hidePresentationSurface,writePresentationControls,readPresentationControls,
     presentationSurfaceMarkup,presentationEditorMarkup,presentationStyles
   };
 });
