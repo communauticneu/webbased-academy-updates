@@ -194,7 +194,7 @@
   }
 
   function presentationSurfaceMarkup(){
-    return '<div id="presentationSurface" class="presentation-surface presentation-chalkboard" data-medium="chalkboard" data-position="right" data-size="large" data-enter="fade" aria-hidden="true"><div class="presentation-content"><div class="presentation-board-text"></div></div></div>';
+    return '<div id="presentationSurface" class="presentation-surface presentation-chalkboard" data-medium="chalkboard" data-position="right" data-size="large" data-enter="fade" aria-hidden="true"><div class="presentation-content"><div class="presentation-board-text"></div><img class="presentation-board-graphic" alt="" hidden></div></div>';
   }
 
   function presentationEditorMarkup(){
@@ -219,8 +219,10 @@
       .presentation-surface.presentation-flipchart{width:min(35%,390px)!important;height:67%!important;top:10%!important;background:linear-gradient(#fff,#f1f1ed);border-radius:3px;box-shadow:0 18px 50px rgba(0,0,0,.22)}
       .presentation-surface.presentation-flipchart:after{content:"";position:absolute;left:48%;top:100%;width:4%;height:26%;background:#88939a;box-shadow:-80px 0 0 #88939a,80px 0 0 #88939a}
       .presentation-surface.presentation-custom{background:#14232d;border:1px solid rgba(255,255,255,.16)}
-      .presentation-content{position:absolute;inset:0;padding:5.5%;display:flex;align-items:flex-start;justify-content:flex-start}
+      .presentation-content{position:absolute;inset:0;padding:5.5%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:4%;align-items:start}
       .presentation-board-text{position:relative;z-index:1;color:#f4f1e8;font-family:Georgia,serif;font-size:clamp(18px,1.4vw,34px);line-height:1.28;white-space:pre-wrap;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+      .presentation-board-graphic{position:relative;z-index:1;width:100%;max-height:82%;object-fit:contain;align-self:center;justify-self:center;filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
+      .presentation-board-graphic[hidden]{display:none}.presentation-content:has(.presentation-board-graphic[hidden]){grid-template-columns:1fr}
       .presentation-whiteboard .presentation-board-text,.presentation-flipchart .presentation-board-text{color:#18242b;font-family:Segoe UI,Arial,sans-serif;text-shadow:none}
       .presentation-surface.is-visible{opacity:1}
       .presentation-surface[data-enter="slide-left"]{transform:translateX(-115%)}.presentation-surface[data-enter="slide-right"]{transform:translateX(115%)}.presentation-surface[data-enter="slide-top"]{transform:translateY(-115%)}.presentation-surface[data-enter="slide-bottom"]{transform:translateY(115%)}
@@ -287,6 +289,17 @@
     surface.style.transitionDuration=`${s.effectDuration}s`;
     const txt=surface.querySelector('.presentation-board-text');
     if(txt)txt.textContent=s.boardText||'';
+    const graphic=surface.querySelector('.presentation-board-graphic');
+    if(graphic){
+      if(s.mediumUrl)graphic.src=s.mediumUrl;else graphic.removeAttribute('src');
+      graphic.hidden=!s.mediumUrl;
+    }
+    if(s.presentationMedium==='custom'&&s.mediumUrl){
+      surface.style.backgroundImage=`linear-gradient(rgba(0,0,0,.04),rgba(0,0,0,.04)),url('${s.mediumUrl.replace(/'/g,"%27")}')`;
+      surface.style.backgroundSize='cover';surface.style.backgroundPosition='center';
+    }else if(s.presentationMedium!=='chalkboard'){
+      surface.style.backgroundImage='';surface.style.backgroundSize='';surface.style.backgroundPosition='';
+    }
     const shouldShow=s.presentationVisible&&s.kind==='board';
     surface.setAttribute('aria-hidden',shouldShow?'false':'true');
     const toggle=()=>surface.classList.toggle('is-visible',shouldShow);
