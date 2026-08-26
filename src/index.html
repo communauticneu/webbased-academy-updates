@@ -1138,6 +1138,109 @@ body > .app, body > .shell, body > .layout, body > main{
 .v160-buttons .btn{font-weight:700;min-height:42px}
 
 </style>
+
+<style>
+/* V16.10 – Ultrawide Layoutkorrektur */
+@media (min-width:1600px) and (min-aspect-ratio:2/1) {
+  #vortragView > .workspace{
+    grid-template-columns:205px minmax(0,1fr) 390px!important;
+    gap:8px!important;
+  }
+
+  .controls{
+    display:grid!important;
+    grid-template-rows:auto auto minmax(0,1fr)!important;
+    align-content:start!important;
+    gap:6px!important;
+    overflow:hidden!important;
+    padding-right:0!important;
+  }
+
+  /* Der alte manuelle Updateblock wird auf Ultrawide nicht doppelt angezeigt.
+     Der Auto-Updater unten im Dokument übernimmt die Statusanzeige. */
+  .v151-update{display:none!important}
+
+  .controls > .panel{
+    margin:0!important;
+    padding:7px!important;
+    border-radius:10px!important;
+  }
+  .controls > .panel h2{
+    font-size:13px!important;
+    line-height:1.15!important;
+    margin:0 0 5px!important;
+  }
+  .controls label{
+    font-size:11px!important;
+    line-height:1.15!important;
+    margin:5px 0 2px!important;
+  }
+  .controls select,.controls input,.controls textarea{
+    font-size:11px!important;
+    line-height:1.2!important;
+    padding:5px 7px!important;
+    border-radius:7px!important;
+  }
+  .controls .btn{
+    font-size:10px!important;
+    line-height:1.1!important;
+    padding:5px 7px!important;
+    min-height:0!important;
+    border-radius:7px!important;
+  }
+
+  .v15-core{padding:7px!important}
+  .v15-statusrow{font-size:10px!important;margin-bottom:4px!important}
+  .v15-last{font-size:9px!important;margin-top:4px!important;line-height:1.2!important}
+  .v15-avatar-modes{gap:3px!important;margin-top:3px!important}
+  .v15-avatar-modes .btn{font-size:9px!important;padding:4px 2px!important}
+
+  .v160-regie{padding:7px!important}
+  .v169-status{font-size:9px!important;line-height:1.2!important;margin-top:2px!important;min-height:11px!important}
+  .v160-clock{font-size:18px!important;margin:2px 0!important}
+  .v160-track{height:8px!important;margin:4px 0!important}
+  .v160-phases{gap:2px!important;margin:3px 0!important}
+  .v160-phase{font-size:8px!important;padding:3px 1px!important}
+  .v160-regie select{font-size:10px!important;margin:2px 0!important;padding:5px 6px!important}
+  .v160-buttons{gap:3px!important;margin-top:4px!important}
+  .v160-buttons .btn{font-size:9px!important;padding:5px 3px!important;min-height:30px!important}
+
+  .controls > .panel:last-child{
+    min-height:0!important;
+    overflow:hidden!important;
+    padding:7px!important;
+  }
+  .controls > .panel:last-child .grid2{gap:4px!important}
+  .controls textarea{min-height:62px!important;height:62px!important;resize:none!important}
+  .controls #applyRegie{margin-top:4px!important}
+  .v5-tools{margin-top:6px!important;padding-top:6px!important}
+  .v5-tools h2{margin-bottom:4px!important}
+  .v5-grid{gap:4px!important}
+  .target-tabs{gap:3px!important;margin:4px 0!important}
+  .range-wrap{grid-template-columns:58px 1fr 34px!important;gap:5px!important;margin:3px 0!important}
+  .range-val{font-size:8px!important}
+  .layer-list{gap:2px!important;margin-top:3px!important}
+  .layer-item{padding:3px 5px!important;font-size:9px!important}
+  .anim-badge{font-size:9px!important;margin-top:4px!important;padding:4px 6px!important}
+  .tafel-card{margin-top:5px!important;padding:5px!important}
+  .tafel-preview{height:58px!important;border-width:3px!important;padding:5px!important}
+  .tafel-preview .chalk-title{font-size:10px!important}
+  .tafel-preview .chalk-chart{height:28px!important;right:7px!important;bottom:6px!important}
+  .tafel-preview .chalk-chart i{width:8px!important}
+  .controls .status{font-size:9px!important;margin-top:5px!important;padding-top:4px!important}
+
+  #vortragView{grid-template-rows:auto minmax(0,1fr) 140px!important}
+  #vortragView > .media-library{height:140px!important;padding:7px!important}
+  .media-library .media-item{height:74px!important}
+  .media-library .media-item .thumb{height:44px!important}
+}
+
+/* Auf kleineren Fenstern darf als sichere Rückfallebene gescrollt werden. */
+@media (max-width:1599px), (max-aspect-ratio:2/1) {
+  .controls{overflow-y:auto!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -3475,6 +3578,11 @@ window.addEventListener('DOMContentLoaded', () => {
 #academyAutoUpdater .bar{display:none;height:12px;background:#06131a;border:1px solid #356a80;border-radius:7px;overflow:hidden;margin:10px 0}
 #academyAutoUpdater .fill{height:100%;width:0;background:#2f9ac6}
 #academyAutoUpdater button{display:none;width:100%;margin-top:10px;padding:11px;border-radius:8px;border:1px solid #55a5c6;background:#176f99;color:white;font-weight:700;font-size:14px;cursor:pointer}
+#academyAutoUpdater.compact-current:not(.expanded-current){width:auto;min-width:150px;right:16px;top:56px;padding:5px 9px;border-width:1px;border-radius:8px;box-shadow:none;cursor:pointer}
+#academyAutoUpdater.compact-current:not(.expanded-current) .badge,
+#academyAutoUpdater.compact-current:not(.expanded-current) .bar,
+#academyAutoUpdater.compact-current:not(.expanded-current) button{display:none!important}
+#academyAutoUpdater.compact-current:not(.expanded-current) .status{margin:0;font-size:11px;line-height:1.2;color:#a9d8b8;white-space:nowrap}
 </style>
 <div id="academyAutoUpdater">
  <div class="badge">AUTO-UPDATER 1.0</div>
@@ -3484,27 +3592,44 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 <script>
 window.addEventListener('DOMContentLoaded',()=>{
+ const updater=document.getElementById('academyAutoUpdater');
  const st=document.getElementById('auStatus'), bar=document.getElementById('auBar'),
  fill=document.getElementById('auFill'), btn=document.getElementById('auButton');
  let phase='';
+ updater.addEventListener('click',(event)=>{
+   if(updater.classList.contains('compact-current') && !event.target.closest('button')){
+     updater.classList.toggle('expanded-current');
+   }
+ });
  const show=(txt)=>{btn.textContent=txt;btn.style.display='block';btn.disabled=false;};
 
  function onState(s){
    if(!s)return;
-   if(s.state==='checking'){st.textContent='Suche nach neuer Version …';}
+   if(s.state==='checking'){
+     updater.classList.remove('compact-current','expanded-current');
+     st.textContent='Suche nach neuer Version …';
+   }
    else if(s.state==='available'){
+     updater.classList.remove('compact-current','expanded-current');
      phase='available'; st.textContent='Neue Version '+s.version+' verfügbar.'; show('Jetzt aktualisieren');
-   } else if(s.state==='not-available'){
-     st.textContent=(window.__academyDisplayVersion||'Creator')+' ist aktuell.'; btn.style.display='none';
+   } else if(s.state==='not-available' || s.state==='current'){
+     phase='current';
+     st.textContent='✓ '+(window.__academyDisplayVersion||'Creator')+' aktuell';
+     btn.style.display='none';bar.style.display='none';
+     updater.classList.toggle('compact-current',true);
+     updater.classList.remove('expanded-current');
    } else if(s.state==='downloading'){
+     updater.classList.remove('compact-current','expanded-current');
      phase='downloading';
      const p=Math.max(0,Math.min(100,Number(s.percent)||0));
      st.textContent='Download läuft: '+p.toFixed(0)+' %';
      bar.style.display='block'; fill.style.width=p+'%'; btn.style.display='none';
    } else if(s.state==='ready'){
+     updater.classList.remove('compact-current','expanded-current');
      phase='ready'; st.textContent='Update vollständig geladen.';
      bar.style.display='block'; fill.style.width='100%'; show('Installieren & neu starten');
    } else if(s.state==='error'){
+     updater.classList.remove('compact-current','expanded-current');
      st.textContent='Update-Fehler: '+(s.message||'Unbekannter Fehler'); btn.style.display='none';
    }
  }
