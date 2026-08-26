@@ -21,13 +21,44 @@
     return shouldShow;
   }
 
+  function transitionDurationMs(node){
+    const raw=node?.style?.transitionDuration||'0.6s';
+    const value=parseFloat(raw)||0;
+    return raw.includes('ms')?value:value*1000;
+  }
+
+  function animateExitSnapshot(stage,snapshot,rootScope){
+    if(!stage||!snapshot)return null;
+    const clone=snapshot.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.add('presentation-exit-clone','is-visible');
+    clone.dataset.enter=clone.dataset.exit||'fade';
+    clone.setAttribute('aria-hidden','true');
+    stage.appendChild(clone);
+    const durationMs=transitionDurationMs(clone);
+    const frame=rootScope&&typeof rootScope.requestAnimationFrame==='function'
+      ?rootScope.requestAnimationFrame.bind(rootScope)
+      :function(callback){return setTimeout(callback,0);};
+    frame(()=>clone.classList.remove('is-visible'));
+    setTimeout(()=>clone.remove(),durationMs+80);
+    return clone;
+  }
+
   function install(doc){
     if(!doc)return null;
     const stage=doc.querySelector('.stage');
     if(!stage)return null;
+    const rootScope=doc.defaultView||(typeof globalThis!=='undefined'?globalThis:null);
     const sync=()=>syncPresentationStage(doc);
     let surfaceObserver=null;
     let observedSurface=null;
+    let lastVisibleSnapshot=null;
+
+    function captureVisible(surface){
+      if(surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'){
+        lastVisibleSnapshot=surface.cloneNode(true);
+      }
+    }
 
     function watchSurface(){
       const surface=doc.getElementById('presentationSurface');
@@ -35,9 +66,22 @@
       surfaceObserver?.disconnect();
       surfaceObserver=null;
       observedSurface=surface||null;
+      captureVisible(surface);
       if(surface&&typeof MutationObserver==='function'){
-        surfaceObserver=new MutationObserver(sync);
-        surfaceObserver.observe(surface,{attributes:true,attributeFilter:['class','aria-hidden','data-position','data-medium','data-size']});
+        surfaceObserver=new MutationObserver(records=>{
+          const leftVisibleState=records.some(record=>record.attributeName==='class'&&String(record.oldValue||'').includes('is-visible'));
+          if(leftVisibleState&&lastVisibleSnapshot){
+            animateExitSnapshot(stage,lastVisibleSnapshot,rootScope);
+            lastVisibleSnapshot=null;
+          }
+          captureVisible(surface);
+          sync();
+        });
+        surfaceObserver.observe(surface,{
+          attributes:true,
+          attributeOldValue:true,
+          attributeFilter:['class','aria-hidden','data-position','data-medium','data-size','data-enter','data-exit']
+        });
       }
       sync();
     }
@@ -55,5 +99,5 @@
     };
   }
 
-  return {syncPresentationStage,install};
+  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,install};
 });
