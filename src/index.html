@@ -1375,6 +1375,11 @@ body > .app, body > .shell, body > .layout, body > main{
 }
 </style>
 
+
+<style>
+/* V0.16.14 · freier Vortrag – nutzt bestehende 3440×1440-Aufteilung */
+.v1614-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px}.v1614-tabs .btn{padding:4px 6px!important;font-size:13px!important}.v1614-tabs .btn.active{background:#155075;border-color:#2a7ca8}.v1614-clockrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0}.v1614-clockrow strong{font-size:20px}.v1614-clockrow span,.v1614-summary{font-size:14px;color:#9eb4c0}.v1614-summary{display:flex;justify-content:space-between;align-items:center;gap:6px;margin:4px 0}.v1614-summary .btn{padding:3px 6px!important}.v1614-drawer{position:fixed;right:18px;top:72px;width:min(620px,calc(100vw - 36px));max-height:calc(100vh - 92px);z-index:99990;background:#0a1821;border:1px solid #3b7891;border-radius:14px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.55);color:#eef6fb}.v1614-drawer-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}.v1614-drawer-head strong{font-size:17px}.v1614-drawer-head div div{font-size:13px;color:#8fa8b8;margin-top:2px}.v1614-form{display:grid;grid-template-columns:1fr 1fr;gap:7px 9px}.v1614-form label{font-size:14px;color:#b9d0dc}.v1614-form label.wide{grid-column:1/-1}.v1614-form input,.v1614-form select,.v1614-form textarea{display:block;width:100%;margin-top:3px;background:#071722;border:1px solid #284c60;color:#eef6fb;border-radius:8px;padding:7px 8px;font-size:14px}.v1614-form textarea{resize:none}.v1614-drawer-actions{display:flex;gap:7px;margin-top:9px}.scene .v1614-meta{font-size:12px;color:#7893a5;margin-top:2px}.scene.v1614-playing{border-color:#68d391;box-shadow:0 0 0 1px rgba(104,211,145,.3)}@media(max-width:1200px){.v1614-form{grid-template-columns:1fr}.v1614-form label.wide{grid-column:auto}.v1614-drawer{overflow:auto}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1541,23 +1546,39 @@ body > .app, body > .shell, body > .layout, body > main{
           </div>
 
           <div class="panel v160-regie">
-            <h2>Produktionsmodus · Academy-Test</h2>
-            <div class="v169-status">Vollständiger automatischer Ablauf · 40 Sekunden</div>
-            <div class="v160-clock" id="v160Clock">00:00.0</div>
-            <div class="v160-track"><div class="v160-progress" id="v160Progress"></div></div>
-            <div class="v160-phases">
-              <div class="v160-phase on" data-phase="avatar1">0–10 Avatar</div>
-              <div class="v160-phase" data-phase="board">10–25 Tafel</div>
-              <div class="v160-phase" data-phase="graphic">25–33 Grafik</div>
-              <div class="v160-phase" data-phase="avatar2">33–40 Avatar</div>
+            <div class="v1614-tabs"><button class="btn active" id="fixedTestTab" type="button">40-Sek.-Test</button><button class="btn" id="freeTalkTab" type="button">Freier Vortrag</button></div>
+            <div id="fixedTestPane">
+              <h2>Produktionsmodus · Academy-Test</h2>
+              <div class="v169-status">Vollständiger automatischer Ablauf · 40 Sekunden</div>
+              <div class="v160-clock" id="v160Clock">00:00.0</div>
+              <div class="v160-track"><div class="v160-progress" id="v160Progress"></div></div>
+              <div class="v160-phases">
+                <div class="v160-phase on" data-phase="avatar1">0–10 Avatar</div>
+                <div class="v160-phase" data-phase="board">10–25 Tafel</div>
+                <div class="v160-phase" data-phase="graphic">25–33 Grafik</div>
+                <div class="v160-phase" data-phase="avatar2">33–40 Avatar</div>
+              </div>
+              <label for="v169Voice">Systemstimme · technischer Platzhalter</label>
+              <select id="v169Voice"><option value="">Automatische Systemstimme</option></select>
+              <div class="v169-status" id="v169SpeechStatus">Systemstimmen werden geladen …</div>
+              <div class="v160-buttons">
+                <button class="btn primary" id="v160Start" type="button">▶ Gesamtablauf testen</button>
+                <button class="btn" id="v160Pause" type="button">Ⅱ Pause/Stop</button>
+                <button class="btn" id="v160Reset" type="button">↺ Zurücksetzen</button>
+              </div>
             </div>
-            <label for="v169Voice">Systemstimme · technischer Platzhalter</label>
-            <select id="v169Voice"><option value="">Automatische Systemstimme</option></select>
-            <div class="v169-status" id="v169SpeechStatus">Systemstimmen werden geladen …</div>
-            <div class="v160-buttons">
-              <button class="btn primary" id="v160Start" type="button">▶ Gesamtablauf testen</button>
-              <button class="btn" id="v160Pause" type="button">Ⅱ Pause/Stop</button>
-              <button class="btn" id="v160Reset" type="button">↺ Zurücksetzen</button>
+            <div id="freeTalkPane" hidden>
+              <h2>Produktionsmodus · Vortrag</h2>
+              <div class="v169-status" id="freeTalkSceneStatus">Szene 1 · bereit</div>
+              <div class="v1614-clockrow"><strong id="freeTalkSceneClock">00:00.0</strong><span id="freeTalkTotalClock">00:00.0 / 00:40.0</span></div>
+              <div class="v160-track"><div class="v160-progress" id="freeTalkProgress"></div></div>
+              <div class="v1614-summary"><span id="freeTalkTotal">Gesamtdauer 40.0 s</span><button class="btn" id="freeTalkEditor" type="button">Szene bearbeiten</button></div>
+              <div class="v160-buttons">
+                <button class="btn primary" id="freeTalkPlay" type="button">▶ Vorschau</button>
+                <button class="btn" id="freeTalkPause" type="button">Ⅱ Pause</button>
+                <button class="btn" id="freeTalkStop" type="button">■ Stop</button>
+                <button class="btn" id="freeTalkReset" type="button">↺ Zurücksetzen</button>
+              </div>
             </div>
           </div>
 
@@ -2071,8 +2092,26 @@ body > .app, body > .shell, body > .layout, body > main{
   </main>
 </div>
 
+<div class="v1614-drawer" id="freeTalkDrawer" hidden>
+  <div class="v1614-drawer-head"><div><strong>Vortrag · Szene bearbeiten</strong><div id="freeTalkDrawerHint">Eigenschaften der ausgewählten Szene</div></div><button class="btn" id="freeTalkClose" type="button">Schließen</button></div>
+  <div class="v1614-form">
+    <label>Szenenname<input id="fpName" type="text"></label>
+    <label>Dauer (Sek.)<input id="fpDuration" type="number" min="0.5" step="0.5"></label>
+    <label>Darstellungsart<select id="fpKind"><option value="avatar">Avatar</option><option value="board">Tafel</option><option value="graphic">Grafik</option><option value="background">Hintergrund</option></select></label>
+    <label>Avatar<select id="fpAvatarMode"><option value="full">Ganzkörper</option><option value="medium">Bis Nabel</option><option value="hidden">Ohne Avatar</option></select></label>
+    <label>Avatar-Aktion<select id="fpGesture"><option value="front">Frontal sprechen</option><option value="point">Zeige-/Präsentationsgeste</option></select></label>
+    <label>Ein-/Ausblendung<select id="fpTransition"><option value="cut">Direkt</option><option value="fade">Weiche Blende</option></select></label>
+    <label class="wide">Sprechtext<textarea id="fpSpeech" rows="3"></textarea></label>
+    <label class="wide">Tafeltext<textarea id="fpBoardText" rows="2"></textarea></label>
+    <label>Medium/Grafik<input id="fpMedium" type="text" placeholder="Name oder ID des Mediums"></label>
+    <label>Medium-Quelle<input id="fpMediumUrl" type="text" placeholder="optional / lokal"></label>
+  </div>
+  <div class="v1614-drawer-actions"><button class="btn primary" id="fpApply" type="button">Szene übernehmen</button><button class="btn" id="fpUseCurrent" type="button">Aktuelle Bühne übernehmen</button></div>
+</div>
+
 <script src="production-mode.js"></script>
 <script src="local-avatar-motion.js"></script>
+<script src="free-presentation.js"></script>
 <script>
 (function(){
   const q=s=>document.querySelector(s), qa=s=>[...document.querySelectorAll(s)];
@@ -2898,7 +2937,8 @@ body > .app, body > .shell, body > .layout, body > main{
       app:'Webbased Academy Creator',
       version:'V9',
       project:{name:projectName.value,topic:projectTopic.value,audience:projectAudience.value},
-      storyboard
+      storyboard,
+      presentationScenes:window.__freePresentationScenes?.()||[]
     };
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);
@@ -2918,7 +2958,8 @@ body > .app, body > .shell, body > .layout, body > main{
       app:'Webbased Academy Creator',
       project:{name:projectName.value.trim(),topic:projectTopic.value.trim(),audience:projectAudience.value.trim()},
       states:savedStates.length?savedStates:[captureState()],
-      storyboard
+      storyboard,
+      presentationScenes:window.__freePresentationScenes?.()||[]
     };
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);
@@ -2942,6 +2983,7 @@ body > .app, body > .shell, body > .layout, body > main{
         projectAudience.value=data.project?.audience||'';
         savedStates=Array.isArray(data.states)?data.states:[];
         storyboard=Array.isArray(data.storyboard)?data.storyboard:[];
+        window.__freePresentationLoad?.(data);
         selectedStory=storyboard.length?0:-1;
         renderStateCards();renderStoryboard();
         if(savedStates[0]) restoreState(savedStates[0]);
@@ -3254,6 +3296,7 @@ body > .app, body > .shell, body > .layout, body > main{
       project:{name:projectName.value,topic:projectTopic.value,audience:projectAudience.value},
       folders:plain,
       storyboard:storyboard,
+      presentationScenes:window.__freePresentationScenes?.()||[],
       states:savedStates,
       current:captureState()
     };
@@ -3288,6 +3331,7 @@ body > .app, body > .shell, body > .layout, body > main{
       folders:folderCopy,
       states:savedStates,
       storyboard:storyboard,
+      presentationScenes:window.__freePresentationScenes?.()||[],
       current:captureState(),
       transcript:transcriptText.value,
       anchors:textAnchors
@@ -3316,6 +3360,7 @@ body > .app, body > .shell, body > .layout, body > main{
         projectAudience.value=data.project?.audience||'';
         savedStates=Array.isArray(data.states)?data.states:[];
         storyboard=Array.isArray(data.storyboard)?data.storyboard:[];
+        window.__freePresentationLoad?.(data);
         textAnchors=Array.isArray(data.anchors)?data.anchors:[];
         transcriptText.value=data.transcript||'';
         renderTranscript();renderAnchors();renderStateCards();renderStoryboard();
@@ -3473,7 +3518,7 @@ body > .app, body > .shell, body > .layout, body > main{
   function v15Snapshot(){return {format:'WAC_V15_LOCAL_PROJECT',appVersion:'0.2.0-alpha',savedAt:new Date().toISOString(),
     project:{name:projectName.value.trim(),topic:projectTopic.value.trim(),audience:projectAudience.value.trim()},
     avatar:{profile:v15AvatarProfile?.value||'demo',mode:v15CurrentAvatarMode()},states:savedStates,
-    storyboard:typeof storyboard!=='undefined'?storyboard:[],current:captureState(),transcript:transcriptText.value,anchors:textAnchors};}
+    storyboard:typeof storyboard!=='undefined'?storyboard:[],presentationScenes:window.__freePresentationScenes?.()||[],current:captureState(),transcript:transcriptText.value,anchors:textAnchors};}
   function v15ModeUI(mode){v15ModeButtons.forEach(b=>b.classList.toggle('active',b.dataset.v15mode===mode))}
   function v15ApplyMode(mode,save=true){avatar.classList.remove('medium','hidden');if(mode==='medium')avatar.classList.add('medium');if(mode==='hidden')avatar.classList.add('hidden');v15ModeUI(mode);if(save)v15ScheduleSave()}
   v15ModeButtons.forEach(b=>b.addEventListener('click',()=>v15ApplyMode(b.dataset.v15mode)));
@@ -3491,6 +3536,7 @@ body > .app, body > .shell, body > .layout, body > main{
       projectName.value=d.project?.name||'';projectTopic.value=d.project?.topic||'';projectAudience.value=d.project?.audience||'';
       savedStates=Array.isArray(d.states)?d.states:[];renderStateCards();
       if(Array.isArray(d.storyboard)&&typeof storyboard!=='undefined'){storyboard=d.storyboard;if(typeof renderStoryboard==='function')renderStoryboard()}
+      window.__freePresentationLoad?.(d);
       if(d.current)restoreState(d.current);if(d.transcript!=null){transcriptText.value=d.transcript;renderTranscript()}
       if(Array.isArray(d.anchors)){textAnchors=d.anchors.map(a=>({...a,fired:false}));renderAnchors()}
       v15ApplyMode(d.avatar?.mode||v15CurrentAvatarMode(),false);
@@ -3725,6 +3771,91 @@ body > .app, body > .shell, body > .layout, body > main{
   v169Timeline.reset();v169ApplyPhase(productionMode.getProductionPhase(0),false);
 
 })();
+</script>
+
+<script>
+// V0.16.14 – frei planbarer Vortrag. Reine DOM-/Timer-/Windows-Sprachlogik, keine externe KI.
+window.addEventListener('DOMContentLoaded',()=>{
+  const FP=window.FreePresentation;if(!FP)return;
+  const $=id=>document.getElementById(id), sceneList=$('sceneList'), avatar=$('avatar'), stage=$('stage');
+  const board=$('boardOverlay'), boardInput=$('boardText'), boardStageText=$('boardStageText');
+  const graphic=$('fullGraphic'), background=$('bgScene'), action=$('avatarAction');
+  const fixedTab=$('fixedTestTab'),freeTab=$('freeTalkTab'),fixedPane=$('fixedTestPane'),freePane=$('freeTalkPane');
+  const drawer=$('freeTalkDrawer');
+  let selected=0, raf=0, lastTs=0;
+  const defaults=[
+    {name:'Avatar · Einstieg',duration:12,kind:'avatar',avatarMode:'medium',gesture:'front',speechText:'Willkommen zum frei planbaren Vortrag.'},
+    {name:'Schultafel',duration:12,kind:'board',avatarMode:'medium',gesture:'front',boardText:'WISSEN VERSTEHEN.'},
+    {name:'Grafik',duration:8,kind:'graphic',avatarMode:'hidden',gesture:'front'},
+    {name:'Avatar · Abschluss',duration:8,kind:'avatar',avatarMode:'medium',gesture:'front',speechText:'Damit endet die Vorschau.'}
+  ];
+  const model=FP.createPresentationModel(defaults);
+
+  function modeLabel(s){return s.kind==='avatar'?'Avatar':s.kind==='board'?'Tafel':s.kind==='graphic'?'Grafik':'Hintergrund'}
+  function cameraLabel(s){return s.avatarMode==='full'?'Ganzkörper':s.avatarMode==='hidden'?'Ohne Avatar':'Bis Nabel'}
+  function renderScenes(playing=-1){
+    sceneList.innerHTML='';
+    model.getScenes().forEach((s,i)=>{
+      const el=document.createElement('div');el.className='scene'+(i===selected?' active':'')+(i===playing?' v1614-playing':'');el.dataset.fpIndex=i;
+      el.innerHTML='<div class="n"></div><div class="t"></div><div class="v1614-meta"></div>';
+      el.querySelector('.n').textContent=String(i+1).padStart(2,'0');el.querySelector('.t').textContent=s.name;
+      el.querySelector('.v1614-meta').textContent=`${s.duration.toFixed(1)} s · ${modeLabel(s)} · ${cameraLabel(s)}`;
+      el.addEventListener('click',()=>{selected=i;renderScenes();fillEditor();});sceneList.appendChild(el);
+    });updateSummary();
+  }
+  function updateSummary(){const total=model.totalDuration();$('freeTalkTotal').textContent='Gesamtdauer '+total.toFixed(1)+' s';$('freeTalkTotalClock').textContent=FP.formatTime(runner?.getState().totalTime||0)+' / '+FP.formatTime(total)}
+  function fillEditor(){
+    const s=model.get(selected);if(!s)return;
+    $('fpName').value=s.name;$('fpDuration').value=s.duration;$('fpKind').value=s.kind;$('fpAvatarMode').value=s.avatarMode;$('fpGesture').value=s.gesture;$('fpTransition').value=s.transition;$('fpSpeech').value=s.speechText;$('fpBoardText').value=s.boardText;$('fpMedium').value=s.mediumId;$('fpMediumUrl').value=s.mediumUrl;
+    $('freeTalkDrawerHint').textContent=`Szene ${selected+1} von ${model.getScenes().length} · Gesamtdauer ${model.totalDuration().toFixed(1)} s`;
+  }
+  function editorPatch(){return {name:$('fpName').value.trim()||`Szene ${selected+1}`,duration:Number($('fpDuration').value)||8,kind:$('fpKind').value,avatarMode:$('fpAvatarMode').value,gesture:$('fpGesture').value,transition:$('fpTransition').value,speechText:$('fpSpeech').value,boardText:$('fpBoardText').value,mediumId:$('fpMedium').value.trim(),mediumUrl:$('fpMediumUrl').value.trim()}}
+  function clickCamera(mode){document.querySelector(`[data-camera="${mode}"]`)?.click()}
+  function speak(text){
+    if(!window.speechSynthesis)return;window.speechSynthesis.cancel();if(!text.trim())return;
+    const u=new SpeechSynthesisUtterance(text);const sel=$('v169Voice');const voices=window.speechSynthesis.getVoices();const idx=Number(sel?.value);if(Number.isInteger(idx)&&voices[idx]){u.voice=voices[idx];u.lang=voices[idx].lang}else u.lang='de-AT';window.speechSynthesis.speak(u);
+  }
+  function applyScene(s,index){
+    if(s.transition==='fade'){stage.style.opacity='.25';setTimeout(()=>stage.style.opacity='1',130)}else stage.style.opacity='1';
+    clickCamera(s.avatarMode);
+    action.value=s.gesture==='point'?'point':'front';action.dispatchEvent(new Event('change',{bubbles:true}));
+    board.classList.toggle('show',s.kind==='board');graphic.classList.toggle('show',s.kind==='graphic');background.classList.toggle('show',s.kind==='background');
+    boardInput.value=s.boardText||'';boardInput.dispatchEvent(new Event('input',{bubbles:true}));if(boardStageText)boardStageText.textContent=s.boardText||' ';
+    let img=$('userStageImage');
+    if(s.mediumUrl){if(!img){img=document.createElement('img');img.id='userStageImage';img.className='stage-media-img';stage.appendChild(img)}img.src=s.mediumUrl;img.style.display='block'}else if(img)img.style.display='none';
+    selected=index;renderScenes(index);$('freeTalkSceneStatus').textContent=`Szene ${index+1}/${model.getScenes().length} · ${s.name}`;speak(s.speechText||'');
+  }
+  let runner=FP.createPresentationRunner(model.getScenes(),{
+    onSceneEnter:applyScene,
+    onTick(st){$('freeTalkSceneClock').textContent=FP.formatTime(st.sceneTime);$('freeTalkTotalClock').textContent=FP.formatTime(st.totalTime)+' / '+FP.formatTime(st.totalDuration);$('freeTalkProgress').style.width=(st.progress*100).toFixed(2)+'%';},
+    onComplete(){window.speechSynthesis?.cancel();$('freeTalkSceneStatus').textContent='Vortrag beendet.';cancelAnimationFrame(raf);raf=0},
+    onStop(){window.speechSynthesis?.cancel()}
+  });
+  function rebuildRunner(){runner.setScenes(model.getScenes());updateSummary()}
+  function frame(ts){if(!lastTs)lastTs=ts;const dt=Math.min(.25,Math.max(0,(ts-lastTs)/1000));lastTs=ts;runner.advance(dt);if(runner.getState().running)raf=requestAnimationFrame(frame);else raf=0}
+  function play(){runner.setScenes(model.getScenes());runner.start();lastTs=performance.now();if(!raf)raf=requestAnimationFrame(frame);$('freeTalkPause').textContent='Ⅱ Pause'}
+  function resume(){runner.start();window.speechSynthesis?.resume();lastTs=performance.now();if(!raf)raf=requestAnimationFrame(frame);$('freeTalkPause').textContent='Ⅱ Pause'}
+  function pause(){runner.pause();window.speechSynthesis?.pause();$('freeTalkPause').textContent='▶ Weiter'}
+  function resetView(){runner.reset();window.speechSynthesis?.cancel();cancelAnimationFrame(raf);raf=0;lastTs=0;$('freeTalkProgress').style.width='0%';$('freeTalkSceneClock').textContent='00:00.0';$('freeTalkSceneStatus').textContent='Szene 1 · bereit';selected=0;renderScenes()}
+
+  fixedTab.addEventListener('click',()=>{fixedTab.classList.add('active');freeTab.classList.remove('active');fixedPane.hidden=false;freePane.hidden=true});
+  freeTab.addEventListener('click',()=>{freeTab.classList.add('active');fixedTab.classList.remove('active');freePane.hidden=false;fixedPane.hidden=true;updateSummary()});
+  $('freeTalkEditor').addEventListener('click',()=>{fillEditor();drawer.hidden=false});$('freeTalkClose').addEventListener('click',()=>drawer.hidden=true);
+  $('fpApply').addEventListener('click',()=>{model.update(selected,editorPatch());rebuildRunner();renderScenes();fillEditor();drawer.hidden=true;});
+  $('fpUseCurrent').addEventListener('click',()=>{const patch={avatarMode:avatar.classList.contains('hidden')?'hidden':avatar.classList.contains('medium')?'medium':'full',gesture:avatar.classList.contains('point')?'point':'front',boardText:boardInput.value,kind:board.classList.contains('show')?'board':graphic.classList.contains('show')?'graphic':background.classList.contains('show')?'background':'avatar',mediumUrl:$('userStageImage')?.src||''};model.update(selected,patch);renderScenes();fillEditor()});
+  $('freeTalkPlay').addEventListener('click',()=>{const st=runner.getState();st.paused?resume():play()});$('freeTalkPause').addEventListener('click',()=>runner.getState().running?pause():resume());$('freeTalkStop').addEventListener('click',()=>{runner.stop();cancelAnimationFrame(raf);raf=0;lastTs=0;$('freeTalkPause').textContent='Ⅱ Pause';$('freeTalkSceneStatus').textContent='Vortrag gestoppt.'});$('freeTalkReset').addEventListener('click',resetView);
+
+  function intercept(id,fn){$(id)?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();fn()},true)}
+  intercept('addScene',()=>{model.add({name:'Neue Szene',duration:8},selected+1);selected+=1;rebuildRunner();renderScenes();fillEditor();drawer.hidden=false});
+  intercept('duplicateScene',()=>{model.duplicate(selected);selected+=1;rebuildRunner();renderScenes()});
+  intercept('deleteScene',()=>{if(model.remove(selected)){selected=Math.min(selected,model.getScenes().length-1);rebuildRunner();renderScenes()}});
+  intercept('moveUp',()=>{if(model.move(selected,-1)){selected-=1;rebuildRunner();renderScenes()}});
+  intercept('moveDown',()=>{if(model.move(selected,1)){selected+=1;rebuildRunner();renderScenes()}});
+
+  window.__freePresentationScenes=()=>model.getScenes();
+  window.__freePresentationLoad=data=>{const migrated=FP.migrateProjectData(data);model.replace(migrated.presentationScenes);selected=0;rebuildRunner();renderScenes();};
+  renderScenes();
+});
 </script>
 <div id="v148diag"><span id="runtimeVersionBottom">Version wird geladen…</span> AKTIV · 3440×1440 FIXED WORKSPACE</div>
 

@@ -14,9 +14,12 @@ test('V0.16.13 uses a dark hidden BrowserWindow until renderer ready', () => {
   assert.match(s, /win\?\.show\(\)|win\.show\(\)/);
 });
 
-test('V0.16.13 is the package version', () => {
+test('V0.16.13 behavior remains available in later package versions', () => {
   const pkg = JSON.parse(read('package.json'));
-  assert.equal(pkg.version, '0.16.13');
+  const parts = pkg.version.split('.').map(Number);
+  assert.equal(parts[0], 0);
+  assert.equal(parts[1], 16);
+  assert.ok(parts[2] >= 13);
 });
 
 test('local avatar movement module exposes deterministic motion controller', () => {
