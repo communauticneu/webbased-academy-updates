@@ -102,6 +102,20 @@ test('presentation surface uses lightweight CSS transitions for fade and slide e
   assert.match(js,/effectDuration/);
 });
 
+test('confirmed Academy composition keeps board frameless and avatar in foreground',()=>{
+  const css=read('src/presentation-stage-v16.17.css');
+  const preload=read('src/preload.js');
+  const js=read('src/free-presentation.js');
+  assert.match(css,/\.stage\.v1617-presentation-active/);
+  assert.match(css,/\.stage\.v1617-presentation-active \.avatar/);
+  assert.match(css,/z-index:\s*6/);
+  assert.match(css,/presentation-surface/);
+  assert.match(css,/border:\s*0/);
+  assert.match(css,/assets\/tafel-academy\.jpg/);
+  assert.match(preload,/presentation-stage-v16\.17\.css/);
+  assert.match(js,/stage\.classList\.toggle\('v1617-presentation-active',shouldShow\)/);
+});
+
 test('V0.16.17 keeps 40-second technical test unchanged',()=>{
   const {PHASES,TOTAL_DURATION_SECONDS}=require('../src/production-mode');
   assert.equal(TOTAL_DURATION_SECONDS,40);
