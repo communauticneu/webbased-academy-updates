@@ -11,9 +11,10 @@ function freshModel(){
   return require('../src/free-presentation');
 }
 
-test('V0.16.14 is the package version', () => {
+test('V0.16.14 free-presentation behavior remains available in later versions', () => {
   const pkg = JSON.parse(read('package.json'));
-  assert.equal(pkg.version, '0.16.14');
+  const [major,minor,patch]=pkg.version.split('.').map(Number);
+  assert.ok(major>0 || minor>16 || (minor===16 && patch>=14));
 });
 
 test('free presentation model supports add duplicate delete and move', () => {
@@ -107,7 +108,6 @@ test('HTML exposes free presentation editor and preview without automatic HeyGen
   assert.match(s,/id="freeTalkReset"/);
   assert.doesNotMatch(s,/freeTalk[^]{0,600}heygenGenerateTest/);
 });
-
 
 
 test('free preview starts the scene speech and local avatar state without HeyGen', () => {
