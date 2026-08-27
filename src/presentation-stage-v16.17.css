@@ -26,29 +26,29 @@
   display:none!important;
 }
 
-/* APPROVED STAGE COMPOSITION
-   Die Tafel ist keine schwebende Karte mehr. Sie bildet die linke Wandfläche der Bühne. */
+/* BALANCED STAGE COMPOSITION
+   Die Tafel bleibt links integriert, lässt aber sichtbar Raum und Bühnenkontext stehen. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
   position:absolute!important;
-  top:0%!important;
-  bottom:0!important;
-  width:66%!important;
-  height:100%!important;
+  top:7%!important;
+  bottom:auto!important;
+  width:61%!important;
+  height:86%!important;
   max-width:none!important;
   max-height:none!important;
   border-radius:0!important;
   transform:none!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{
-  left:0%!important;
+  left:4%!important;
   right:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{
-  right:0%!important;
+  right:4%!important;
   left:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{
-  left:17%!important;
+  left:19.5%!important;
   right:auto!important;
 }
 
@@ -59,30 +59,31 @@
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar{
   left:auto!important;
-  right:4%!important;
+  right:7%!important;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar{
-  left:4%!important;
+  left:7%!important;
   right:auto!important;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar{
   left:auto!important;
-  right:4%!important;
+  right:7%!important;
 }
 
-/* „Bis Nabel“ = großer Oberkörper-Ausschnitt wie in der freigegebenen Referenz. */
+/* „Bis Nabel“ = großer Oberkörper-Ausschnitt ohne Abschneiden von Kopf/Schultern. */
 .stage .avatar.medium{
-  height:74%!important;
-  width:18%!important;
-  bottom:-6%!important;
-  transform:scale(1.55)!important;
+  height:300px!important;
+  width:120px!important;
+  bottom:-4%!important;
+  transform:scale(1.25)!important;
   transform-origin:50% 100%!important;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
   left:auto!important;
-  right:4%!important;
-  height:74%!important;
-  bottom:-6%!important;
+  right:7%!important;
+  height:300px!important;
+  width:120px!important;
+  bottom:-4%!important;
 }
 
 /* Text und Grafik sitzen gemeinsam innerhalb der Tafelfläche. */
@@ -119,12 +120,15 @@
 
 @media (max-width:1599px){
   .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-    width:66%!important;
-    height:100%!important;
+    top:7%!important;
+    width:61%!important;
+    height:86%!important;
   }
   .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
-    right:3%!important;
-    height:72%!important;
+    right:6%!important;
+    height:280px!important;
+    width:112px!important;
+    bottom:-4%!important;
   }
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:3%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:6%!important}
 }
