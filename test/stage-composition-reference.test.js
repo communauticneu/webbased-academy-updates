@@ -5,12 +5,12 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 
-test('Academy chalkboard matches approved framed left-room reference',()=>{
+test('Academy chalk surface is a large frameless perspective presentation plane',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*15%!important[\s\S]*?width:\s*52%!important[\s\S]*?height:\s*68%!important/);
-  assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*8%!important/);
-  assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?border:\s*7px solid #51483f!important/);
-  assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?box-shadow:\s*0 3px 10px rgba\(0,0,0,.24\)!important/);
+  assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?border:\s*0!important/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*5%!important[\s\S]*?width:\s*67%!important[\s\S]*?height:\s*90%!important/);
+  assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*-1%!important/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?transform:\s*perspective\(1200px\) rotateY\(2deg\)!important/);
 });
 
 test('visible Academy board uses approved realistic navel avatar composition on the right',()=>{
