@@ -58,6 +58,13 @@ test('fixed 40-second test also keeps Bis Nabel avatar on the right',()=>{
   assert.match(css,/\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
 });
 
+test('Bis Nabel crop reveals the avatar down to the navel instead of cutting too high',()=>{
+  const css=read('src/presentation-stage-v16.17.css');
+  const medium=css.match(/\.stage \.avatar\.medium\s*\{[\s\S]*?\n\}/);
+  assert.ok(medium,'medium avatar rule missing');
+  assert.match(medium[0],/bottom:\s*-8%\s*!important/);
+});
+
 test('desktop window is not shown on ready-to-show before delayed scene restore settles',()=>{
   const main=read('src/main.js');
   assert.doesNotMatch(main,/win\.once\('ready-to-show',[\s\S]*?win\.show\(\)/);
