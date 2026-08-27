@@ -20,18 +20,20 @@ function classList(initial=[]){
   };
 }
 
-test('V0.16.18 Schultafel button toggles the visible stage board, not only the timeline clip',()=>{
+test('Schultafel button makes the real stage board visible and removes covering full graphic',()=>{
   const {bindLegacyBoardToggle}=fresh();
   const handlers={};
   const button={textContent:'Einblenden',addEventListener:(type,fn)=>{handlers[type]=fn;}};
   const board={classList:classList()};
+  const graphic={classList:classList(['show'])};
   const clip={style:{display:'block'}};
   const cue={textContent:''};
-  const doc={getElementById:id=>({toggleBoard:button,boardOverlay:board,boardClip:clip,cue}[id]||null)};
+  const doc={getElementById:id=>({toggleBoard:button,boardOverlay:board,fullGraphic:graphic,boardClip:clip,cue}[id]||null)};
 
   assert.equal(bindLegacyBoardToggle(doc),true);
   handlers.click({preventDefault(){},stopImmediatePropagation(){}});
   assert.equal(board.classList.contains('show'),true);
+  assert.equal(graphic.classList.contains('show'),false,'full-screen graphic must not cover the board');
   assert.equal(button.textContent,'Ausblenden');
   assert.equal(clip.style.display,'block');
 
