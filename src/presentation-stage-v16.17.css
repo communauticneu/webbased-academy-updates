@@ -53,14 +53,14 @@
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:perspective(900px) rotateY(-3.5deg)!important}
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important}
 
-/* REALISTISCHER TESTAVATAR – „Bis Nabel“: ein Avatar/ein Ausschnitt, standardmäßig rechts, proportional zur Academy-Bühne. */
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“: echtes 600×577-Asset, ein Ausschnitt, rechts, proportional zur Academy-Bühne. */
 .stage.v1617-presentation-active .avatar,
 .stage.v169-fixed-test-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
-  height:118%!important;
+  height:96%!important;
   width:auto!important;
-  aspect-ratio:450 / 590;
-  bottom:-8%!important;
+  aspect-ratio:600 / 577;
+  bottom:-2%!important;
   transform:none!important;
   transform-origin:50% 100%!important;
   background-image:url('assets/testavatar-academy.png')!important;
