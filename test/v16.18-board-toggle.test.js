@@ -24,11 +24,15 @@ test('Schultafel button routes visibility to the Academy presentation surface an
   const {bindLegacyBoardToggle}=fresh();
   const handlers={};
   const button={textContent:'Einblenden',addEventListener:(type,fn)=>{handlers[type]=fn;}};
-  const surface={classList:classList(['presentation-surface']),dataset:{},style:{},setAttribute(){}};
+  const surface={classList:classList(['presentation-surface']),dataset:{},style:{},setAttribute(){},getAttribute:name=>name==='aria-hidden'?(surface.classList.contains('is-visible')?'false':'true'):null,querySelector:()=>null};
+  const stage={classList:classList(),querySelector:()=>null};
   const graphic={classList:classList(['show'])};
   const clip={style:{display:'block'}};
   const cue={textContent:''};
-  const doc={getElementById:id=>({toggleBoard:button,presentationSurface:surface,fullGraphic:graphic,boardClip:clip,cue}[id]||null)};
+  const doc={
+    getElementById:id=>({toggleBoard:button,presentationSurface:surface,fullGraphic:graphic,boardClip:clip,cue}[id]||null),
+    querySelector:selector=>selector==='.stage'?stage:null
+  };
 
   assert.equal(bindLegacyBoardToggle(doc),true);
   handlers.click({preventDefault(){},stopImmediatePropagation(){}});
@@ -37,12 +41,14 @@ test('Schultafel button routes visibility to the Academy presentation surface an
   assert.equal(surface.dataset.medium,'chalkboard');
   assert.equal(surface.dataset.position,'left');
   assert.equal(surface.dataset.size,'large');
+  assert.equal(stage.classList.contains('v1617-presentation-active'),true);
   assert.equal(graphic.classList.contains('show'),false,'full-screen graphic must not cover the board');
   assert.equal(button.textContent,'Ausblenden');
   assert.equal(clip.style.display,'block');
 
   handlers.click({preventDefault(){},stopImmediatePropagation(){}});
   assert.equal(surface.classList.contains('is-visible'),false);
+  assert.equal(stage.classList.contains('v1617-presentation-active'),false);
   assert.equal(button.textContent,'Einblenden');
   assert.equal(clip.style.display,'none');
 });
