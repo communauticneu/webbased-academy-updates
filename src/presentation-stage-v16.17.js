@@ -46,6 +46,25 @@
     return clone;
   }
 
+  function bindLegacyBoardToggle(doc){
+    if(!doc)return false;
+    const button=doc.getElementById('toggleBoard');
+    const board=doc.getElementById('boardOverlay');
+    if(!button||!board)return false;
+    const clip=doc.getElementById('boardClip');
+    const cue=doc.getElementById('cue');
+    button.addEventListener('click',event=>{
+      event?.preventDefault?.();
+      event?.stopImmediatePropagation?.();
+      const visible=!board.classList.contains('show');
+      board.classList.toggle('show',visible);
+      if(clip)clip.style.display=visible?'block':'none';
+      button.textContent=visible?'Ausblenden':'Einblenden';
+      if(cue)cue.textContent=visible?'Schultafel mit Text/Grafik eingeblendet':'Schultafel ausgeblendet';
+    },true);
+    return true;
+  }
+
   function install(doc){
     if(!doc)return null;
     const stage=doc.querySelector('.stage');
@@ -55,6 +74,8 @@
     let surfaceObserver=null;
     let observedSurface=null;
     let lastVisibleSnapshot=null;
+
+    bindLegacyBoardToggle(doc);
 
     function captureVisible(surface){
       if(surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'){
@@ -101,5 +122,5 @@
     };
   }
 
-  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,install};
+  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,bindLegacyBoardToggle,install};
 });
