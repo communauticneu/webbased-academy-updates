@@ -72,7 +72,17 @@
     surface.dataset.enter='fade';
     surface.setAttribute('aria-hidden',visible?'false':'true');
     surface.classList.toggle('is-visible',!!visible);
-    if(visible)syncLegacyBoardContent(doc,surface);
+    if(visible){
+      syncLegacyBoardContent(doc,surface);
+      const avatar=doc.getElementById('avatar');
+      if(avatar){
+        avatar.classList.remove('hidden');
+        avatar.classList.add('medium');
+      }
+      const graphic=doc.getElementById('fullGraphic');
+      graphic?.classList?.remove?.('show');
+      doc.querySelectorAll?.('[data-camera]')?.forEach?.(button=>button.classList.toggle('active',button.dataset.camera==='medium'));
+    }
     syncPresentationStage(doc);
     return true;
   }
