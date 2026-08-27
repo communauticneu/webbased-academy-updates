@@ -53,11 +53,13 @@
     if(!button||!board)return false;
     const clip=doc.getElementById('boardClip');
     const cue=doc.getElementById('cue');
+    const graphic=doc.getElementById('fullGraphic');
     button.addEventListener('click',event=>{
       event?.preventDefault?.();
       event?.stopImmediatePropagation?.();
       const visible=!board.classList.contains('show');
       board.classList.toggle('show',visible);
+      if(visible&&graphic)graphic.classList.remove('show');
       if(clip)clip.style.display=visible?'block':'none';
       button.textContent=visible?'Ausblenden':'Einblenden';
       if(cue)cue.textContent=visible?'Schultafel mit Text/Grafik eingeblendet':'Schultafel ausgeblendet';
