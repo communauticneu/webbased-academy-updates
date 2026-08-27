@@ -1,6 +1,16 @@
 /* V0.16.17 – Präsentationsobjekte im austauschbaren Academy-Raum. */
 .stage .presentation-surface{outline:0;overflow:hidden}
 
+/* VORLÄUFIGER ACADEMY-RAUM 3. */
+.stage.v1617-presentation-active{
+  background-image:url('assets/room3-academy.jpg')!important;
+  background-size:cover!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+}
+.stage.v1617-presentation-active .floor{display:none!important}
+.stage.v1617-presentation-active .bgScene{display:none!important}
+
 /* KREIDE-PRÄSENTATIONSFLÄCHE – kein klassisches Tafelobjekt. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:#262928;
@@ -12,33 +22,34 @@
   border-radius:0!important;
   box-shadow:none!important;
   transform-origin:left bottom!important;
+  clip-path:polygon(0 0,96% 2%,100% 100%,0 100%)!important;
 }
 
 .stage #boardOverlay{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .stage.v1617-presentation-active #userStageImage{display:none!important}
 
-/* REFERENZKOMPOSITION: raumhoch, links aus dem Bild laufend, unten am Boden sichtbar,
-   rechter Abschluss nur leicht perspektivisch. */
+/* REFERENZKOMPOSITION: raumhoch; oben aus dem Bild; unten am Boden sichtbar;
+   rechter Abschluss leicht perspektivisch und Raum 3 rechts sichtbar. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
   position:absolute!important;
-  top:-3%!important;
+  top:-4%!important;
   bottom:0!important;
-  width:67%!important;
-  height:106%!important;
+  width:68%!important;
+  height:108%!important;
   max-width:none!important;
   max-height:none!important;
-  transform:perspective(1200px) rotateY(2deg)!important;
+  transform:perspective(900px) rotateY(3.5deg)!important;
 }
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:-1%!important;right:auto!important}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-1%!important;left:auto!important;transform:perspective(1200px) rotateY(-2deg)!important}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16.5%!important;right:auto!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:-2%!important;right:auto!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:perspective(900px) rotateY(-3.5deg)!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important}
 
-/* REALISTISCHER TESTAVATAR – „Bis Nabel“ rechts vor dem sichtbaren Raum. */
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“ groß rechts vor Raum 3. */
 .stage.v1617-presentation-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
-  height:470px!important;
-  width:360px!important;
-  bottom:-7%!important;
+  height:590px!important;
+  width:450px!important;
+  bottom:-18%!important;
   transform:none!important;
   transform-origin:50% 100%!important;
   background-image:url('assets/testavatar-academy.png')!important;
@@ -47,9 +58,9 @@
   background-repeat:no-repeat!important;
 }
 .stage .avatar.medium > *{display:none!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{left:auto!important;right:1.5%!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:1.5%!important;right:auto!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar.medium{left:auto!important;right:1.5%!important}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{left:auto!important;right:-2%!important}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:-2%!important;right:auto!important}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar.medium{left:auto!important;right:-2%!important}
 
 .stage .presentation-content{padding:6% 7%!important}
 .stage .presentation-board-text{max-width:84%;font-size:clamp(22px,1.55vw,40px)!important;line-height:1.28}
@@ -59,7 +70,7 @@
 .stage .presentation-surface.presentation-flipchart,.stage .presentation-surface.presentation-whiteboard{border:0!important}
 
 @media (max-width:1599px){
-  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-3%!important;bottom:0!important;width:67%!important;height:106%!important;transform:perspective(1200px) rotateY(2deg)!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:1%!important;height:420px!important;width:320px!important;bottom:-7%!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:1%!important}
+  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-4%!important;bottom:0!important;width:68%!important;height:108%!important;transform:perspective(900px) rotateY(3.5deg)!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:-2%!important;height:520px!important;width:400px!important;bottom:-18%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:-2%!important}
 }
