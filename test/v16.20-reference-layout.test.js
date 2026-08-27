@@ -5,19 +5,19 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 
-test('Academy board remains left integrated in the current composed stage',()=>{
+test('Academy board remains a framed left object with room context visible',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*width:\s*61%!important/);
-  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*height:\s*86%!important/);
-  assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*left:\s*4%!important/);
-  assert.doesNotMatch(css,/presentation-chalkboard[\s\S]{0,300}border:\s*[1-9]/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*width:\s*52%!important/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*height:\s*68%!important/);
+  assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*left:\s*8%!important/);
+  assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*border:\s*7px solid #51483f!important/);
 });
 
-test('current navel avatar is realistic, large and positioned right of integrated board',()=>{
+test('current navel avatar is realistic, large and positioned right of framed board',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   assert.match(css,/\.avatar\.medium[\s\S]*background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*right:\s*3%!important/);
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*height:\s*390px!important/);
+  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*right:\s*1\.5%!important/);
+  assert.match(css,/\.avatar\.medium[\s\S]*height:\s*470px!important[\s\S]*width:\s*360px!important/);
 });
 
 test('legacy floating board is never used while Academy presentation surface is active',()=>{
