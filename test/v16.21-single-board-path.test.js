@@ -34,12 +34,12 @@ test('fixed 40-second production keeps Room 3 and suppresses legacy background l
   assert.match(css,/\.stage\.v169-fixed-test-active \.fullscreen-object[\s\S]*?display:\s*none!important/);
 });
 
-test('medium Academy avatar scales with the stage instead of fixed pixel sizes',()=>{
+test('medium Academy avatar uses the real 600x577 asset ratio and scales with the stage',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   const medium=css.match(/\.stage \.avatar\.medium\s*\{[\s\S]*?\n\}/);
   assert.ok(medium,'medium avatar rule missing');
-  assert.match(medium[0],/height:\s*\d+(?:\.\d+)?%\s*!important/);
-  assert.match(medium[0],/aspect-ratio:\s*450\s*\/\s*590/);
+  assert.match(medium[0],/height:\s*96%\s*!important/);
+  assert.match(medium[0],/aspect-ratio:\s*600\s*\/\s*577/);
   assert.doesNotMatch(css,/@media[\s\S]*?\.avatar\.medium\{[^}]*height:\s*\d+px\s*!important/);
 });
 
@@ -49,6 +49,7 @@ test('approved Bis Nabel avatar keeps one crop and defaults to the right',()=>{
   assert.ok(medium,'medium avatar rule missing');
   assert.match(medium[0],/background-image:url\('assets\/testavatar-academy\.png'\)!important/);
   assert.match(medium[0],/background-position:center bottom!important/);
+  assert.match(medium[0],/bottom:\s*-2%\s*!important/);
   assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium,\s*\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
   assert.doesNotMatch(css,/:has\(\.presentation-surface\[data-position=/);
 });
@@ -58,11 +59,11 @@ test('fixed 40-second test also keeps Bis Nabel avatar on the right',()=>{
   assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium,\s*\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
 });
 
-test('Bis Nabel crop reveals the avatar down to the navel instead of cutting too high',()=>{
-  const css=read('src/presentation-stage-v16.17.css');
-  const medium=css.match(/\.stage \.avatar\.medium\s*\{[\s\S]*?\n\}/);
-  assert.ok(medium,'medium avatar rule missing');
-  assert.match(medium[0],/bottom:\s*-8%\s*!important/);
+test('fixed Academy startup reapplies its clean stage after legacy local restore',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  assert.match(js,/function resetFixedAcademyStage\(doc\)/);
+  assert.match(js,/resetFixedAcademyStage\(doc\)[\s\S]*?classList\.add\('medium'\)/);
+  assert.match(js,/setTimeout\([\s\S]*?fixedProductionRoom\?\.activate\?\.\(\)[\s\S]*?10(?:0\d|1\d|2\d|3\d|4\d|5\d)/);
 });
 
 test('desktop window is not shown on ready-to-show before delayed scene restore settles',()=>{
