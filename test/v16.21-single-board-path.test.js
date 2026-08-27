@@ -52,3 +52,15 @@ test('approved Bis Nabel avatar keeps one crop and defaults to the right',()=>{
   assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
   assert.doesNotMatch(css,/:has\(\.presentation-surface\[data-position=/);
 });
+
+test('fixed 40-second test also keeps Bis Nabel avatar on the right',()=>{
+  const css=read('src/presentation-stage-v16.17.css');
+  assert.match(css,/\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
+});
+
+test('desktop window is not shown on ready-to-show before delayed scene restore settles',()=>{
+  const main=read('src/main.js');
+  assert.doesNotMatch(main,/win\.once\('ready-to-show',[\s\S]*?win\.show\(\)/);
+  assert.match(main,/did-finish-load/);
+  assert.match(main,/setTimeout\([\s\S]*?win\.show\(\)[\s\S]*?1\d{3}/);
+});
