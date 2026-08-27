@@ -13,10 +13,11 @@ test('Academy board remains left integrated in the current composed stage',()=>{
   assert.doesNotMatch(css,/presentation-chalkboard[\s\S]{0,300}border:\s*[1-9]/);
 });
 
-test('current navel avatar is large and positioned right of integrated board',()=>{
+test('current navel avatar is realistic, large and positioned right of integrated board',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*right:\s*7%!important/);
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*height:\s*300px!important/);
+  assert.match(css,/\.avatar\.medium[\s\S]*background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
+  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*right:\s*3%!important/);
+  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*height:\s*390px!important/);
 });
 
 test('legacy floating board is never used while Academy presentation surface is active',()=>{
