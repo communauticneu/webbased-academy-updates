@@ -11,10 +11,10 @@
   background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/tafel-academy.jpg')!important;
   background-size:cover!important;
   background-position:center!important;
-  box-shadow:0 22px 52px rgba(0,0,0,.18)!important;
+  box-shadow:none!important;
 }
 
-/* V0.16.21 SINGLE BOARD PATH
+/* SINGLE BOARD PATH
    Das alte braun gerahmte boardOverlay bleibt nur als unsichtbarer Kompatibilitätszustand
    für ältere Projekt-/Regiepfade erhalten. Es darf auf der Bühne nie mehr rendern. */
 .stage #boardOverlay{
@@ -26,70 +26,77 @@
   display:none!important;
 }
 
-/* V0.16.20 APPROVED ACADEMY REFERENCE
-   Große, rahmenlose Tafelfläche links im Raum gemäß freigegebener Bildreferenz. */
+/* APPROVED STAGE COMPOSITION
+   Die Tafel ist keine schwebende Karte mehr. Sie bildet die linke Wandfläche der Bühne. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-  top:10%!important;
-  width:58%!important;
-  height:68%!important;
+  position:absolute!important;
+  top:0%!important;
+  bottom:0!important;
+  width:66%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  border-radius:0!important;
+  transform:none!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{
-  left:7%!important;
+  left:0%!important;
   right:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{
-  right:7%!important;
+  right:0%!important;
   left:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{
-  left:50%!important;
+  left:17%!important;
   right:auto!important;
 }
 
-/* Der Avatar bleibt klar im Vordergrund und weicht dem Präsentationsmedium aus. */
+/* Der Avatar bleibt klar im Vordergrund und steht rechts neben der Tafelfläche. */
 .stage.v1617-presentation-active .avatar{
   z-index:6;
   transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar{
   left:auto!important;
-  right:8%!important;
+  right:4%!important;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar{
-  left:10%!important;
+  left:4%!important;
   right:auto!important;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar{
-  left:8%!important;
-  right:auto!important;
+  left:auto!important;
+  right:4%!important;
 }
 
-/* V0.16.20 NAVEL AVATAR
-   Verbindliche Bedeutung von „bis Nabel“: großer Oberkörper-Ausschnitt wie in der freigegebenen Referenz. */
+/* „Bis Nabel“ = großer Oberkörper-Ausschnitt wie in der freigegebenen Referenz. */
 .stage .avatar.medium{
-  height:220px!important;
-  bottom:-3%!important;
-  transform:scale(1.9)!important;
+  height:74%!important;
+  width:18%!important;
+  bottom:-6%!important;
+  transform:scale(1.55)!important;
   transform-origin:50% 100%!important;
 }
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
   left:auto!important;
-  right:8%!important;
-  bottom:-3%!important;
+  right:4%!important;
+  height:74%!important;
+  bottom:-6%!important;
 }
 
-/* Text und Grafik sitzen gemeinsam auf der Fläche und bleiben auch auf 3440×1440 gut lesbar. */
+/* Text und Grafik sitzen gemeinsam innerhalb der Tafelfläche. */
 .stage .presentation-content{
-  padding:5.5%!important;
+  padding:6% 7%!important;
 }
 .stage .presentation-board-text{
-  max-width:100%;
-  font-size:clamp(18px,1.35vw,34px)!important;
+  max-width:84%;
+  font-size:clamp(22px,1.55vw,40px)!important;
   line-height:1.28;
 }
 .stage .presentation-board-graphic{
-  max-width:100%;
-  max-height:82%;
+  max-width:82%;
+  max-height:72%;
   object-fit:contain;
 }
 
@@ -112,9 +119,12 @@
 
 @media (max-width:1599px){
   .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-    width:58%!important;
-    height:68%!important;
+    width:66%!important;
+    height:100%!important;
   }
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:6%!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:6%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
+    right:3%!important;
+    height:72%!important;
+  }
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:3%!important}
 }
