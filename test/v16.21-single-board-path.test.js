@@ -23,3 +23,13 @@ test('approved Academy board remains the only visible chalkboard surface',()=>{
   assert.match(css,/presentation-surface\.presentation-chalkboard/);
   assert.match(css,/assets\/academy-tafel-vorlage\.png/);
 });
+
+test('fixed 40-second production keeps Room 3 and suppresses legacy background layers',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  const css=read('src/presentation-stage-v16.17.css');
+  assert.match(js,/v169-fixed-test-active/);
+  assert.match(css,/\.stage\.v169-fixed-test-active[\s\S]*?room3-academy\.jpg/);
+  assert.match(css,/\.stage\.v169-fixed-test-active \.bgScene[\s\S]*?display:\s*none!important/);
+  assert.match(css,/\.stage\.v169-fixed-test-active \.fullGraphic[\s\S]*?display:\s*none!important/);
+  assert.match(css,/\.stage\.v169-fixed-test-active \.fullscreen-object[\s\S]*?display:\s*none!important/);
+});
