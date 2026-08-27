@@ -14,8 +14,14 @@
   box-shadow:0 22px 52px rgba(0,0,0,.18)!important;
 }
 
-/* Alte V0.16.16/V0.16.19-Tafelebene und schwebende Grafik dürfen nicht zusätzlich erscheinen. */
-.stage.v1617-presentation-active #boardOverlay,
+/* V0.16.21 SINGLE BOARD PATH
+   Das alte braun gerahmte boardOverlay bleibt nur als unsichtbarer Kompatibilitätszustand
+   für ältere Projekt-/Regiepfade erhalten. Es darf auf der Bühne nie mehr rendern. */
+.stage #boardOverlay{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
 .stage.v1617-presentation-active #userStageImage{
   display:none!important;
 }
