@@ -1,81 +1,63 @@
-/* V0.16.17 – visuelle Referenz: rahmenlose Präsentationsfläche als Teil des Academy-Raums. */
+/* V0.16.17 – Präsentationsobjekte im austauschbaren Academy-Raum. */
 .stage .presentation-surface{
-  border:0!important;
-  border-radius:0!important;
   outline:0;
   overflow:hidden;
 }
 
+/* SCHULTAFEL – verbindliche Referenz: echte rechteckige Tafel mit sichtbarem Rahmen. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:#262928;
   background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/tafel-academy.jpg')!important;
   background-size:cover!important;
   background-position:center!important;
-  box-shadow:none!important;
+  background-repeat:no-repeat!important;
+  border:7px solid #51483f!important;
+  border-radius:3px!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.24)!important;
 }
 
-/* SINGLE BOARD PATH
-   Das alte braun gerahmte boardOverlay bleibt nur als unsichtbarer Kompatibilitätszustand
-   für ältere Projekt-/Regiepfade erhalten. Es darf auf der Bühne nie mehr rendern. */
+/* Das alte Overlay bleibt nur als unsichtbarer Kompatibilitätszustand erhalten. */
 .stage #boardOverlay{
   display:none!important;
   visibility:hidden!important;
   pointer-events:none!important;
 }
-.stage.v1617-presentation-active #userStageImage{
-  display:none!important;
-}
+.stage.v1617-presentation-active #userStageImage{display:none!important}
 
-/* BALANCED STAGE COMPOSITION
-   Die Tafel bleibt links integriert, lässt aber sichtbar Raum und Bühnenkontext stehen. */
+/* REFERENZKOMPOSITION
+   Die Tafel ist ein klar abgegrenztes Objekt links im Raum; der Raum bleibt rundherum sichtbar. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
   position:absolute!important;
-  top:7%!important;
+  top:15%!important;
   bottom:auto!important;
-  width:61%!important;
-  height:86%!important;
+  width:52%!important;
+  height:68%!important;
   max-width:none!important;
   max-height:none!important;
-  border-radius:0!important;
   transform:none!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{
-  left:4%!important;
+  left:8%!important;
   right:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{
-  right:4%!important;
+  right:8%!important;
   left:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{
-  left:19.5%!important;
+  left:24%!important;
   right:auto!important;
 }
 
-/* Der Avatar bleibt klar im Vordergrund und steht rechts neben der Tafelfläche. */
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“ rechts neben der Tafel. */
 .stage.v1617-presentation-active .avatar{
   z-index:6;
   transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease;
 }
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar{
-  left:auto!important;
-  right:3%!important;
-}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar{
-  left:3%!important;
-  right:auto!important;
-}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar{
-  left:auto!important;
-  right:3%!important;
-}
-
-/* REALISTIC TEST AVATAR
-   Nur der Modus „Bis Nabel“ verwendet im Entwicklungs-Sichttest die freigestellte Referenz-PNG. */
 .stage .avatar.medium{
-  height:390px!important;
-  width:300px!important;
-  bottom:-2%!important;
+  height:470px!important;
+  width:360px!important;
+  bottom:-7%!important;
   transform:none!important;
   transform-origin:50% 100%!important;
   background-image:url('assets/testavatar-academy.png')!important;
@@ -83,21 +65,22 @@
   background-position:center bottom!important;
   background-repeat:no-repeat!important;
 }
-.stage .avatar.medium > *{
-  display:none!important;
-}
+.stage .avatar.medium > *{display:none!important}
 .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
   left:auto!important;
-  right:3%!important;
-  height:390px!important;
-  width:300px!important;
-  bottom:-2%!important;
+  right:1.5%!important;
+}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{
+  left:1.5%!important;
+  right:auto!important;
+}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar.medium{
+  left:auto!important;
+  right:1.5%!important;
 }
 
 /* Text und Grafik sitzen gemeinsam innerhalb der Tafelfläche. */
-.stage .presentation-content{
-  padding:6% 7%!important;
-}
+.stage .presentation-content{padding:6% 7%!important}
 .stage .presentation-board-text{
   max-width:84%;
   font-size:clamp(22px,1.55vw,40px)!important;
@@ -108,35 +91,24 @@
   max-height:72%;
   object-fit:contain;
 }
+.stage .presentation-surface.presentation-custom .presentation-board-graphic{display:none!important}
+.stage .presentation-exit-clone{pointer-events:none!important;z-index:4}
 
-/* Ein eigenes Präsentationsmedium ist selbst die Fläche und wird nicht doppelt als Grafik darüber gelegt. */
-.stage .presentation-surface.presentation-custom .presentation-board-graphic{
-  display:none!important;
-}
-
-/* Ausgehende Flächen bleiben nur für die Dauer ihres CSS-Effekts bestehen. */
-.stage .presentation-exit-clone{
-  pointer-events:none!important;
-  z-index:4;
-}
-
-/* Flipchart und Whiteboard bleiben bewusst eigenständige, austauschbare Medien. */
+/* Whiteboard und Flipchart bleiben eigenständige austauschbare Medienobjekte. */
 .stage .presentation-surface.presentation-flipchart,
-.stage .presentation-surface.presentation-whiteboard{
-  border:0!important;
-}
+.stage .presentation-surface.presentation-whiteboard{border:0!important}
 
 @media (max-width:1599px){
   .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-    top:7%!important;
-    width:61%!important;
-    height:86%!important;
+    top:15%!important;
+    width:52%!important;
+    height:68%!important;
   }
   .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
-    right:2%!important;
-    height:350px!important;
-    width:270px!important;
-    bottom:-2%!important;
+    right:1%!important;
+    height:420px!important;
+    width:320px!important;
+    bottom:-7%!important;
   }
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:2%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:1%!important}
 }
