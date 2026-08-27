@@ -14,11 +14,11 @@ test('Academy chalk surface remains room-height, frameless and left integrated',
   assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*transform:\s*perspective\(900px\) rotateY\(3\.5deg\)!important/);
 });
 
-test('current navel avatar is realistic, large and positioned right of chalk surface',()=>{
+test('current navel avatar is realistic, responsive and positioned on the right',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/\.avatar\.medium[\s\S]*background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*right:\s*-2%!important/);
-  assert.match(css,/\.avatar\.medium[\s\S]*height:\s*590px!important[\s\S]*width:\s*450px!important/);
+  assert.match(css,/\.stage \.avatar\.medium[\s\S]*background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
+  assert.match(css,/\.stage \.avatar\.medium[\s\S]*height:\s*96%!important[\s\S]*width:\s*auto!important[\s\S]*aspect-ratio:\s*600\s*\/\s*577/);
+  assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium,[\s\S]*\.stage\.v169-fixed-test-active \.avatar\.medium\s*\{[\s\S]*left:\s*auto!important[\s\S]*right:\s*-2%!important/);
 });
 
 test('legacy floating board is never used while Academy presentation surface is active',()=>{
