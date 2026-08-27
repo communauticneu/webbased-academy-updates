@@ -53,7 +53,7 @@
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:perspective(900px) rotateY(-3.5deg)!important}
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important}
 
-/* REALISTISCHER TESTAVATAR – „Bis Nabel“ in freigegebener Größe, proportional zur Academy-Bühne. */
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“: ein Avatar/ein Ausschnitt, standardmäßig rechts, proportional zur Academy-Bühne. */
 .stage.v1617-presentation-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
   height:118%!important;
@@ -68,9 +68,7 @@
   background-repeat:no-repeat!important;
 }
 .stage .avatar.medium > *{display:none!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{left:auto!important;right:-2%!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:-2%!important;right:auto!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar.medium{left:auto!important;right:-2%!important}
+.stage.v1617-presentation-active .avatar.medium{left:auto!important;right:-2%!important}
 
 .stage .presentation-content{padding:6% 7%!important}
 .stage .presentation-board-text{max-width:84%;font-size:clamp(22px,1.55vw,40px)!important;line-height:1.28}
@@ -81,6 +79,4 @@
 
 @media (max-width:1599px){
   .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-4%!important;bottom:0!important;width:68%!important;height:108%!important;transform:perspective(900px) rotateY(3.5deg)!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:-2%!important;bottom:-18%!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:-2%!important}
 }
