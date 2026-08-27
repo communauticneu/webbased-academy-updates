@@ -1,4 +1,7 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webFrame } = require('electron');
+
+// Frühester Startschutz: noch bevor DOMContentLoaded und die alte HTML-Bühne sichtbar werden können.
+webFrame.insertCSS('.stage{visibility:hidden!important}.stage.academy-startup-ready{visibility:visible!important}');
 
 contextBridge.exposeInMainWorld('academyDesktop', {
   isDesktop: true,
