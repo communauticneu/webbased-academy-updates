@@ -69,12 +69,19 @@ test('fixed Academy startup reapplies its clean stage after legacy local restore
   assert.match(delayed[0],/resetFixedAcademyStage\(doc\)/);
 });
 
-test('stage is hidden on first render until fixed Academy state is ready',()=>{
+test('stage stays hidden through first reset and only becomes visible after delayed Academy reset',()=>{
+  const html=read('src/index.html');
   const js=read('src/presentation-stage-v16.17.js');
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/\.stage\s*\{\s*visibility:\s*hidden\s*!important\s*\}/);
-  assert.match(css,/\.stage\.academy-startup-ready\s*\{\s*visibility:\s*visible\s*!important\s*\}/);
-  assert.match(js,/resetFixedAcademyStage\(doc\)[\s\S]*?classList\.add\('academy-startup-ready'\)/);
+  assert.match(html,/class="stage academy-startup-pending" id="stage"/);
+  assert.match(css,/\.stage\.academy-startup-pending\s*\{[^}]*visibility:\s*hidden\s*!important/);
+  const resetFn=js.match(/function resetFixedAcademyStage\(doc\)\{[\s\S]*?\n  \}/);
+  assert.ok(resetFn,'resetFixedAcademyStage missing');
+  assert.doesNotMatch(resetFn[0],/academy-startup-pending/);
+  const delayed=js.match(/setTimeout\(\(\)=>\{[\s\S]*?\},1100\);/);
+  assert.ok(delayed,'delayed Academy startup release missing');
+  assert.match(delayed[0],/resetFixedAcademyStage\(doc\)/);
+  assert.match(delayed[0],/classList\.remove\('academy-startup-pending'\)/);
 });
 
 test('desktop window is not shown on ready-to-show before delayed scene restore settles',()=>{
