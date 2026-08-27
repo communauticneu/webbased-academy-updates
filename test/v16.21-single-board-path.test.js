@@ -70,12 +70,11 @@ test('fixed Academy startup reapplies its clean stage after legacy local restore
 });
 
 test('stage is hidden on first render until fixed Academy state is ready',()=>{
-  const html=read('src/index.html');
   const js=read('src/presentation-stage-v16.17.js');
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(html,/class="stage[^\"]*academy-startup-pending/);
-  assert.match(css,/\.stage\.academy-startup-pending\s*\{[^}]*visibility:\s*hidden\s*!important/);
-  assert.match(js,/resetFixedAcademyStage\(doc\)[\s\S]*?classList\.remove\('academy-startup-pending'\)/);
+  assert.match(css,/\.stage\s*\{\s*visibility:\s*hidden\s*!important\s*\}/);
+  assert.match(css,/\.stage\.academy-startup-ready\s*\{\s*visibility:\s*visible\s*!important\s*\}/);
+  assert.match(js,/resetFixedAcademyStage\(doc\)[\s\S]*?classList\.add\('academy-startup-ready'\)/);
 });
 
 test('desktop window is not shown on ready-to-show before delayed scene restore settles',()=>{
