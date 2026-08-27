@@ -42,3 +42,13 @@ test('medium Academy avatar scales with the stage instead of fixed pixel sizes',
   assert.match(medium[0],/aspect-ratio:\s*450\s*\/\s*590/);
   assert.doesNotMatch(css,/@media[\s\S]*?\.avatar\.medium\{[^}]*height:\s*\d+px\s*!important/);
 });
+
+test('approved Bis Nabel avatar keeps one crop and defaults to the right',()=>{
+  const css=read('src/presentation-stage-v16.17.css');
+  const medium=css.match(/\.stage \.avatar\.medium\s*\{[\s\S]*?\n\}/);
+  assert.ok(medium,'medium avatar rule missing');
+  assert.match(medium[0],/background-image:url\('assets\/testavatar-academy\.png'\)!important/);
+  assert.match(medium[0],/background-position:center bottom!important/);
+  assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
+  assert.doesNotMatch(css,/:has\(\.presentation-surface\[data-position=/);
+});
