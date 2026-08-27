@@ -12,10 +12,12 @@ test('Academy chalkboard keeps room context and a balanced left composition',()=
   assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?box-shadow:\s*none!important/);
 });
 
-test('visible Academy board composes with an unclipped navel avatar on the right',()=>{
+test('visible Academy board uses the realistic navel test avatar on the right',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/\.avatar\.medium[\s\S]*?height:\s*300px!important[\s\S]*?width:\s*120px!important[\s\S]*?transform:\s*scale\(1\.25\)!important/);
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*?right:\s*7%!important[\s\S]*?bottom:\s*-4%!important/);
+  assert.match(css,/\.avatar\.medium[\s\S]*?background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
+  assert.match(css,/\.avatar\.medium[\s\S]*?height:\s*390px!important[\s\S]*?width:\s*300px!important/);
+  assert.match(css,/\.avatar\.medium\s*>\s*\*[\s\S]*?display:\s*none!important/);
+  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*?right:\s*3%!important[\s\S]*?bottom:\s*-2%!important/);
   const js=read('src/presentation-stage-v16.17.js');
   const fn=js.match(/function setAcademyBoardVisible\(doc,visible\)[\s\S]*?\n  }/);
   assert.ok(fn,'setAcademyBoardVisible missing');
