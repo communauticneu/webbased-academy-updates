@@ -5,10 +5,10 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 
-test('Academy chalk surface is a large frameless perspective presentation plane',()=>{
+test('Academy chalk surface is room-height, frameless and slightly perspective',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?border:\s*0!important/);
-  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*5%!important[\s\S]*?width:\s*67%!important[\s\S]*?height:\s*90%!important/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*-3%!important[\s\S]*?bottom:\s*0!important[\s\S]*?width:\s*67%!important[\s\S]*?height:\s*106%!important/);
   assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*-1%!important/);
   assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?transform:\s*perspective\(1200px\) rotateY\(2deg\)!important/);
 });
