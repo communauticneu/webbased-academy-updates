@@ -53,10 +53,10 @@
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:perspective(900px) rotateY(-3.5deg)!important}
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important}
 
-/* REALISTISCHER TESTAVATAR – „Bis Nabel“ proportional zur Academy-Bühne. */
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“ in freigegebener Größe, proportional zur Academy-Bühne. */
 .stage.v1617-presentation-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
-  height:82%!important;
+  height:118%!important;
   width:auto!important;
   aspect-ratio:450 / 590;
   bottom:-18%!important;
