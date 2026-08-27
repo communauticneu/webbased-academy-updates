@@ -120,6 +120,21 @@
     return observer;
   }
 
+  function bindFixedProductionRoom(doc){
+    if(!doc)return null;
+    const stage=doc.querySelector('.stage');
+    const fixedTab=doc.getElementById('fixedTestTab');
+    const freeTab=doc.getElementById('freeTalkTab');
+    const fixedPane=doc.getElementById('fixedTestPane');
+    if(!stage||!fixedTab||!freeTab)return null;
+    const activate=()=>stage.classList.add('v169-fixed-test-active');
+    const deactivate=()=>stage.classList.remove('v169-fixed-test-active');
+    fixedTab.addEventListener('click',activate,true);
+    freeTab.addEventListener('click',deactivate,true);
+    if(!fixedPane||!fixedPane.hidden)activate();
+    return {activate,deactivate};
+  }
+
   function install(doc){
     if(!doc)return null;
     const stage=doc.querySelector('.stage');
@@ -132,6 +147,7 @@
 
     bindLegacyBoardToggle(doc);
     const legacyBoardObserver=bindLegacyBoardBridge(doc);
+    const fixedProductionRoom=bindFixedProductionRoom(doc);
 
     function captureVisible(surface){
       if(surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'){
@@ -181,9 +197,10 @@
         stageObserver.disconnect();
         surfaceObserver?.disconnect();
         legacyBoardObserver?.disconnect();
+        fixedProductionRoom?.deactivate?.();
       }
     };
   }
 
-  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,bindLegacyBoardToggle,bindLegacyBoardBridge,install};
+  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,bindLegacyBoardToggle,bindLegacyBoardBridge,bindFixedProductionRoom,install};
 });
