@@ -108,6 +108,7 @@
     }
     doc.querySelectorAll?.('[data-camera]')?.forEach?.(button=>button.classList.toggle('active',button.dataset.camera==='medium'));
     syncPresentationStage(doc);
+    stage.classList.add('academy-startup-ready');
     return true;
   }
 
