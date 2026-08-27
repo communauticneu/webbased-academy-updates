@@ -21,5 +21,5 @@ test('legacy brown board can never render on stage',()=>{
 test('approved Academy board remains the only visible chalkboard surface',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   assert.match(css,/presentation-surface\.presentation-chalkboard/);
-  assert.match(css,/assets\/tafel-academy\.jpg/);
+  assert.match(css,/assets\/academy-tafel-vorlage\.png/);
 });
