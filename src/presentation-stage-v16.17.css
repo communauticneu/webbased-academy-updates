@@ -57,7 +57,8 @@
 .stage.v1617-presentation-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
   height:82%!important;
-  width:31.4%!important;
+  width:auto!important;
+  aspect-ratio:450 / 590;
   bottom:-18%!important;
   transform:none!important;
   transform-origin:50% 100%!important;
