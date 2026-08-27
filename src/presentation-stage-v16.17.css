@@ -53,11 +53,11 @@
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:perspective(900px) rotateY(-3.5deg)!important}
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important}
 
-/* REALISTISCHER TESTAVATAR – „Bis Nabel“ groß rechts vor Raum 3. */
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“ proportional zur Academy-Bühne. */
 .stage.v1617-presentation-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
-  height:590px!important;
-  width:450px!important;
+  height:82%!important;
+  width:31.4%!important;
   bottom:-18%!important;
   transform:none!important;
   transform-origin:50% 100%!important;
@@ -80,6 +80,6 @@
 
 @media (max-width:1599px){
   .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-4%!important;bottom:0!important;width:68%!important;height:108%!important;transform:perspective(900px) rotateY(3.5deg)!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:-2%!important;height:520px!important;width:400px!important;bottom:-18%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:-2%!important;bottom:-18%!important}
   .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:-2%!important}
 }
