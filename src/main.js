@@ -23,9 +23,11 @@ function createWindow() {
     }
   });
   win.maximize();
-  win.once('ready-to-show', () => {
-    if (!win || win.isDestroyed()) return;
-    win.show();
+  win.webContents.once('did-finish-load', () => {
+    setTimeout(() => {
+      if (!win || win.isDestroyed()) return;
+      win.show();
+    }, 1200);
   });
   win.loadFile(path.join(__dirname, 'index.html'));
 }
