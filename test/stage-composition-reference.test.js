@@ -5,16 +5,17 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 
-test('Academy chalkboard is integrated into the left stage wall instead of floating as a rectangle',()=>{
+test('Academy chalkboard keeps room context and a balanced left composition',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*0%!important[\s\S]*?width:\s*66%!important[\s\S]*?height:\s*100%!important/);
-  assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*0%!important/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*7%!important[\s\S]*?width:\s*61%!important[\s\S]*?height:\s*86%!important/);
+  assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*4%!important/);
   assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?box-shadow:\s*none!important/);
 });
 
-test('visible Academy board composes with a large navel avatar on the right',()=>{
+test('visible Academy board composes with an unclipped navel avatar on the right',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*?right:\s*4%!important[\s\S]*?height:\s*74%!important/);
+  assert.match(css,/\.avatar\.medium[\s\S]*?height:\s*300px!important[\s\S]*?width:\s*120px!important[\s\S]*?transform:\s*scale\(1\.25\)!important/);
+  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*?right:\s*7%!important[\s\S]*?bottom:\s*-4%!important/);
   const js=read('src/presentation-stage-v16.17.js');
   const fn=js.match(/function setAcademyBoardVisible\(doc,visible\)[\s\S]*?\n  }/);
   assert.ok(fn,'setAcademyBoardVisible missing');
