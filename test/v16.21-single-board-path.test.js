@@ -49,13 +49,13 @@ test('approved Bis Nabel avatar keeps one crop and defaults to the right',()=>{
   assert.ok(medium,'medium avatar rule missing');
   assert.match(medium[0],/background-image:url\('assets\/testavatar-academy\.png'\)!important/);
   assert.match(medium[0],/background-position:center bottom!important/);
-  assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
+  assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium,\s*\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
   assert.doesNotMatch(css,/:has\(\.presentation-surface\[data-position=/);
 });
 
 test('fixed 40-second test also keeps Bis Nabel avatar on the right',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
+  assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium,\s*\.stage\.v169-fixed-test-active \.avatar\.medium\{[^}]*left:auto!important;[^}]*right:-2%!important/);
 });
 
 test('Bis Nabel crop reveals the avatar down to the navel instead of cutting too high',()=>{
