@@ -87,6 +87,30 @@
     return true;
   }
 
+  function resetFixedAcademyStage(doc){
+    if(!doc)return false;
+    const fixedPane=doc.getElementById('fixedTestPane');
+    if(fixedPane&&fixedPane.hidden)return false;
+    const stage=doc.querySelector('.stage');
+    const avatar=doc.getElementById('avatar');
+    const surface=doc.getElementById('presentationSurface');
+    if(!stage||!avatar)return false;
+    stage.classList.add('v169-fixed-test-active');
+    avatar.classList.remove('hidden','point');
+    avatar.classList.add('medium');
+    doc.getElementById('boardOverlay')?.classList?.remove?.('show');
+    doc.getElementById('fullGraphic')?.classList?.remove?.('show');
+    doc.getElementById('bgScene')?.classList?.remove?.('show');
+    doc.querySelectorAll?.('.media.show,.fullscreen-object.show')?.forEach?.(node=>node.classList.remove('show'));
+    if(surface){
+      surface.classList.remove('is-visible');
+      surface.setAttribute('aria-hidden','true');
+    }
+    doc.querySelectorAll?.('[data-camera]')?.forEach?.(button=>button.classList.toggle('active',button.dataset.camera==='medium'));
+    syncPresentationStage(doc);
+    return true;
+  }
+
   function bindLegacyBoardToggle(doc){
     if(!doc)return false;
     const button=doc.getElementById('toggleBoard');
@@ -129,7 +153,7 @@
     if(!stage||!fixedTab||!freeTab)return null;
     const activate=()=>stage.classList.add('v169-fixed-test-active');
     const deactivate=()=>stage.classList.remove('v169-fixed-test-active');
-    fixedTab.addEventListener('click',activate,true);
+    fixedTab.addEventListener('click',()=>{activate();resetFixedAcademyStage(doc);},true);
     freeTab.addEventListener('click',deactivate,true);
     if(!fixedPane||!fixedPane.hidden)activate();
     return {activate,deactivate};
@@ -148,6 +172,11 @@
     bindLegacyBoardToggle(doc);
     const legacyBoardObserver=bindLegacyBoardBridge(doc);
     const fixedProductionRoom=bindFixedProductionRoom(doc);
+    resetFixedAcademyStage(doc);
+    setTimeout(()=>{
+      fixedProductionRoom?.activate?.();
+      resetFixedAcademyStage(doc);
+    },1100);
 
     function captureVisible(surface){
       if(surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'){
@@ -202,5 +231,5 @@
     };
   }
 
-  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,bindLegacyBoardToggle,bindLegacyBoardBridge,bindFixedProductionRoom,install};
+  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,resetFixedAcademyStage,bindLegacyBoardToggle,bindLegacyBoardBridge,bindFixedProductionRoom,install};
 });
