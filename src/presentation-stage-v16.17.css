@@ -1,6 +1,10 @@
 /* V0.16.17 – Präsentationsobjekte im austauschbaren Academy-Raum. */
 .stage .presentation-surface{outline:0;overflow:hidden}
 
+/* STARTSCHUTZ: keine historische Bühnenebene darf vor dem Academy-Ausgangszustand sichtbar werden. */
+.stage{visibility:hidden!important}
+.stage.academy-startup-ready{visibility:visible!important}
+
 /* VORLÄUFIGER ACADEMY-RAUM 3. */
 .stage.v1617-presentation-active,
 .stage.v169-fixed-test-active{
