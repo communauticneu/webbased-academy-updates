@@ -14,7 +14,7 @@
 /* KREIDE-PRÄSENTATIONSFLÄCHE – kein klassisches Tafelobjekt. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:#262928;
-  background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/tafel-academy.jpg')!important;
+  background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/academy-tafel-vorlage.png')!important;
   background-size:cover!important;
   background-position:center!important;
   background-repeat:no-repeat!important;
