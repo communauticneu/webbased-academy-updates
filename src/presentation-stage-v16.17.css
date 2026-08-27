@@ -14,24 +14,25 @@
   box-shadow:0 22px 52px rgba(0,0,0,.18)!important;
 }
 
-/* Alte V0.16.16-Tafelebene und schwebende Grafik dürfen nicht zusätzlich erscheinen. */
+/* Alte V0.16.16/V0.16.19-Tafelebene und schwebende Grafik dürfen nicht zusätzlich erscheinen. */
 .stage.v1617-presentation-active #boardOverlay,
 .stage.v1617-presentation-active #userStageImage{
   display:none!important;
 }
 
-/* Die Tafel wirkt wie eine große Materialfläche im Raum – kein Schulrahmen. */
+/* V0.16.20 APPROVED ACADEMY REFERENCE
+   Große, rahmenlose Tafelfläche links im Raum gemäß freigegebener Bildreferenz. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-  top:8%!important;
-  width:70%!important;
-  height:76%!important;
+  top:10%!important;
+  width:58%!important;
+  height:68%!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{
-  left:5%!important;
+  left:7%!important;
   right:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{
-  right:5%!important;
+  right:7%!important;
   left:auto!important;
 }
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{
@@ -57,7 +58,21 @@
   right:auto!important;
 }
 
-/* Text und Grafik sitzen auf der Fläche und bleiben auch auf 3440×1440 gut lesbar. */
+/* V0.16.20 NAVEL AVATAR
+   Verbindliche Bedeutung von „bis Nabel“: großer Oberkörper-Ausschnitt wie in der freigegebenen Referenz. */
+.stage .avatar.medium{
+  height:220px!important;
+  bottom:-3%!important;
+  transform:scale(1.9)!important;
+  transform-origin:50% 100%!important;
+}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
+  left:auto!important;
+  right:8%!important;
+  bottom:-3%!important;
+}
+
+/* Text und Grafik sitzen gemeinsam auf der Fläche und bleiben auch auf 3440×1440 gut lesbar. */
 .stage .presentation-content{
   padding:5.5%!important;
 }
@@ -91,9 +106,9 @@
 
 @media (max-width:1599px){
   .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-    width:66%!important;
-    height:72%!important;
+    width:58%!important;
+    height:68%!important;
   }
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar{right:5%!important}
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar{left:6%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:6%!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:6%!important}
 }
