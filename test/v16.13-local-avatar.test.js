@@ -6,12 +6,13 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 const read = p => fs.readFileSync(path.join(root,p),'utf8');
 
-test('V0.16.13 uses a dark hidden BrowserWindow until renderer ready', () => {
+test('V0.16.13 uses a dark hidden BrowserWindow until Academy renderer restore settles', () => {
   const s = read('src/main.js');
   assert.match(s, /backgroundColor:\s*['"]#06131c['"]/);
   assert.match(s, /show:\s*false/);
-  assert.match(s, /ready-to-show/);
-  assert.match(s, /win\?\.show\(\)|win\.show\(\)/);
+  assert.match(s, /did-finish-load/);
+  assert.match(s, /setTimeout\([\s\S]*?win\.show\(\)[\s\S]*?1\d{3}/);
+  assert.doesNotMatch(s, /ready-to-show[\s\S]*?win\.show\(\)/);
 });
 
 test('V0.16.13 behavior remains available in later package versions', () => {
