@@ -19,12 +19,12 @@ test('Academy chalk surface is room-height, frameless and slightly perspective',
   assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?transform:\s*perspective\(900px\) rotateY\(3\.5deg\)!important/);
 });
 
-test('visible Academy board uses approved realistic navel avatar composition on the right',()=>{
+test('visible Academy board uses approved responsive navel avatar composition on the right',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/\.avatar\.medium[\s\S]*?background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
-  assert.match(css,/\.avatar\.medium[\s\S]*?height:\s*590px!important[\s\S]*?width:\s*450px!important[\s\S]*?bottom:\s*-18%!important/);
-  assert.match(css,/\.avatar\.medium\s*>\s*\*[\s\S]*?display:\s*none!important/);
-  assert.match(css,/:has\(\.presentation-surface\[data-position="left"\]\.is-visible\) \.avatar\.medium[\s\S]*?right:\s*-2%!important/);
+  assert.match(css,/\.stage \.avatar\.medium[\s\S]*?height:\s*96%!important[\s\S]*?width:\s*auto!important[\s\S]*?aspect-ratio:\s*600\s*\/\s*577[\s\S]*?bottom:\s*-2%!important/);
+  assert.match(css,/\.stage \.avatar\.medium[\s\S]*?background-image:\s*url\(['"]assets\/testavatar-academy\.png['"]\)!important/);
+  assert.match(css,/\.stage \.avatar\.medium\s*>\s*\*[\s\S]*?display:\s*none!important/);
+  assert.match(css,/\.stage\.v1617-presentation-active \.avatar\.medium,[\s\S]*?\.stage\.v169-fixed-test-active \.avatar\.medium\s*\{[\s\S]*?left:\s*auto!important[\s\S]*?right:\s*-2%!important/);
   const js=read('src/presentation-stage-v16.17.js');
   const fn=js.match(/function setAcademyBoardVisible\(doc,visible\)[\s\S]*?\n  }/);
   assert.ok(fn,'setAcademyBoardVisible missing');
