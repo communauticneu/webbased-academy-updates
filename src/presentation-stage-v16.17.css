@@ -1,59 +1,40 @@
 /* V0.16.17 – Präsentationsobjekte im austauschbaren Academy-Raum. */
-.stage .presentation-surface{
-  outline:0;
-  overflow:hidden;
-}
+.stage .presentation-surface{outline:0;overflow:hidden}
 
-/* SCHULTAFEL – verbindliche Referenz: echte rechteckige Tafel mit sichtbarem Rahmen. */
+/* KREIDE-PRÄSENTATIONSFLÄCHE – kein klassisches Tafelobjekt. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:#262928;
   background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/tafel-academy.jpg')!important;
   background-size:cover!important;
   background-position:center!important;
   background-repeat:no-repeat!important;
-  border:7px solid #51483f!important;
-  border-radius:3px!important;
-  box-shadow:0 3px 10px rgba(0,0,0,.24)!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  transform-origin:left bottom!important;
 }
 
-/* Das alte Overlay bleibt nur als unsichtbarer Kompatibilitätszustand erhalten. */
-.stage #boardOverlay{
-  display:none!important;
-  visibility:hidden!important;
-  pointer-events:none!important;
-}
+.stage #boardOverlay{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .stage.v1617-presentation-active #userStageImage{display:none!important}
 
-/* REFERENZKOMPOSITION
-   Die Tafel ist ein klar abgegrenztes Objekt links im Raum; der Raum bleibt rundherum sichtbar. */
+/* REFERENZKOMPOSITION: raumhoch, links aus dem Bild laufend, unten am Boden sichtbar,
+   rechter Abschluss nur leicht perspektivisch. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
   position:absolute!important;
-  top:15%!important;
-  bottom:auto!important;
-  width:52%!important;
-  height:68%!important;
+  top:-3%!important;
+  bottom:0!important;
+  width:67%!important;
+  height:106%!important;
   max-width:none!important;
   max-height:none!important;
-  transform:none!important;
+  transform:perspective(1200px) rotateY(2deg)!important;
 }
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{
-  left:8%!important;
-  right:auto!important;
-}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{
-  right:8%!important;
-  left:auto!important;
-}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{
-  left:24%!important;
-  right:auto!important;
-}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:-1%!important;right:auto!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-1%!important;left:auto!important;transform:perspective(1200px) rotateY(-2deg)!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16.5%!important;right:auto!important}
 
-/* REALISTISCHER TESTAVATAR – „Bis Nabel“ rechts neben der Tafel. */
-.stage.v1617-presentation-active .avatar{
-  z-index:6;
-  transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease;
-}
+/* REALISTISCHER TESTAVATAR – „Bis Nabel“ rechts vor dem sichtbaren Raum. */
+.stage.v1617-presentation-active .avatar{z-index:6;transition:left .45s ease,right .45s ease,bottom .45s ease,transform .45s ease,opacity .3s ease}
 .stage .avatar.medium{
   height:470px!important;
   width:360px!important;
@@ -66,49 +47,19 @@
   background-repeat:no-repeat!important;
 }
 .stage .avatar.medium > *{display:none!important}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
-  left:auto!important;
-  right:1.5%!important;
-}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{
-  left:1.5%!important;
-  right:auto!important;
-}
-.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar.medium{
-  left:auto!important;
-  right:1.5%!important;
-}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{left:auto!important;right:1.5%!important}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:1.5%!important;right:auto!important}
+.stage.v1617-presentation-active:has(.presentation-surface[data-position="center"].is-visible) .avatar.medium{left:auto!important;right:1.5%!important}
 
-/* Text und Grafik sitzen gemeinsam innerhalb der Tafelfläche. */
 .stage .presentation-content{padding:6% 7%!important}
-.stage .presentation-board-text{
-  max-width:84%;
-  font-size:clamp(22px,1.55vw,40px)!important;
-  line-height:1.28;
-}
-.stage .presentation-board-graphic{
-  max-width:82%;
-  max-height:72%;
-  object-fit:contain;
-}
+.stage .presentation-board-text{max-width:84%;font-size:clamp(22px,1.55vw,40px)!important;line-height:1.28}
+.stage .presentation-board-graphic{max-width:82%;max-height:72%;object-fit:contain}
 .stage .presentation-surface.presentation-custom .presentation-board-graphic{display:none!important}
 .stage .presentation-exit-clone{pointer-events:none!important;z-index:4}
-
-/* Whiteboard und Flipchart bleiben eigenständige austauschbare Medienobjekte. */
-.stage .presentation-surface.presentation-flipchart,
-.stage .presentation-surface.presentation-whiteboard{border:0!important}
+.stage .presentation-surface.presentation-flipchart,.stage .presentation-surface.presentation-whiteboard{border:0!important}
 
 @media (max-width:1599px){
-  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
-    top:15%!important;
-    width:52%!important;
-    height:68%!important;
-  }
-  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{
-    right:1%!important;
-    height:420px!important;
-    width:320px!important;
-    bottom:-7%!important;
-  }
+  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-3%!important;bottom:0!important;width:67%!important;height:106%!important;transform:perspective(1200px) rotateY(2deg)!important}
+  .stage.v1617-presentation-active:has(.presentation-surface[data-position="left"].is-visible) .avatar.medium{right:1%!important;height:420px!important;width:320px!important;bottom:-7%!important}
   .stage.v1617-presentation-active:has(.presentation-surface[data-position="right"].is-visible) .avatar.medium{left:1%!important}
 }
