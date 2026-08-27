@@ -63,7 +63,10 @@ test('fixed Academy startup reapplies its clean stage after legacy local restore
   const js=read('src/presentation-stage-v16.17.js');
   assert.match(js,/function resetFixedAcademyStage\(doc\)/);
   assert.match(js,/resetFixedAcademyStage\(doc\)[\s\S]*?classList\.add\('medium'\)/);
-  assert.match(js,/setTimeout\([\s\S]*?fixedProductionRoom\?\.activate\?\.\(\)[\s\S]*?10(?:0\d|1\d|2\d|3\d|4\d|5\d)/);
+  const delayed=js.match(/setTimeout\(\(\)=>\{[\s\S]*?\},1100\);/);
+  assert.ok(delayed,'delayed fixed Academy reset missing');
+  assert.match(delayed[0],/fixedProductionRoom\?\.activate\?\.\(\)/);
+  assert.match(delayed[0],/resetFixedAcademyStage\(doc\)/);
 });
 
 test('desktop window is not shown on ready-to-show before delayed scene restore settles',()=>{
