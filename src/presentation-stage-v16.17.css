@@ -2,14 +2,23 @@
 .stage .presentation-surface{outline:0;overflow:hidden}
 
 /* VORLÄUFIGER ACADEMY-RAUM 3. */
-.stage.v1617-presentation-active{
+.stage.v1617-presentation-active,
+.stage.v169-fixed-test-active{
   background-image:url('assets/room3-academy.jpg')!important;
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
 }
-.stage.v1617-presentation-active .floor{display:none!important}
-.stage.v1617-presentation-active .bgScene{display:none!important}
+.stage.v1617-presentation-active .floor,
+.stage.v169-fixed-test-active .floor{display:none!important}
+.stage.v1617-presentation-active .bgScene,
+.stage.v169-fixed-test-active .bgScene{display:none!important}
+
+/* Im festen 40-Sekunden-Test darf keine alte Hintergrund-/Vollbildebene Raum 3 überdecken. */
+.stage.v169-fixed-test-active .fullGraphic,
+.stage.v169-fixed-test-active .fullscreen-object,
+.stage.v169-fixed-test-active .media,
+.stage.v169-fixed-test-active #userStageImage{display:none!important}
 
 /* KREIDE-PRÄSENTATIONSFLÄCHE – kein klassisches Tafelobjekt. */
 .stage .presentation-surface.presentation-chalkboard{
