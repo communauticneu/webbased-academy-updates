@@ -33,3 +33,12 @@ test('fixed 40-second production keeps Room 3 and suppresses legacy background l
   assert.match(css,/\.stage\.v169-fixed-test-active \.fullGraphic[\s\S]*?display:\s*none!important/);
   assert.match(css,/\.stage\.v169-fixed-test-active \.fullscreen-object[\s\S]*?display:\s*none!important/);
 });
+
+test('medium Academy avatar scales with the stage instead of fixed pixel sizes',()=>{
+  const css=read('src/presentation-stage-v16.17.css');
+  const medium=css.match(/\.stage \.avatar\.medium\s*\{[\s\S]*?\n\}/);
+  assert.ok(medium,'medium avatar rule missing');
+  assert.match(medium[0],/height:\s*\d+(?:\.\d+)?%\s*!important/);
+  assert.match(medium[0],/aspect-ratio:\s*450\s*\/\s*590/);
+  assert.doesNotMatch(css,/@media[\s\S]*?\.avatar\.medium\{[^}]*height:\s*\d+px\s*!important/);
+});
