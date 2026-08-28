@@ -51,6 +51,7 @@
     const view=doc.defaultView||root;
     if(!vortrag||!view)return false;
     ensureResponsiveLayoutStyle(doc);
+    doc.querySelectorAll('.v1623-medium-grid button span, .v1623-background-grid button span').forEach?.(node=>node.remove());
 
     const workspace=vortrag.querySelector('.v1623-production-workspace');
     const monitor=vortrag.querySelector('.monitor-card');
