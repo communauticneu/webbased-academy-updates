@@ -9,8 +9,10 @@ echo   WEBBASED ACADEMY CREATOR - TESTSTART
 echo ==============================================
 echo.
 
-echo [1/3] Aktuellen Entwicklungsstand holen...
-git pull --ff-only
+echo [1/3] Exakten GitHub-Entwicklungsstand holen...
+git fetch origin dev-stage-composition
+if errorlevel 1 goto :error
+git reset --hard origin/dev-stage-composition
 if errorlevel 1 goto :error
 
 echo.
