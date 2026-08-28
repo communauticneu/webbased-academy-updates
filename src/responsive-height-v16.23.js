@@ -16,7 +16,8 @@
         .v1623-editor-body,.v1623-section{min-width:0!important;max-width:100%!important}
         .v1623-medium-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
         .v1623-background-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
-        .v1623-medium-grid button,.v1623-background-grid button{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;padding-left:4px!important;padding-right:4px!important}
+        .v1623-medium-grid button,.v1623-background-grid button{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;padding:6px 7px!important;background:#0b1b27!important;color:#dceaf1!important;border:1px solid #294b5f!important;border-radius:7px!important}
+        .v1623-medium-grid button.active,.v1623-background-grid button.active{background:#123148!important;border-color:#4cc8ff!important;color:#eef9ff!important}
         .v1623-media-workspace .media-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;gap:8px!important;overflow-x:hidden!important;overflow-y:hidden!important;padding-bottom:0!important}
         .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:86px!important;min-height:86px!important;padding:5px!important}
         .v1623-media-workspace .media-item .thumb{height:54px!important}
@@ -24,10 +25,10 @@
         .v1623-media-workspace .dropzone{display:none!important}
       }
       @media (min-width:1600px) and (min-height:1100px){
-        .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:110px!important;min-height:110px!important;padding:7px!important}
-        .v1623-media-workspace .media-item .thumb{height:72px!important}
-        .v1623-media-workspace .media-item .name{font-size:11px!important;margin-top:5px!important}
-        .v1623-media-workspace .media-head{margin-bottom:7px!important}
+        .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:150px!important;min-height:150px!important;padding:8px!important}
+        .v1623-media-workspace .media-item .thumb{height:108px!important}
+        .v1623-media-workspace .media-item .name{font-size:12px!important;margin-top:7px!important}
+        .v1623-media-workspace .media-head{margin-bottom:8px!important}
       }
       @media (min-width:1251px) and (max-height:1050px){
         .v1623-scene-editor{overflow-y:hidden!important;padding:8px!important}
