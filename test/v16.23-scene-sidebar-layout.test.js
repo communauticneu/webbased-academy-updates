@@ -32,9 +32,13 @@ test('V0.16.23 implements the approved four-area production workspace',()=>{
 
 test('V0.16.23 protects the global creator navigation while restructuring Vortrag',()=>{
   const html=read('src/index.html');
+  const js=read('src/presentation-stage-v16.17.js');
   for(const label of ['Intro / Outro','Vortrag','Skripten','Cartoons','Coaching','Feedback','Podcast']){
     assert.match(html,new RegExp(label.replace(' / ',' \/ ')),`${label} must remain in the global navigation`);
   }
+  assert.match(js,/\/\* V0\.16\.23 · Hauptmenü sichtbar halten/);
+  assert.match(js,/\.app\{display:grid!important;grid-template-columns:230px minmax\(0,1fr\)!important/);
+  assert.match(js,/\.app > \.sidebar\{display:block!important;visibility:visible!important;width:230px!important;min-width:230px!important/);
 });
 
 test('V0.16.23 does not remove the protected Academy production hooks',()=>{
