@@ -37,8 +37,6 @@
 
     if(!workspace||!monitor||!stage)return true;
 
-    /* The complete Academy composition is one immutable 16:9 picture.
-       First reserve the surrounding Creator UI, then fit that picture as a whole. */
     const workspaceStyle=view.getComputedStyle?.(workspace);
     const monitorStyle=view.getComputedStyle?.(monitor);
     const toolbar=monitor.querySelector('.monitor-toolbar');
@@ -60,7 +58,10 @@
     const stageHeight=Math.floor(stageWidth*9/16);
 
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageHeight}px`);
+    stage.style.setProperty('max-width','none','important');
     stage.style.setProperty('max-height','none','important');
+    stage.style.setProperty('min-height','0','important');
+    stage.style.setProperty('aspect-ratio','16 / 9','important');
     stage.style.setProperty('width',`${stageWidth}px`,'important');
     stage.style.setProperty('height',`${stageHeight}px`,'important');
     stage.style.setProperty('margin','auto','important');
@@ -71,9 +72,11 @@
     if(!doc)return null;
     const view=doc.defaultView||root;
     const sync=()=>syncProductionWorkspaceHeightV1623(doc);
+    const settle=()=>view?.setTimeout?.(sync,120);
     sync();
-    view?.addEventListener?.('resize',sync);
-    return {disconnect(){view?.removeEventListener?.('resize',sync);}};
+    view?.setTimeout?.(sync,1000);
+    view?.addEventListener?.('resize',settle);
+    return {disconnect(){view?.removeEventListener?.('resize',settle);}};
   }
 
   const api={syncProductionWorkspaceHeightV1623,install};
