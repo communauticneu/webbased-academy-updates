@@ -22,6 +22,9 @@
     if(view.innerWidth<=1250){
       vortrag.style.removeProperty('height');
       vortrag.style.removeProperty('--v1623-stage-max-height');
+      vortrag.style.removeProperty('overflow-y');
+      vortrag.style.removeProperty('overflow-x');
+      vortrag.style.removeProperty('min-height');
       stage?.style?.removeProperty?.('max-height');
       return true;
     }
@@ -30,6 +33,9 @@
     const bottomReserve=18;
     const available=Math.max(0,Math.floor(view.innerHeight-top-bottomReserve));
     vortrag.style.setProperty('height',`${available}px`,'important');
+    vortrag.style.setProperty('min-height','0','important');
+    vortrag.style.setProperty('overflow-y','auto','important');
+    vortrag.style.setProperty('overflow-x','hidden','important');
 
     if(!workspace||!stageWorkspace||!media||!controls||!monitor||!stage)return true;
 
