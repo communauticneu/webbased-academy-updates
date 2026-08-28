@@ -3,6 +3,9 @@ const { contextBridge, ipcRenderer, webFrame } = require('electron');
 // Frühester Startschutz: noch bevor DOMContentLoaded und die alte HTML-Bühne sichtbar werden können.
 webFrame.insertCSS('.stage{visibility:hidden!important}.stage.academy-startup-ready{visibility:visible!important}');
 
+// V0.16.23 · Hauptmenü sichtbar halten: globale Creator-Navigation bleibt unabhängig von älteren Responsive-Regeln erhalten.
+webFrame.insertCSS('.app{display:grid!important;grid-template-columns:230px minmax(0,1fr)!important}.app > .sidebar{display:block!important;visibility:visible!important;width:230px!important;min-width:230px!important;max-width:230px!important}');
+
 contextBridge.exposeInMainWorld('academyDesktop', {
   isDesktop: true,
   getAppVersion: () => ipcRenderer.invoke('academy-app-version'),
