@@ -14,10 +14,7 @@
     return Array.isArray(scenes)?(scenes[sceneIndex()]||scenes[0]||null):null;
   }
 
-  function mediaName(item,index){
-    return item.querySelector('.name')?.textContent?.trim()||`Medium ${index+1}`;
-  }
-
+  function mediaName(item,index){return item.querySelector('.name')?.textContent?.trim()||`Medium ${index+1}`;}
   function ensureMediaId(item,index){
     if(item.dataset.mediaId)return item.dataset.mediaId;
     const kind=item.dataset.kind||'media';
@@ -25,13 +22,10 @@
     item.dataset.mediaId=`library:${kind}:${encodeURIComponent(name)}:${index}`;
     return item.dataset.mediaId;
   }
-
   function savedName(id){
     if(!id)return 'Gespeichertes Medium';
     const parts=String(id).split(':');
-    if(parts[0]==='import'&&parts[1]){
-      try{return decodeURIComponent(parts[1])}catch{}
-    }
+    if(parts[0]==='import'&&parts[1]){try{return decodeURIComponent(parts[1])}catch{}}
     return 'Gespeichertes Medium';
   }
 
@@ -41,94 +35,69 @@
     select.innerHTML='';
     const none=document.createElement('option');none.value='';none.textContent='Kein Medium';select.appendChild(none);
     document.querySelectorAll('#mediaGrid .media-item').forEach((item,index)=>{
-      const option=document.createElement('option');
-      option.value=ensureMediaId(item,index);
-      option.textContent=mediaName(item,index);
-      option.dataset.url=item.dataset.url||'';
-      option.dataset.kind=item.dataset.kind||'';
-      select.appendChild(option);
+      const option=document.createElement('option');option.value=ensureMediaId(item,index);option.textContent=mediaName(item,index);option.dataset.url=item.dataset.url||'';option.dataset.kind=item.dataset.kind||'';select.appendChild(option);
     });
     if(wanted&&![...select.options].some(option=>option.value===wanted)){
-      const option=document.createElement('option');
-      option.value=wanted;
-      option.textContent=`Gespeichertes Medium · ${savedName(wanted)}`;
-      option.dataset.url=scene?.mediumUrl||'';
-      option.dataset.kind='saved';
-      select.appendChild(option);
+      const option=document.createElement('option');option.value=wanted;option.textContent=`Gespeichertes Medium · ${savedName(wanted)}`;option.dataset.url=scene?.mediumUrl||'';option.dataset.kind='saved';select.appendChild(option);
     }
-    select.value=wanted;
-    syncSelectedMedium();
+    select.value=wanted;syncSelectedMedium();
   }
 
-  function syncSelectedMedium(){
-    if(!select||!urlInput)return;
-    const option=select.options[select.selectedIndex];
-    urlInput.value=option?.dataset.url||'';
-  }
+  function syncSelectedMedium(){if(!select||!urlInput)return;const option=select.options[select.selectedIndex];urlInput.value=option?.dataset.url||'';}
 
   function replaceMediumInputs(){
-    const old=$('fpMedium');urlInput=$('fpMediumUrl');
-    if(!old||!urlInput)return false;
+    const old=$('fpMedium');urlInput=$('fpMediumUrl');if(!old||!urlInput)return false;
     select=document.createElement('select');select.id='fpMedium';select.className=old.className||'';
-    const label=old.closest('label');
-    if(label&&label.firstChild?.nodeType===Node.TEXT_NODE)label.firstChild.nodeValue='Medium/Grafik aus Medienbibliothek';
-    old.replaceWith(select);
-    urlInput.type='hidden';
-    const urlLabel=urlInput.closest('label');if(urlLabel)urlLabel.style.display='none';
-    select.addEventListener('change',syncSelectedMedium);
+    const label=old.closest('label');if(label&&label.firstChild?.nodeType===Node.TEXT_NODE)label.firstChild.nodeValue='Medium/Grafik aus Medienbibliothek';
+    old.replaceWith(select);urlInput.type='hidden';const urlLabel=urlInput.closest('label');if(urlLabel)urlLabel.style.display='none';select.addEventListener('change',syncSelectedMedium);return true;
+  }
+
+  /* V0.16.23 · visuelle Medienbibliothek: Auswahl über klar erkennbare Bildkacheln. */
+  function prepareVisualLibrary(){
+    const grid=$('mediaGrid');if(!grid)return false;
+    const existing=[...grid.querySelectorAll('.media-item')];
+    const wanted=['3D Kompetenzmodell','Diagramm','Schultafel','Flipchart','Whiteboard','Academy Hintergrund'];
+    const byName=new Map(existing.map(item=>[mediaName(item,0),item]));
+    wanted.forEach((name,index)=>{
+      let item=byName.get(name);
+      if(!item){item=document.createElement('div');item.className='media-item';item.draggable=true;item.dataset.kind=name==='Academy Hintergrund'?'background':'presentation';item.innerHTML='<div class="thumb"></div><div class="name"></div>';grid.appendChild(item);}
+      item.classList.add('v1623-media-tile');item.dataset.visualKind=String(index+1);item.querySelector('.name').textContent=name;
+    });
+    let importTile=grid.querySelector('.v1623-import-tile');
+    if(!importTile){
+      importTile=document.createElement('button');importTile.type='button';importTile.className='v1623-import-tile';importTile.innerHTML='<span class="v1623-import-plus">＋</span><span>Importieren</span>';
+      importTile.addEventListener('click',()=>document.getElementById('mediaInput')?.click?.());grid.appendChild(importTile);
+    }
+    if(!document.getElementById('v1623VisualMediaStyle')){
+      const style=document.createElement('style');style.id='v1623VisualMediaStyle';style.textContent=`
+        @media (min-width:1600px){
+          .v1623-media-workspace .media-grid{grid-template-columns:repeat(7,minmax(140px,1fr))!important;gap:10px!important;overflow:visible!important}
+          .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:118px!important;min-height:118px!important;border:1px solid #294b5f!important;border-radius:10px!important;background:#091722!important;padding:6px!important;color:#dceaf1!important}
+          .v1623-media-workspace .media-item .thumb{height:84px!important;border-radius:7px!important;background-size:cover!important;background-position:center!important;object-fit:cover!important}
+          .v1623-media-workspace .media-item .name{font-size:11px!important;margin-top:6px!important;color:#e4f0f6!important}
+          .v1623-media-workspace .v1623-import-tile{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important;border-style:dashed!important;cursor:pointer!important}
+          .v1623-import-plus{font-size:25px!important;color:#9eb4c0!important}
+          .v1623-media-tile[data-visual-kind="1"] .thumb{background:linear-gradient(150deg,#153a52,#0b1821 58%),linear-gradient(45deg,transparent 45%,#42b9e8 46% 54%,transparent 55%)!important}
+          .v1623-media-tile[data-visual-kind="2"] .thumb{background:linear-gradient(180deg,#102a3a,#09141c)!important;box-shadow:inset 0 -18px 0 #102333!important}
+          .v1623-media-tile[data-visual-kind="3"] .thumb{background:linear-gradient(rgba(255,255,255,.025),rgba(0,0,0,.08)),#262928!important;box-shadow:inset 0 0 0 5px #3b3e3c!important}
+          .v1623-media-tile[data-visual-kind="4"] .thumb{background:linear-gradient(90deg,transparent 30%,#f0f1ed 30% 70%,transparent 70%),linear-gradient(#172733,#0a151d)!important}
+          .v1623-media-tile[data-visual-kind="5"] .thumb{background:linear-gradient(90deg,transparent 18%,#e9eceb 18% 82%,transparent 82%),linear-gradient(#172733,#0a151d)!important}
+          .v1623-media-tile[data-visual-kind="6"] .thumb{background-image:url('assets/room3-academy.jpg')!important}
+        }`;
+      document.head.appendChild(style);
+    }
     return true;
   }
 
-  function durableId(file){
-    return `import:${encodeURIComponent(file.name||'Medium')}:${Number(file.size)||0}:${Number(file.lastModified)||0}`;
-  }
-
+  function durableId(file){return `import:${encodeURIComponent(file.name||'Medium')}:${Number(file.size)||0}:${Number(file.lastModified)||0}`;}
   function addDurableImage(file){
     if(!file||!String(file.type||'').startsWith('image/'))return;
-    const reader=new FileReader();
-    reader.onload=()=>{
-      const dataUrl=String(reader.result||'');if(!dataUrl)return;
-      const grid=$('mediaGrid');if(!grid)return;
-      const id=durableId(file);
-      let item=[...grid.querySelectorAll('.media-item')].find(node=>node.dataset.mediaId===id);
-      if(!item){item=document.createElement('div');item.className='media-item';item.draggable=true;grid.appendChild(item)}
-      item.dataset.kind='image';item.dataset.mediaId=id;item.dataset.url=dataUrl;
-      item.innerHTML='<div class="thumb"></div><div class="name"></div>';
-      const thumb=item.querySelector('.thumb');thumb.style.backgroundImage=`url(${dataUrl})`;thumb.style.backgroundSize='cover';thumb.style.backgroundPosition='center';
-      item.querySelector('.name').textContent=file.name;
-      item.addEventListener('dragstart',event=>event.dataTransfer?.setData('text/plain','image'));
-      refreshMediaOptions(currentScene());
-    };
-    reader.readAsDataURL(file);
+    const reader=new FileReader();reader.onload=()=>{const dataUrl=String(reader.result||'');if(!dataUrl)return;const grid=$('mediaGrid');if(!grid)return;const id=durableId(file);let item=[...grid.querySelectorAll('.media-item')].find(node=>node.dataset.mediaId===id);if(!item){item=document.createElement('div');item.className='media-item';item.draggable=true;grid.insertBefore(item,grid.querySelector('.v1623-import-tile'))}item.dataset.kind='image';item.dataset.mediaId=id;item.dataset.url=dataUrl;item.innerHTML='<div class="thumb"></div><div class="name"></div>';const thumb=item.querySelector('.thumb');thumb.style.backgroundImage=`url(${dataUrl})`;thumb.style.backgroundSize='cover';thumb.style.backgroundPosition='center';item.querySelector('.name').textContent=file.name;item.addEventListener('dragstart',event=>event.dataTransfer?.setData('text/plain','image'));refreshMediaOptions(currentScene());};reader.readAsDataURL(file);
   }
-
   function interceptImports(){
-    const input=$('mediaInput'),drop=$('dropzone');
-    input?.addEventListener('change',event=>{
-      event.stopImmediatePropagation();
-      [...(event.target.files||[])].forEach(addDurableImage);
-      event.target.value='';
-    },true);
-    drop?.addEventListener('drop',event=>{
-      event.preventDefault();event.stopImmediatePropagation();
-      [...(event.dataTransfer?.files||[])].forEach(addDurableImage);
-      drop.classList.remove('drag');
-    },true);
+    const input=$('mediaInput'),drop=$('dropzone');input?.addEventListener('change',event=>{event.stopImmediatePropagation();[...(event.target.files||[])].forEach(addDurableImage);event.target.value='';},true);drop?.addEventListener('drop',event=>{event.preventDefault();event.stopImmediatePropagation();[...(event.dataTransfer?.files||[])].forEach(addDurableImage);drop.classList.remove('drag');},true);
   }
-
-  function bindEditor(){
-    $('freeTalkEditor')?.addEventListener('click',()=>setTimeout(()=>refreshMediaOptions(currentScene()),0),true);
-    $('sceneList')?.addEventListener('click',event=>{
-      if(event.target.closest('.scene'))setTimeout(()=>refreshMediaOptions(currentScene()),0);
-    },true);
-    $('fpApply')?.addEventListener('click',syncSelectedMedium,true);
-  }
-
-  function boot(){
-    if(!replaceMediumInputs())return;
-    interceptImports();bindEditor();refreshMediaOptions(currentScene());
-  }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});
-  else setTimeout(boot,0);
+  function bindEditor(){$('freeTalkEditor')?.addEventListener('click',()=>setTimeout(()=>refreshMediaOptions(currentScene()),0),true);$('sceneList')?.addEventListener('click',event=>{if(event.target.closest('.scene'))setTimeout(()=>refreshMediaOptions(currentScene()),0);},true);$('fpApply')?.addEventListener('click',syncSelectedMedium,true);}
+  function boot(){prepareVisualLibrary();if(!replaceMediumInputs())return;interceptImports();bindEditor();refreshMediaOptions(currentScene());}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
 })();
