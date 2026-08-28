@@ -13,6 +13,11 @@ test('V0.16.23 editor controls may shrink inside the fixed editor column without
   assert.match(js,/\.v1623-scene-editor\{[^}]*overflow-x:hidden!important/s);
 });
 
+test('V0.16.23 uses dark Creator styling for presentation and background tabs instead of native white buttons',()=>{
+  assert.match(js,/\.v1623-medium-grid button,\.v1623-background-grid button\{[^}]*background:#0b1b27!important[^}]*color:#dceaf1!important[^}]*border:1px solid #294b5f!important/s);
+  assert.match(js,/\.v1623-medium-grid button\.active,\.v1623-background-grid button\.active\{[^}]*background:#123148!important[^}]*border-color:#4cc8ff!important/s);
+});
+
 test('V0.16.23 keeps all seven media actions in one visible row without a horizontal scrollbar',()=>{
   assert.match(js,/\.v1623-media-workspace \.media-grid\{[^}]*grid-template-columns:repeat\(7,minmax\(0,1fr\)\)!important/s);
   assert.match(js,/\.v1623-media-workspace \.media-grid\{[^}]*overflow-x:hidden!important/s);
@@ -21,11 +26,11 @@ test('V0.16.23 keeps all seven media actions in one visible row without a horizo
   assert.match(js,/const mediaHeight=Math\.max\(118,mediaContentHeight\)/);
 });
 
-test('V0.16.23 gives the media library comfortable tile height on the large 3440x1440 workspace',()=>{
+test('V0.16.23 gives the media library proper visual depth on the large 3440x1440 workspace',()=>{
   assert.match(js,/@media \(min-width:1600px\) and \(min-height:1100px\)/);
-  assert.match(js,/\.v1623-media-workspace \.media-item,\.v1623-media-workspace \.v1623-import-tile\{[^}]*height:110px!important[^}]*min-height:110px!important/s);
-  assert.match(js,/\.v1623-media-workspace \.media-item \.thumb\{[^}]*height:72px!important/s);
-  assert.match(js,/\.v1623-media-workspace \.media-item \.name\{[^}]*font-size:11px!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item,\.v1623-media-workspace \.v1623-import-tile\{[^}]*height:150px!important[^}]*min-height:150px!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item \.thumb\{[^}]*height:108px!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item \.name\{[^}]*font-size:12px!important/s);
 });
 
 test('V0.16.23 keeps the compact short-height editor without introducing media clipping',()=>{
