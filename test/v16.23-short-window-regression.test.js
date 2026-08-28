@@ -9,6 +9,8 @@ const js=fs.readFileSync(path.join(root,'src','responsive-height-v16.23.js'),'ut
 test('V0.16.23 keeps the desktop workspace fixed while the stage shrinks to preserve the media row',()=>{
   assert.doesNotMatch(js,/vortrag\.style\.setProperty\('overflow-y','auto','important'\)/);
   assert.doesNotMatch(js,/vortrag\.style\.setProperty\('overflow-x','hidden','important'\)/);
+  assert.match(js,/const mediaVisibilityReserve=view\.innerHeight<1000\?90:0;/);
+  assert.match(js,/available-mediaHeight-mediaVisibilityReserve-workspaceGap-controlsHeight-stageGap-monitorTopChrome-monitorBottomChrome/);
   assert.match(js,/const stageWidth=Math\.max\(0,Math\.floor\(stageAvailable\*16\/9\)\)/);
   assert.match(js,/stage\.style\.setProperty\('width',`min\(100%, \$\{stageWidth\}px\)`,'important'\)/);
 });
