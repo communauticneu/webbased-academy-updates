@@ -12,8 +12,11 @@
     const view=doc.defaultView||root;
     if(!vortrag||!view)return false;
 
+    const workspace=vortrag.querySelector('.v1623-production-workspace');
     const monitor=vortrag.querySelector('.monitor-card');
     const stage=vortrag.querySelector('.v1623-stage-workspace .stage');
+    const media=vortrag.querySelector('.v1623-media-workspace');
+    const controls=vortrag.querySelector('.v1623-stage-controls');
 
     if(view.innerWidth<=1250){
       vortrag.style.removeProperty('height');
@@ -32,18 +35,28 @@
     vortrag.style.setProperty('height',`${available}px`,'important');
     vortrag.style.setProperty('min-height','0','important');
 
-    if(!monitor||!stage)return true;
+    if(!workspace||!monitor||!stage)return true;
 
-    /* The monitor already sits in the stage row. Fit the 16:9 composition only
-       into its real content box: toolbar and monitor padding are not stage space. */
-    const toolbar=monitor.querySelector('.monitor-toolbar');
+    /* The complete Academy composition is one immutable 16:9 picture.
+       First reserve the surrounding Creator UI, then fit that picture as a whole. */
+    const workspaceStyle=view.getComputedStyle?.(workspace);
     const monitorStyle=view.getComputedStyle?.(monitor);
+    const toolbar=monitor.querySelector('.monitor-toolbar');
     const toolbarStyle=toolbar?view.getComputedStyle?.(toolbar):null;
-    const monitorWidth=Math.max(0,Math.floor(monitor.clientWidth-px(monitorStyle?.paddingLeft)-px(monitorStyle?.paddingRight)));
+    const stageWorkspace=stage.closest?.('.v1623-stage-workspace');
+    const stageWorkspaceStyle=stageWorkspace?view.getComputedStyle?.(stageWorkspace):null;
+
+    const mediaHeight=media?.getBoundingClientRect().height||0;
+    const controlsHeight=controls?.getBoundingClientRect().height||0;
+    const workspaceGap=px(workspaceStyle?.rowGap||workspaceStyle?.gap);
+    const stageGap=px(stageWorkspaceStyle?.rowGap||stageWorkspaceStyle?.gap);
     const toolbarHeight=toolbar?.getBoundingClientRect().height||0;
     const toolbarMarginBottom=px(toolbarStyle?.marginBottom);
-    const monitorHeight=Math.max(0,Math.floor(monitor.clientHeight-px(monitorStyle?.paddingTop)-px(monitorStyle?.paddingBottom)-toolbarHeight-toolbarMarginBottom));
-    const stageWidth=Math.min(monitorWidth,Math.floor(monitorHeight*16/9));
+    const monitorChromeHeight=px(monitorStyle?.paddingTop)+px(monitorStyle?.paddingBottom)+toolbarHeight+toolbarMarginBottom;
+
+    const monitorWidth=Math.max(0,Math.floor(monitor.clientWidth-px(monitorStyle?.paddingLeft)-px(monitorStyle?.paddingRight)));
+    const stageSlotHeight=Math.max(0,Math.floor(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight));
+    const stageWidth=Math.min(monitorWidth,Math.floor(stageSlotHeight*16/9));
     const stageHeight=Math.floor(stageWidth*9/16);
 
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageHeight}px`);
