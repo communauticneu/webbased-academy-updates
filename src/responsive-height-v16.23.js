@@ -6,11 +6,28 @@
     return Number.isFinite(number)?number:0;
   }
 
+  function ensureResponsiveLayoutStyle(doc){
+    if(!doc||doc.getElementById('v1623ResponsiveLayoutGuard'))return;
+    const style=doc.createElement('style');
+    style.id='v1623ResponsiveLayoutGuard';
+    style.textContent=`
+      @media (min-width:1251px){
+        .v1623-scene-editor{overflow-x:hidden!important;min-width:0!important}
+        .v1623-editor-body,.v1623-section{min-width:0!important;max-width:100%!important}
+        .v1623-medium-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
+        .v1623-background-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
+        .v1623-medium-grid button,.v1623-background-grid button{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;padding-left:4px!important;padding-right:4px!important}
+      }
+    `;
+    doc.head?.appendChild(style);
+  }
+
   function syncProductionWorkspaceHeightV1623(doc){
     if(!doc)return false;
     const vortrag=doc.getElementById('vortragView');
     const view=doc.defaultView||root;
     if(!vortrag||!view)return false;
+    ensureResponsiveLayoutStyle(doc);
 
     const workspace=vortrag.querySelector('.v1623-production-workspace');
     const monitor=vortrag.querySelector('.monitor-card');
@@ -25,6 +42,8 @@
       vortrag.style.removeProperty('min-height');
       workspace?.style?.removeProperty?.('grid-template-rows');
       stageWorkspace?.style?.removeProperty?.('grid-template-rows');
+      media?.style?.removeProperty?.('height');
+      media?.style?.removeProperty?.('min-height');
       monitor?.style?.removeProperty?.('height');
       monitor?.style?.removeProperty?.('display');
       monitor?.style?.removeProperty?.('flex-direction');
@@ -65,10 +84,10 @@
     const monitorHeight=monitorChromeHeight+stageHeight;
     const stageRowHeight=monitorHeight+stageGap+controlsHeight;
 
-    /* The old minmax(0,1fr) row kept a large empty monitor area alive and pushed
-       the media library below the viewport. Lock the outer rows to their real content. */
     workspace.style.setProperty('grid-template-rows',`${stageRowHeight}px ${mediaHeight}px`,'important');
     stageWorkspace.style.setProperty('grid-template-rows',`${monitorHeight}px ${controlsHeight}px`,'important');
+    media?.style?.setProperty('height',`${mediaHeight}px`,'important');
+    media?.style?.setProperty('min-height',`${mediaHeight}px`,'important');
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageHeight}px`);
     monitor.style.setProperty('height',`${monitorHeight}px`,'important');
     monitor.style.setProperty('display','flex','important');
@@ -89,6 +108,7 @@
   function install(doc){
     if(!doc)return null;
     const view=doc.defaultView||root;
+    ensureResponsiveLayoutStyle(doc);
     const sync=()=>syncProductionWorkspaceHeightV1623(doc);
     const settle=()=>view?.setTimeout?.(sync,120);
     sync();
