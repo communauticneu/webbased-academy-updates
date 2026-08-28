@@ -57,6 +57,7 @@
       vortrag.style.removeProperty('--v1623-stage-max-height');
       vortrag.style.removeProperty('min-height');
       workspace?.style?.removeProperty?.('grid-template-rows');
+      workspace?.style?.removeProperty?.('height');
       stageWorkspace?.style?.removeProperty?.('grid-template-rows');
       media?.style?.removeProperty?.('height');
       media?.style?.removeProperty?.('min-height');
@@ -78,6 +79,10 @@
     vortrag.style.setProperty('min-height','0','important');
 
     if(!workspace||!monitor||!stage||!stageWorkspace)return true;
+
+    const workspaceTop=Math.max(top,workspace.getBoundingClientRect().top);
+    const workspaceAvailable=Math.max(0,Math.floor(view.innerHeight-workspaceTop-bottomReserve));
+    workspace.style.setProperty('height',`${workspaceAvailable}px`,'important');
 
     const workspaceStyle=view.getComputedStyle?.(workspace);
     const monitorStyle=view.getComputedStyle?.(monitor);
@@ -106,7 +111,7 @@
     const monitorChromeHeight=px(monitorStyle?.paddingTop)+px(monitorStyle?.paddingBottom)+toolbarHeight+toolbarMarginBottom;
 
     const monitorWidth=Math.max(0,Math.floor(monitor.clientWidth-px(monitorStyle?.paddingLeft)-px(monitorStyle?.paddingRight)));
-    const stageSlotHeight=Math.max(0,Math.floor(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight));
+    const stageSlotHeight=Math.max(0,Math.floor(workspaceAvailable-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight));
     const stageWidth=Math.min(monitorWidth,Math.floor(stageSlotHeight*16/9));
     const stageHeight=Math.floor(stageWidth*9/16);
     const monitorHeight=monitorChromeHeight+stageHeight;
