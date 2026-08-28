@@ -45,24 +45,31 @@ test('V0.16.23 media library follows the approved visual tile reference',()=>{
   assert.match(media,/prepareVisualLibrary\(\)/);
 });
 
-test('V0.16.23 keeps stage and visual media useful when the window becomes narrower',()=>{
+test('V0.16.23 uses one coherent responsive layout instead of fixed widths that push the editor off-screen',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  assert.match(js,/\/\* V0\.16\.23 · einheitliches Responsive-Layout/);
+  assert.match(js,/@media \(min-width:1251px\) and \(max-width:1599px\)/);
+  assert.match(js,/grid-template-columns:200px minmax\(0,1fr\) 300px/);
+  assert.match(js,/grid-template-areas:"scenes stage editor" "media media editor"/);
+  assert.match(js,/@media \(max-width:1250px\)/);
+  assert.match(js,/grid-template-columns:190px minmax\(0,1fr\)/);
+  assert.match(js,/grid-template-areas:"scenes stage" "media media" "editor editor"/);
+  assert.doesNotMatch(js,/min-width:1000px!important/);
+  assert.doesNotMatch(js,/min-width:760px!important/);
+});
+
+test('V0.16.23 media tiles remain visual and readable at narrower widths',()=>{
   const media=read('src/media-library-scene-picker.js');
-  assert.match(media,/\/\* V0\.16\.23 · responsive Produktionsoberfläche/);
-  assert.match(media,/@media \(max-width:1900px\)/);
-  assert.match(media,/grid-template-columns:210px minmax\(760px,1fr\) 330px/);
-  assert.match(media,/@media \(max-width:1500px\)/);
-  assert.match(media,/grid-template-areas:"scenes stage" "media media" "editor editor"/);
   assert.match(media,/\/\* V0\.16\.23 · responsive Medienkacheln/);
+  assert.match(media,/@media \(max-width:1900px\)/);
   assert.match(media,/grid-template-columns:repeat\(4,minmax\(150px,1fr\)\)/);
-  assert.match(media,/grid-template-columns:repeat\(3,minmax\(150px,1fr\)\)/);
+  assert.match(media,/@media \(max-width:1250px\)/);
+  assert.match(media,/grid-template-columns:repeat\(3,minmax\(140px,1fr\)\)/);
   assert.match(media,/height:110px!important/);
 });
 
-test('V0.16.23 production workspace must not fall back to legacy controls below 1600px',()=>{
+test('V0.16.23 keeps legacy test controls hidden across responsive layouts',()=>{
   const js=read('src/presentation-stage-v16.17.js');
-  assert.match(js,/\/\* V0\.16\.23 · Basislayout unter 1600px/);
-  assert.match(js,/@media \(max-width:1599px\)/);
-  assert.match(js,/\.v1623-production-workspace\{display:grid!important/);
   assert.match(js,/\.v1623-legacy-controls,.v1623-hidden-timeline\{display:none!important\}/);
   assert.match(js,/\.v1623-scene-editor\{grid-area:editor!important/);
   assert.match(js,/\.v1623-media-workspace\{grid-area:media!important/);
