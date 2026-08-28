@@ -13,7 +13,15 @@ test('V0.16.23 editor controls may shrink inside the fixed editor column without
   assert.match(js,/\.v1623-scene-editor\{[^}]*overflow-x:hidden!important/s);
 });
 
-test('V0.16.23 keeps the compact short-height editor but does not shrink media cards into clipping',()=>{
+test('V0.16.23 keeps all seven media actions in one visible row without a horizontal scrollbar',()=>{
+  assert.match(js,/\.v1623-media-workspace \.media-grid\{[^}]*grid-template-columns:repeat\(7,minmax\(0,1fr\)\)!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-grid\{[^}]*overflow-x:hidden!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item,\.v1623-media-workspace \.v1623-import-tile\{[^}]*height:86px!important[^}]*min-height:86px!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item \.thumb\{[^}]*height:54px!important/s);
+  assert.match(js,/const mediaHeight=Math\.max\(118,mediaContentHeight\)/);
+});
+
+test('V0.16.23 keeps the compact short-height editor without introducing media clipping',()=>{
   assert.match(js,/@media \(min-width:1251px\) and \(max-height:1050px\)/);
   assert.match(js,/\.v1623-scene-editor\{[^}]*overflow-y:hidden!important[^}]*padding:8px!important/s);
   assert.match(js,/\.v1623-editor-meta\{[^}]*margin-bottom:6px!important/s);
@@ -21,7 +29,4 @@ test('V0.16.23 keeps the compact short-height editor but does not shrink media c
   assert.match(js,/\.v1623-editor-body input,\.v1623-editor-body select\{[^}]*padding:5px 6px!important/s);
   assert.match(js,/\.v1623-section\{[^}]*margin-top:6px!important[^}]*padding-top:6px!important/s);
   assert.match(js,/\.v1623-media-workspace \.media-head\{[^}]*margin-bottom:5px!important/s);
-  assert.doesNotMatch(js,/\.v1623-media-workspace\{[^}]*height:132px!important/);
-  assert.doesNotMatch(js,/\.v1623-media-workspace \.media-item\{[^}]*min-height:68px!important/);
-  assert.doesNotMatch(js,/\.v1623-media-workspace \.media-item \.thumb\{[^}]*height:38px!important/);
 });
