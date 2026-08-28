@@ -18,6 +18,21 @@
         .v1623-background-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
         .v1623-medium-grid button,.v1623-background-grid button{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;padding-left:4px!important;padding-right:4px!important}
       }
+      @media (min-width:1251px) and (max-height:1050px){
+        .v1623-scene-editor{overflow-y:hidden!important;padding:8px!important}
+        .v1623-scene-editor h2{font-size:15px!important;margin-bottom:2px!important}
+        .v1623-editor-meta{margin-bottom:6px!important}
+        .v1623-editor-body label{margin:3px 0 2px!important;font-size:10px!important}
+        .v1623-editor-body input,.v1623-editor-body select{padding:5px 6px!important;font-size:11px!important}
+        .v1623-section{margin-top:6px!important;padding-top:6px!important}
+        .v1623-medium-grid,.v1623-background-grid{gap:4px!important;margin-top:4px!important}
+        .v1623-edit-content{margin-top:5px!important;padding-top:6px!important;padding-bottom:6px!important}
+        .v1623-media-workspace{height:132px!important;min-height:132px!important}
+        .v1623-media-workspace .media-head{margin-bottom:5px!important}
+        .v1623-media-workspace .media-item{min-height:68px!important;padding:5px!important}
+        .v1623-media-workspace .media-item .thumb{height:38px!important}
+        .v1623-media-workspace .media-item .name{margin-top:3px!important}
+      }
     `;
     doc.head?.appendChild(style);
   }
