@@ -34,7 +34,7 @@ test('V0.16.23 reserves the complete lower Creator UI before fitting the 16:9 st
   assert.match(js,/const stageSlotHeight=Math\.max\(0,Math\.floor\(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight\)\)/);
   assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(stageSlotHeight\*16\/9\)\)/);
   assert.match(js,/const stageHeight=Math\.floor\(stageWidth\*9\/16\)/);
-  assert.match(js,/media\.style\.setProperty\('height',`\$\{mediaHeight\}px`,'important'\)/);
+  assert.match(js,/media\?\.style\?\.setProperty\('height',`\$\{mediaHeight\}px`,'important'\)/);
   assert.match(js,/stage\.style\.setProperty\('width',`\$\{stageWidth\}px`,'important'\)/);
   assert.match(js,/stage\.style\.setProperty\('height',`\$\{stageHeight\}px`,'important'\)/);
 });
