@@ -45,6 +45,22 @@ test('V0.16.23 media library follows the approved visual tile reference',()=>{
   assert.match(media,/prepareVisualLibrary\(\)/);
 });
 
+test('V0.16.23 keeps stage and visual media useful when the window becomes narrower',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  const media=read('src/media-library-scene-picker.js');
+  assert.match(js,/\/\* V0\.16\.23 · responsive Produktionsoberfläche/);
+  assert.match(js,/@media \(max-width:1900px\)/);
+  assert.match(js,/grid-template-columns:210px minmax\(760px,1fr\) 330px/);
+  assert.match(js,/@media \(max-width:1500px\)/);
+  assert.match(js,/grid-template-areas:"scenes stage" "media media" "editor editor"/);
+  assert.match(media,/\/\* V0\.16\.23 · responsive Medienkacheln/);
+  assert.match(media,/@media \(max-width:1900px\)/);
+  assert.match(media,/grid-template-columns:repeat\(4,minmax\(150px,1fr\)\)/);
+  assert.match(media,/@media \(max-width:1500px\)/);
+  assert.match(media,/grid-template-columns:repeat\(3,minmax\(150px,1fr\)\)/);
+  assert.match(media,/height:110px!important/);
+});
+
 test('V0.16.23 does not remove the protected Academy production hooks',()=>{
   const html=read('src/index.html');
   for(const hook of ['v160Start','v160Pause','v160Reset','stage','boardOverlay','academyAutoUpdater']) assert.match(html,new RegExp(`id=["']${hook}["']`),`${hook} must remain available`);
