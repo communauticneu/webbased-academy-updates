@@ -7,18 +7,16 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 
 test('V0.16.23 keeps the existing scene controls and gives the scene column a clear production layout',()=>{
   const html=read('src/index.html');
+  const js=read('src/presentation-stage-v16.17.js');
 
-  assert.match(html,/\/\* V0\.16\.23 · Szenenleiste/);
-  assert.match(html,/#vortragView > \.workspace\s*\{[^}]*grid-template-columns:\s*240px minmax\(0,1fr\) 430px!important/);
+  assert.match(js,/\/\* V0\.16\.23 · Szenenleiste/);
+  assert.match(js,/#vortragView > \.workspace\{grid-template-columns:240px minmax\(0,1fr\) 430px!important\}/);
+  assert.match(js,/const labels=\['Avatar-Einstieg','Schultafel-Text','Tafel \/ Grafik','Avatar-Abschluss'\]/);
+  assert.match(js,/prepareSceneSidebarV1623\(doc\)/);
 
   for(const id of ['addScene','duplicateScene','deleteScene','moveUp','moveDown']){
     assert.match(html,new RegExp(`id=["']${id}["']`),`${id} must remain available`);
   }
-
-  assert.match(html,/<div class="n">01<\/div><div class="t">Avatar-Einstieg<\/div>/);
-  assert.match(html,/<div class="n">02<\/div><div class="t">Schultafel-Text<\/div>/);
-  assert.match(html,/<div class="n">03<\/div><div class="t">Tafel \/ Grafik<\/div>/);
-  assert.match(html,/<div class="n">04<\/div><div class="t">Avatar-Abschluss<\/div>/);
 });
 
 test('V0.16.23 does not remove the protected Academy production hooks',()=>{
