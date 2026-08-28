@@ -21,6 +21,13 @@ test('V0.16.23 keeps all seven media actions in one visible row without a horizo
   assert.match(js,/const mediaHeight=Math\.max\(118,mediaContentHeight\)/);
 });
 
+test('V0.16.23 gives the media library comfortable tile height on the large 3440x1440 workspace',()=>{
+  assert.match(js,/@media \(min-width:1600px\) and \(min-height:1100px\)/);
+  assert.match(js,/\.v1623-media-workspace \.media-item,\.v1623-media-workspace \.v1623-import-tile\{[^}]*height:110px!important[^}]*min-height:110px!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item \.thumb\{[^}]*height:72px!important/s);
+  assert.match(js,/\.v1623-media-workspace \.media-item \.name\{[^}]*font-size:11px!important/s);
+});
+
 test('V0.16.23 keeps the compact short-height editor without introducing media clipping',()=>{
   assert.match(js,/@media \(min-width:1251px\) and \(max-height:1050px\)/);
   assert.match(js,/\.v1623-scene-editor\{[^}]*overflow-y:hidden!important[^}]*padding:8px!important/s);
