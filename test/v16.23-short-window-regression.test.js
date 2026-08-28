@@ -11,7 +11,9 @@ test('V0.16.23 fits the complete 16:9 composition into the visible monitor slot'
   assert.match(js,/const mediaGrid=media\?\.querySelector\?\.\('\.media-grid'\)/);
   assert.match(js,/const mediaContentHeight=Math\.ceil\(/);
   assert.match(js,/const mediaHeight=Math\.max\(118,mediaContentHeight\)/);
-  assert.match(js,/const stageSlotHeight=Math\.max\(0,Math\.floor\(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight\)\)/);
+  assert.match(js,/const workspaceTop=Math\.max\(top,workspace\.getBoundingClientRect\(\)\.top\)/);
+  assert.match(js,/const workspaceAvailable=Math\.max\(0,Math\.floor\(view\.innerHeight-workspaceTop-bottomReserve\)\)/);
+  assert.match(js,/const stageSlotHeight=Math\.max\(0,Math\.floor\(workspaceAvailable-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight\)\)/);
   assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(stageSlotHeight\*16\/9\)\)/);
   assert.match(js,/const stageHeight=Math\.floor\(stageWidth\*9\/16\)/);
 });
