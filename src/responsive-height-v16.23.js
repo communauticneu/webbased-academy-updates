@@ -1,6 +1,11 @@
 (function(root){
   'use strict';
 
+  function px(value){
+    const number=parseFloat(value);
+    return Number.isFinite(number)?number:0;
+  }
+
   function syncProductionWorkspaceHeightV1623(doc){
     if(!doc)return false;
     const vortrag=doc.getElementById('vortragView');
@@ -29,10 +34,15 @@
 
     if(!monitor||!stage)return true;
 
-    /* The monitor already represents the space left after scenes, controls and media
-       have been laid out. Do not subtract those areas a second time here. */
-    const monitorWidth=Math.max(0,Math.floor(monitor.clientWidth));
-    const monitorHeight=Math.max(0,Math.floor(monitor.clientHeight));
+    /* The monitor already sits in the stage row. Fit the 16:9 composition only
+       into its real content box: toolbar and monitor padding are not stage space. */
+    const toolbar=monitor.querySelector('.monitor-toolbar');
+    const monitorStyle=view.getComputedStyle?.(monitor);
+    const toolbarStyle=toolbar?view.getComputedStyle?.(toolbar):null;
+    const monitorWidth=Math.max(0,Math.floor(monitor.clientWidth-px(monitorStyle?.paddingLeft)-px(monitorStyle?.paddingRight)));
+    const toolbarHeight=toolbar?.getBoundingClientRect().height||0;
+    const toolbarMarginBottom=px(toolbarStyle?.marginBottom);
+    const monitorHeight=Math.max(0,Math.floor(monitor.clientHeight-px(monitorStyle?.paddingTop)-px(monitorStyle?.paddingBottom)-toolbarHeight-toolbarMarginBottom));
     const stageWidth=Math.min(monitorWidth,Math.floor(monitorHeight*16/9));
     const stageHeight=Math.floor(stageWidth*9/16);
 
