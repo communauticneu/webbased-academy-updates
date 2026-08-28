@@ -6,14 +6,21 @@
     const vortrag=doc.getElementById('vortragView');
     const view=doc.defaultView||root;
     if(!vortrag||!view)return false;
+    const stage=vortrag.querySelector?.('.v1623-stage-workspace .stage');
     if(view.innerWidth<=1250){
       vortrag.style.removeProperty('height');
+      stage?.style?.removeProperty?.('max-height');
       return true;
     }
     const top=Math.max(0,vortrag.getBoundingClientRect().top);
     const bottomReserve=18;
     const available=Math.max(0,Math.floor(view.innerHeight-top-bottomReserve));
+    const mediaReserve=160;
+    const controlsReserve=94;
+    const stageAvailable=Math.max(0,available-mediaReserve-controlsReserve);
     vortrag.style.setProperty('height',`${available}px`,'important');
+    vortrag.style.setProperty('--v1623-stage-max-height',`${stageAvailable}px`);
+    stage?.style?.setProperty?.('max-height',`${stageAvailable}px`,'important');
     return true;
   }
 
