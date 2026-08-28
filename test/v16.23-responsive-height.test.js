@@ -29,7 +29,8 @@ test('V0.16.23 reserves the complete lower Creator UI before fitting the 16:9 st
   assert.match(js,/const stage=vortrag\.querySelector\('\.v1623-stage-workspace \.stage'\)/);
   assert.match(js,/const media=vortrag\.querySelector\('\.v1623-media-workspace'\)/);
   assert.match(js,/const controls=vortrag\.querySelector\('\.v1623-stage-controls'\)/);
-  assert.match(js,/const mediaHeight=Math\.max\(160,media\?\.scrollHeight\|\|0,media\?\.getBoundingClientRect\(\)\.height\|\|0\)/);
+  assert.match(js,/const measuredMediaHeight=Math\.max\(160,media\?\.scrollHeight\|\|0,media\?\.getBoundingClientRect\(\)\.height\|\|0\)/);
+  assert.match(js,/const mediaHeight=view\.innerHeight<=1050\?132:measuredMediaHeight/);
   assert.match(js,/const controlsHeight=controls\?\.getBoundingClientRect\(\)\.height\|\|0/);
   assert.match(js,/const stageSlotHeight=Math\.max\(0,Math\.floor\(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight\)\)/);
   assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(stageSlotHeight\*16\/9\)\)/);
