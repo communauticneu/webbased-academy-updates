@@ -17,11 +17,15 @@
     const stage=vortrag.querySelector('.v1623-stage-workspace .stage');
     const media=vortrag.querySelector('.v1623-media-workspace');
     const controls=vortrag.querySelector('.v1623-stage-controls');
+    const stageWorkspace=stage?.closest?.('.v1623-stage-workspace');
 
     if(view.innerWidth<=1250){
       vortrag.style.removeProperty('height');
       vortrag.style.removeProperty('--v1623-stage-max-height');
       vortrag.style.removeProperty('min-height');
+      workspace?.style?.removeProperty?.('grid-template-rows');
+      stageWorkspace?.style?.removeProperty?.('grid-template-rows');
+      monitor?.style?.removeProperty?.('height');
       monitor?.style?.removeProperty?.('display');
       monitor?.style?.removeProperty?.('flex-direction');
       monitor?.style?.removeProperty?.('align-items');
@@ -38,16 +42,14 @@
     vortrag.style.setProperty('height',`${available}px`,'important');
     vortrag.style.setProperty('min-height','0','important');
 
-    if(!workspace||!monitor||!stage)return true;
+    if(!workspace||!monitor||!stage||!stageWorkspace)return true;
 
     const workspaceStyle=view.getComputedStyle?.(workspace);
     const monitorStyle=view.getComputedStyle?.(monitor);
     const toolbar=monitor.querySelector('.monitor-toolbar');
     const toolbarStyle=toolbar?view.getComputedStyle?.(toolbar):null;
-    const stageWorkspace=stage.closest?.('.v1623-stage-workspace');
-    const stageWorkspaceStyle=stageWorkspace?view.getComputedStyle?.(stageWorkspace):null;
+    const stageWorkspaceStyle=view.getComputedStyle?.(stageWorkspace);
 
-    /* Reserve the complete lower media row, not only the currently clipped visible part. */
     const mediaHeight=Math.max(160,media?.scrollHeight||0,media?.getBoundingClientRect().height||0);
     const controlsHeight=controls?.getBoundingClientRect().height||0;
     const workspaceGap=px(workspaceStyle?.rowGap||workspaceStyle?.gap);
@@ -60,8 +62,15 @@
     const stageSlotHeight=Math.max(0,Math.floor(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight));
     const stageWidth=Math.min(monitorWidth,Math.floor(stageSlotHeight*16/9));
     const stageHeight=Math.floor(stageWidth*9/16);
+    const monitorHeight=monitorChromeHeight+stageHeight;
+    const stageRowHeight=monitorHeight+stageGap+controlsHeight;
 
+    /* The old minmax(0,1fr) row kept a large empty monitor area alive and pushed
+       the media library below the viewport. Lock the outer rows to their real content. */
+    workspace.style.setProperty('grid-template-rows',`${stageRowHeight}px ${mediaHeight}px`,'important');
+    stageWorkspace.style.setProperty('grid-template-rows',`${monitorHeight}px ${controlsHeight}px`,'important');
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageHeight}px`);
+    monitor.style.setProperty('height',`${monitorHeight}px`,'important');
     monitor.style.setProperty('display','flex','important');
     monitor.style.setProperty('flex-direction','column','important');
     monitor.style.setProperty('align-items','center','important');
