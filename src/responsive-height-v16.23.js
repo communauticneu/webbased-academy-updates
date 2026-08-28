@@ -41,10 +41,11 @@
     const workspaceGap=px(workspaceStyle?.rowGap||workspaceStyle?.gap);
     const stageGap=px(stageWorkspaceStyle?.rowGap||stageWorkspaceStyle?.gap);
     const mediaHeight=media.getBoundingClientRect().height;
+    const mediaVisibilityReserve=view.innerHeight<1000?90:0;
     const controlsHeight=controls.getBoundingClientRect().height;
     const monitorTopChrome=Math.max(0,stage.getBoundingClientRect().top-monitor.getBoundingClientRect().top);
     const monitorBottomChrome=Math.max(0,monitor.getBoundingClientRect().bottom-stage.getBoundingClientRect().bottom);
-    const stageAvailable=Math.max(0,Math.floor(available-mediaHeight-workspaceGap-controlsHeight-stageGap-monitorTopChrome-monitorBottomChrome));
+    const stageAvailable=Math.max(0,Math.floor(available-mediaHeight-mediaVisibilityReserve-workspaceGap-controlsHeight-stageGap-monitorTopChrome-monitorBottomChrome));
     const stageWidth=Math.max(0,Math.floor(stageAvailable*16/9));
 
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageAvailable}px`);
