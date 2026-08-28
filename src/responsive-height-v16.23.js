@@ -27,11 +27,7 @@
         .v1623-section{margin-top:6px!important;padding-top:6px!important}
         .v1623-medium-grid,.v1623-background-grid{gap:4px!important;margin-top:4px!important}
         .v1623-edit-content{margin-top:5px!important;padding-top:6px!important;padding-bottom:6px!important}
-        .v1623-media-workspace{height:132px!important;min-height:132px!important}
         .v1623-media-workspace .media-head{margin-bottom:5px!important}
-        .v1623-media-workspace .media-item{min-height:68px!important;padding:5px!important}
-        .v1623-media-workspace .media-item .thumb{height:38px!important}
-        .v1623-media-workspace .media-item .name{margin-top:3px!important}
       }
     `;
     doc.head?.appendChild(style);
@@ -83,9 +79,20 @@
     const toolbar=monitor.querySelector('.monitor-toolbar');
     const toolbarStyle=toolbar?view.getComputedStyle?.(toolbar):null;
     const stageWorkspaceStyle=view.getComputedStyle?.(stageWorkspace);
+    const mediaStyle=media?view.getComputedStyle?.(media):null;
+    const mediaHead=media?.querySelector?.('.media-head');
+    const mediaGrid=media?.querySelector?.('.media-grid');
+    const mediaHeadStyle=mediaHead?view.getComputedStyle?.(mediaHead):null;
 
-    const measuredMediaHeight=Math.max(160,media?.scrollHeight||0,media?.getBoundingClientRect().height||0);
-    const mediaHeight=view.innerHeight<=1050?132:measuredMediaHeight;
+    const mediaContentHeight=Math.ceil(
+      px(mediaStyle?.paddingTop)+
+      px(mediaStyle?.paddingBottom)+
+      (mediaHead?.getBoundingClientRect().height||0)+
+      px(mediaHeadStyle?.marginBottom)+
+      (mediaGrid?.scrollHeight||mediaGrid?.getBoundingClientRect().height||0)+
+      8
+    );
+    const mediaHeight=Math.max(160,mediaContentHeight);
     const controlsHeight=controls?.getBoundingClientRect().height||0;
     const workspaceGap=px(workspaceStyle?.rowGap||workspaceStyle?.gap);
     const stageGap=px(stageWorkspaceStyle?.rowGap||stageWorkspaceStyle?.gap);
