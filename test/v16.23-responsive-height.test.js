@@ -16,10 +16,16 @@ test('V0.16.23 measures the real remaining viewport height and updates it on res
   assert.match(preload,/responsive-height-v16\.23\.js/);
 });
 
-test('V0.16.23 reduces the inner stage height on short windows so the media row remains fully visible',()=>{
-  assert.match(js,/const mediaReserve=160/);
-  assert.match(js,/const controlsReserve=94/);
-  assert.match(js,/const stageAvailable=Math\.max\(0,available-mediaReserve-controlsReserve\)/);
+test('V0.16.23 measures actual media, controls, grid gaps and monitor chrome instead of fixed reserve guesses',()=>{
+  assert.match(js,/const media=vortrag\.querySelector\('\.v1623-media-workspace'\)/);
+  assert.match(js,/const controls=vortrag\.querySelector\('\.v1623-stage-controls'\)/);
+  assert.match(js,/const monitor=vortrag\.querySelector\('\.monitor-card'\)/);
+  assert.match(js,/const stage=vortrag\.querySelector\('\.v1623-stage-workspace \.stage'\)/);
+  assert.match(js,/media\.getBoundingClientRect\(\)\.height/);
+  assert.match(js,/controls\.getBoundingClientRect\(\)\.height/);
+  assert.match(js,/stage\.getBoundingClientRect\(\)\.top-monitor\.getBoundingClientRect\(\)\.top/);
+  assert.match(js,/monitor\.getBoundingClientRect\(\)\.bottom-stage\.getBoundingClientRect\(\)\.bottom/);
+  assert.match(js,/getComputedStyle\?\.\(workspace\)/);
+  assert.match(js,/getComputedStyle\?\.\(stageWorkspace\)/);
   assert.match(js,/vortrag\.style\.setProperty\('--v1623-stage-max-height',`\$\{stageAvailable\}px`\)/);
-  assert.match(js,/stage\?\.style\?\.setProperty\?\.\('max-height',`\$\{stageAvailable\}px`,'important'\)/);
 });
