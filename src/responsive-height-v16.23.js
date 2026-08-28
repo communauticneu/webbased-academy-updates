@@ -23,6 +23,12 @@
         .v1623-media-workspace .media-item .name{font-size:10px!important;margin-top:4px!important}
         .v1623-media-workspace .dropzone{display:none!important}
       }
+      @media (min-width:1600px) and (min-height:1100px){
+        .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:110px!important;min-height:110px!important;padding:7px!important}
+        .v1623-media-workspace .media-item .thumb{height:72px!important}
+        .v1623-media-workspace .media-item .name{font-size:11px!important;margin-top:5px!important}
+        .v1623-media-workspace .media-head{margin-bottom:7px!important}
+      }
       @media (min-width:1251px) and (max-height:1050px){
         .v1623-scene-editor{overflow-y:hidden!important;padding:8px!important}
         .v1623-scene-editor h2{font-size:15px!important;margin-bottom:2px!important}
