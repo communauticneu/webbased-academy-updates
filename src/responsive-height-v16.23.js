@@ -22,6 +22,9 @@
       vortrag.style.removeProperty('height');
       vortrag.style.removeProperty('--v1623-stage-max-height');
       vortrag.style.removeProperty('min-height');
+      monitor?.style?.removeProperty?.('display');
+      monitor?.style?.removeProperty?.('flex-direction');
+      monitor?.style?.removeProperty?.('align-items');
       stage?.style?.removeProperty?.('max-height');
       stage?.style?.removeProperty?.('height');
       stage?.style?.removeProperty?.('width');
@@ -58,13 +61,18 @@
     const stageHeight=Math.floor(stageWidth*9/16);
 
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageHeight}px`);
+    monitor.style.setProperty('display','flex','important');
+    monitor.style.setProperty('flex-direction','column','important');
+    monitor.style.setProperty('align-items','center','important');
+    toolbar?.style?.setProperty?.('align-self','stretch','important');
+    stage.style.setProperty('flex','0 0 auto','important');
     stage.style.setProperty('max-width','none','important');
     stage.style.setProperty('max-height','none','important');
     stage.style.setProperty('min-height','0','important');
     stage.style.setProperty('aspect-ratio','16 / 9','important');
     stage.style.setProperty('width',`${stageWidth}px`,'important');
     stage.style.setProperty('height',`${stageHeight}px`,'important');
-    stage.style.setProperty('margin','auto','important');
+    stage.style.setProperty('margin','0 auto','important');
     return true;
   }
 
