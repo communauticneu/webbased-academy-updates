@@ -84,7 +84,8 @@
     const toolbarStyle=toolbar?view.getComputedStyle?.(toolbar):null;
     const stageWorkspaceStyle=view.getComputedStyle?.(stageWorkspace);
 
-    const mediaHeight=Math.max(160,media?.scrollHeight||0,media?.getBoundingClientRect().height||0);
+    const measuredMediaHeight=Math.max(160,media?.scrollHeight||0,media?.getBoundingClientRect().height||0);
+    const mediaHeight=view.innerHeight<=1050?132:measuredMediaHeight;
     const controlsHeight=controls?.getBoundingClientRect().height||0;
     const workspaceGap=px(workspaceStyle?.rowGap||workspaceStyle?.gap);
     const stageGap=px(stageWorkspaceStyle?.rowGap||stageWorkspaceStyle?.gap);
