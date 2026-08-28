@@ -16,16 +16,16 @@ test('V0.16.23 measures the real remaining viewport height and updates it on res
   assert.match(preload,/responsive-height-v16\.23\.js/);
 });
 
-test('V0.16.23 measures actual media, controls, grid gaps and monitor chrome instead of fixed reserve guesses',()=>{
-  assert.match(js,/const media=vortrag\.querySelector\('\.v1623-media-workspace'\)/);
-  assert.match(js,/const controls=vortrag\.querySelector\('\.v1623-stage-controls'\)/);
+test('V0.16.23 fits the stage to the actual monitor area without subtracting media and controls again',()=>{
   assert.match(js,/const monitor=vortrag\.querySelector\('\.monitor-card'\)/);
   assert.match(js,/const stage=vortrag\.querySelector\('\.v1623-stage-workspace \.stage'\)/);
-  assert.match(js,/media\.getBoundingClientRect\(\)\.height/);
-  assert.match(js,/controls\.getBoundingClientRect\(\)\.height/);
-  assert.match(js,/stage\.getBoundingClientRect\(\)\.top-monitor\.getBoundingClientRect\(\)\.top/);
-  assert.match(js,/monitor\.getBoundingClientRect\(\)\.bottom-stage\.getBoundingClientRect\(\)\.bottom/);
-  assert.match(js,/getComputedStyle\?\.\(workspace\)/);
-  assert.match(js,/getComputedStyle\?\.\(stageWorkspace\)/);
-  assert.match(js,/vortrag\.style\.setProperty\('--v1623-stage-max-height',`\$\{stageAvailable\}px`\)/);
+  assert.match(js,/const monitorWidth=Math\.max\(0,Math\.floor\(monitor\.clientWidth\)\)/);
+  assert.match(js,/const monitorHeight=Math\.max\(0,Math\.floor\(monitor\.clientHeight\)\)/);
+  assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(monitorHeight\*16\/9\)\)/);
+  assert.match(js,/const stageHeight=Math\.floor\(stageWidth\*9\/16\)/);
+  assert.match(js,/stage\.style\.setProperty\('width',`\$\{stageWidth\}px`,'important'\)/);
+  assert.match(js,/stage\.style\.setProperty\('height',`\$\{stageHeight\}px`,'important'\)/);
+  assert.match(js,/stage\.style\.setProperty\('margin','auto','important'\)/);
+  assert.doesNotMatch(js,/v1623-media-workspace/);
+  assert.doesNotMatch(js,/v1623-stage-controls/);
 });
