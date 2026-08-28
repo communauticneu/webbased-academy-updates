@@ -159,6 +159,40 @@
     return {activate,deactivate};
   }
 
+  /* V0.16.23 · Szenenleiste: nur Darstellung/Benennung, bestehende Szenen-DOM und Steuer-IDs bleiben erhalten. */
+  function prepareSceneSidebarV1623(doc){
+    if(!doc)return false;
+    const list=doc.getElementById('sceneList');
+    if(!list)return false;
+    const labels=['Avatar-Einstieg','Schultafel-Text','Tafel / Grafik','Avatar-Abschluss'];
+    const scenes=Array.from(list.querySelectorAll('.scene'));
+    labels.forEach((label,index)=>{
+      const scene=scenes[index];
+      if(!scene)return;
+      const number=scene.querySelector('.n');
+      const title=scene.querySelector('.t');
+      if(number)number.textContent=String(index+1).padStart(2,'0');
+      if(title)title.textContent=label;
+    });
+    if(!doc.getElementById('v1623SceneSidebarStyle')){
+      const style=doc.createElement('style');
+      style.id='v1623SceneSidebarStyle';
+      style.textContent=`
+        @media (min-width:1600px) and (min-aspect-ratio:2/1){
+          #vortragView > .workspace{grid-template-columns:240px minmax(0,1fr) 430px!important}
+          .scenecol{padding:10px!important}
+          .scenecol .scene-list{gap:7px!important}
+          .scenecol .scene{padding:9px 10px!important;border-radius:10px!important}
+          .scenecol .scene.active{box-shadow:inset 3px 0 0 #4cc8ff}
+          .scenecol .scene-tools{grid-template-columns:1fr 1fr!important;gap:6px!important;margin-top:8px!important}
+          .scenecol .add-scene{margin-top:8px!important}
+        }
+      `;
+      (doc.head||doc.documentElement).appendChild(style);
+    }
+    return true;
+  }
+
   function install(doc){
     if(!doc)return null;
     const stage=doc.querySelector('.stage');
@@ -169,6 +203,7 @@
     let observedSurface=null;
     let lastVisibleSnapshot=null;
 
+    prepareSceneSidebarV1623(doc);
     bindLegacyBoardToggle(doc);
     const legacyBoardObserver=bindLegacyBoardBridge(doc);
     const fixedProductionRoom=bindFixedProductionRoom(doc);
@@ -232,5 +267,5 @@
     };
   }
 
-  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,resetFixedAcademyStage,bindLegacyBoardToggle,bindLegacyBoardBridge,bindFixedProductionRoom,install};
+  return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,resetFixedAcademyStage,bindLegacyBoardToggle,bindLegacyBoardBridge,bindFixedProductionRoom,prepareSceneSidebarV1623,install};
 });
