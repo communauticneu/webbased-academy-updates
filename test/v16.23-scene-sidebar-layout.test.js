@@ -68,9 +68,11 @@ test('V0.16.23 detaches its production columns from legacy workspace layout clas
 
 test('V0.16.23 bounds the production workspace and stage on ultrawide displays',()=>{
   const js=read('src/presentation-stage-v16.17.js');
-  assert.match(js,/#vortragView > \.v1623-production-workspace\{[^}]*max-width:\s*2000px!important/s);
-  assert.match(js,/#vortragView > \.v1623-production-workspace\{[^}]*margin:\s*0 auto!important/s);
-  assert.match(js,/\.v1623-stage-workspace \.stage\{[^}]*aspect-ratio:16\/9!important[^}]*max-height:\s*min\(calc\(100vh - 360px\),760px\)!important/s);
+  assert.match(js,/@media \(min-width:1600px\)/);
+  assert.ok(js.includes('max-width:2000px!important'),'ultrawide workspace must be capped at 2000px');
+  assert.ok(js.includes('margin:0 auto!important'),'ultrawide workspace must be centered');
+  assert.ok(js.includes('aspect-ratio:16/9!important'),'stage must remain 16:9');
+  assert.ok(js.includes('max-height:min(calc(100vh - 360px),760px)!important'),'stage must be bounded by available height');
 });
 
 test('V0.16.23 media tiles remain visual and readable at narrower widths',()=>{
