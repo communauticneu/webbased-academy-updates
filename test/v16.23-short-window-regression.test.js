@@ -6,14 +6,14 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const js=fs.readFileSync(path.join(root,'src','responsive-height-v16.23.js'),'utf8');
 
-test('V0.16.23 keeps the whole Vortrag workspace scrollable when a desktop window is too short',()=>{
-  assert.match(js,/vortrag\.style\.setProperty\('overflow-y','auto','important'\)/);
-  assert.match(js,/vortrag\.style\.setProperty\('overflow-x','hidden','important'\)/);
-  assert.match(js,/vortrag\.style\.setProperty\('min-height','0','important'\)/);
+test('V0.16.23 keeps the desktop workspace fixed while the stage shrinks to preserve the media row',()=>{
+  assert.doesNotMatch(js,/vortrag\.style\.setProperty\('overflow-y','auto','important'\)/);
+  assert.doesNotMatch(js,/vortrag\.style\.setProperty\('overflow-x','hidden','important'\)/);
+  assert.match(js,/const stageWidth=Math\.max\(0,Math\.floor\(stageAvailable\*16\/9\)\)/);
+  assert.match(js,/stage\.style\.setProperty\('width',`min\(100%, \$\{stageWidth\}px\)`,'important'\)/);
 });
 
-test('V0.16.23 removes desktop overflow overrides again in the narrow stacked layout',()=>{
-  assert.match(js,/vortrag\.style\.removeProperty\('overflow-y'\)/);
-  assert.match(js,/vortrag\.style\.removeProperty\('overflow-x'\)/);
-  assert.match(js,/vortrag\.style\.removeProperty\('min-height'\)/);
+test('V0.16.23 removes desktop stage sizing overrides again in the narrow stacked layout',()=>{
+  assert.match(js,/stage\?\.style\?\.removeProperty\?\.\('max-height'\)/);
+  assert.match(js,/stage\?\.style\?\.removeProperty\?\.\('width'\)/);
 });
