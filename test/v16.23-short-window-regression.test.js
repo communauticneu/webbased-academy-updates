@@ -7,7 +7,8 @@ const root=path.join(__dirname,'..');
 const js=fs.readFileSync(path.join(root,'src','responsive-height-v16.23.js'),'utf8');
 
 test('V0.16.23 fits the complete 16:9 composition into the visible monitor slot',()=>{
-  assert.match(js,/const mediaHeight=Math\.max\(160,media\?\.scrollHeight\|\|0,media\?\.getBoundingClientRect\(\)\.height\|\|0\)/);
+  assert.match(js,/const measuredMediaHeight=Math\.max\(160,media\?\.scrollHeight\|\|0,media\?\.getBoundingClientRect\(\)\.height\|\|0\)/);
+  assert.match(js,/const mediaHeight=view\.innerHeight<=1050\?132:measuredMediaHeight/);
   assert.match(js,/const stageSlotHeight=Math\.max\(0,Math\.floor\(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight\)\)/);
   assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(stageSlotHeight\*16\/9\)\)/);
   assert.match(js,/const stageHeight=Math\.floor\(stageWidth\*9\/16\)/);
