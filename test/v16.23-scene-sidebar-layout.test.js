@@ -36,18 +36,13 @@ test('V0.16.23 protects the global creator navigation while restructuring Vortra
 });
 
 test('V0.16.23 media library follows the approved visual tile reference',()=>{
-  const js=read('src/presentation-stage-v16.17.js');
-  assert.match(js,/\/\* V0\.16\.23 · visuelle Medienbibliothek/);
-  assert.match(js,/3D Kompetenzmodell/);
-  assert.match(js,/Diagramm/);
-  assert.match(js,/Schultafel/);
-  assert.match(js,/Flipchart/);
-  assert.match(js,/Whiteboard/);
-  assert.match(js,/Academy Hintergrund/);
-  assert.match(js,/Importieren/);
-  assert.match(js,/grid-template-columns:repeat\(7,minmax\(140px,1fr\)\)/);
-  assert.match(js,/height:118px!important/);
-  assert.match(js,/object-fit:cover!important/);
+  const media=read('src/media-library-scene-picker.js');
+  assert.match(media,/\/\* V0\.16\.23 · visuelle Medienbibliothek/);
+  for(const label of ['3D Kompetenzmodell','Diagramm','Schultafel','Flipchart','Whiteboard','Academy Hintergrund','Importieren']) assert.match(media,new RegExp(label));
+  assert.match(media,/grid-template-columns:repeat\(7,minmax\(140px,1fr\)\)/);
+  assert.match(media,/height:118px!important/);
+  assert.match(media,/object-fit:cover!important/);
+  assert.match(media,/prepareVisualLibrary\(\)/);
 });
 
 test('V0.16.23 does not remove the protected Academy production hooks',()=>{
