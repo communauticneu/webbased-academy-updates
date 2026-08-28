@@ -32,13 +32,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const stageScript = document.createElement('script');
   stageScript.src = 'presentation-stage-v16.17.js';
   stageScript.onload = () => {
-    const responsiveHeightScript = document.createElement('script');
-    responsiveHeightScript.src = 'responsive-height-v16.23.js';
-    document.documentElement.appendChild(responsiveHeightScript);
+    const mediaPickerScript = document.createElement('script');
+    mediaPickerScript.src = 'media-library-scene-picker.js';
+    mediaPickerScript.onload = () => {
+      const responsiveHeightScript = document.createElement('script');
+      responsiveHeightScript.src = 'responsive-height-v16.23.js';
+      document.documentElement.appendChild(responsiveHeightScript);
+    };
+    document.documentElement.appendChild(mediaPickerScript);
   };
   document.documentElement.appendChild(stageScript);
-
-  const mediaPickerScript = document.createElement('script');
-  mediaPickerScript.src = 'media-library-scene-picker.js';
-  document.documentElement.appendChild(mediaPickerScript);
 });
