@@ -21,6 +21,13 @@ test('V0.16.23 fits the complete 16:9 composition into the visible monitor slot'
   assert.match(js,/stage\.style\.setProperty\('margin','auto','important'\)/);
 });
 
+test('V0.16.23 remains the final stage-sizing authority after legacy delayed fitters',()=>{
+  assert.match(js,/const settle=\(\)=>view\?\.setTimeout\?\.\(sync,120\)/);
+  assert.match(js,/view\?\.addEventListener\?\.\('resize',settle\)/);
+  assert.match(js,/view\?\.setTimeout\?\.\(sync,1000\)/);
+  assert.match(js,/view\?\.removeEventListener\?\.\('resize',settle\)/);
+});
+
 test('V0.16.23 keeps the room composition itself unchanged while only scaling the stage box',()=>{
   assert.doesNotMatch(js,/backgroundSize/);
   assert.doesNotMatch(js,/avatar/);
