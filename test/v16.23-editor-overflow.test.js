@@ -36,8 +36,9 @@ test('V0.16.23 keeps all seven media actions in one visible row without a horizo
   assert.match(js,/const mediaHeight=Math\.max\(118,mediaContentHeight\)/);
 });
 
-test('V0.16.23 gives the media library proper visual depth on the large 3440x1440 workspace',()=>{
+test('V0.16.23 keeps large-workspace media tiles at a fixed proportional width instead of stretching across the row',()=>{
   assert.match(js,/@media \(min-width:1600px\) and \(min-height:1100px\)/);
+  assert.match(js,/\.v1623-media-workspace \.media-grid\{[^}]*grid-template-columns:repeat\(7,220px\)!important[^}]*justify-content:start!important/s);
   assert.match(js,/\.v1623-media-workspace \.media-item,\.v1623-media-workspace \.v1623-import-tile\{[^}]*height:150px!important[^}]*min-height:150px!important/s);
   assert.match(js,/\.v1623-media-workspace \.media-item \.thumb\{[^}]*height:108px!important/s);
   assert.match(js,/\.v1623-media-workspace \.media-item \.name\{[^}]*font-size:12px!important/s);
