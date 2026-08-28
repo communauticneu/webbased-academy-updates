@@ -314,6 +314,40 @@
       const style=doc.createElement('style');
       style.id='v1623ProductionWorkspaceStyle';
       style.textContent=`
+        /* V0.16.23 · Basislayout unter 1600px: Produktionsstruktur bleibt aktiv, statt auf alte Testbereiche zurückzufallen. */
+        @media (max-width:1599px){
+          #vortragView{overflow:auto!important}
+          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:210px minmax(760px,1fr)!important;grid-template-rows:auto auto auto!important;grid-template-areas:"scenes stage" "media media" "editor editor"!important;gap:10px!important;height:auto!important;min-width:1000px!important;overflow:visible!important}
+          .v1623-scenes-workspace{grid-area:scenes!important;min-height:520px!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:12px!important}
+          .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;min-height:520px!important;overflow:hidden!important}
+          .v1623-stage-workspace .monitor-card{height:100%!important;min-height:0!important;padding:8px!important}
+          .v1623-stage-workspace .stage{height:auto!important;width:100%!important;min-width:760px!important;max-width:100%!important;aspect-ratio:16/9!important;margin:auto!important}
+          .v1623-stage-controls{display:grid!important;grid-template-rows:auto auto 1fr!important;align-items:center!important;padding:4px 8px!important}
+          .v1623-stage-buttons{display:flex!important;justify-content:center!important;gap:7px!important;flex-wrap:wrap!important}
+          .v1623-stage-buttons .btn{min-width:105px!important;padding:8px 11px!important;font-size:12px!important}
+          .v1623-legacy-controls,.v1623-hidden-timeline{display:none!important}
+          .v1623-scene-editor{grid-area:editor!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:12px!important;overflow:visible!important;color:#eef6fb!important}
+          .v1623-editor-body{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px 16px!important}
+          .v1623-media-workspace{grid-area:media!important;height:auto!important;min-height:170px!important;margin:0!important;overflow:visible!important}
+          .v1623-scene-head{padding:2px 2px 10px!important;border-bottom:1px solid #234052!important;margin-bottom:10px!important;position:relative!important}
+          .v1623-scene-title{font-size:17px!important;font-weight:700!important;color:#eef6fb!important}
+          .v1623-scene-sub{font-size:12px!important;color:#8fa8b8!important;margin-top:3px!important}
+          .v1623-scene-count{position:absolute!important;right:2px!important;top:2px!important;font-size:11px!important;color:#7fdcff!important;border:1px solid #28516a!important;border-radius:999px!important;padding:3px 7px!important}
+          .v1623-scenes-workspace .scene-list{gap:8px!important}
+          .v1623-scenes-workspace .scene{min-height:64px!important;padding:10px 11px!important;position:relative!important;border-radius:11px!important;background:#0b1b27!important;border-color:#26495d!important}
+          .v1623-scenes-workspace .scene.active{background:#123148!important;border-color:#4cc8ff!important}
+          .v1623-progress-row{display:grid!important;grid-template-columns:auto 1fr auto!important;gap:9px!important;align-items:center!important;font-size:11px!important;color:#9eb4c0!important}
+          .v1623-total{text-align:center!important;font-size:12px!important;color:#cde2ec!important;margin:3px 0!important}
+          .v1623-scene-editor h2{font-size:17px!important;margin:0 0 3px!important}
+          .v1623-editor-meta{font-size:11px!important;color:#8fa8b8!important;margin-bottom:14px!important}
+          .v1623-editor-body label{display:block!important;font-size:11px!important;color:#9eb4c0!important;margin:7px 0 3px!important}
+          .v1623-editor-body input,.v1623-editor-body select{width:100%!important;background:#071722!important;border:1px solid #284c60!important;color:#eef6fb!important;border-radius:8px!important;padding:7px 8px!important;font-size:12px!important}
+          .v1623-field-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+          .v1623-section{border-top:1px solid #1f3a4d!important;margin-top:12px!important;padding-top:11px!important}
+          .v1623-medium-grid,.v1623-background-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:7px!important;margin-top:8px!important}
+          .v1623-background-grid{grid-template-columns:repeat(3,1fr)!important}
+          .v1623-edit-content{width:100%!important;margin-top:9px!important}
+        }
         @media (min-width:1600px){
           #vortragView{grid-template-rows:auto minmax(0,1fr)!important;gap:8px!important}
           #vortragView > .v1623-production-workspace{
