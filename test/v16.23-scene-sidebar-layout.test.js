@@ -58,6 +58,13 @@ test('V0.16.23 uses one coherent responsive layout instead of fixed widths that 
   assert.doesNotMatch(js,/min-width:760px!important/);
 });
 
+test('V0.16.23 bounds the production workspace and stage on ultrawide displays',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  assert.match(js,/#vortragView > \.v1623-production-workspace\{[^}]*max-width:\s*2000px!important/s);
+  assert.match(js,/#vortragView > \.v1623-production-workspace\{[^}]*margin:\s*0 auto!important/s);
+  assert.match(js,/\.v1623-stage-workspace \.stage\{[^}]*aspect-ratio:16\/9!important[^}]*max-height:\s*min\(calc\(100vh - 360px\),760px\)!important/s);
+});
+
 test('V0.16.23 media tiles remain visual and readable at narrower widths',()=>{
   const media=read('src/media-library-scene-picker.js');
   assert.match(media,/\/\* V0\.16\.23 · responsive Medienkacheln/);
