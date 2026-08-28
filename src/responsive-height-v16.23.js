@@ -22,10 +22,9 @@
     if(view.innerWidth<=1250){
       vortrag.style.removeProperty('height');
       vortrag.style.removeProperty('--v1623-stage-max-height');
-      vortrag.style.removeProperty('overflow-y');
-      vortrag.style.removeProperty('overflow-x');
       vortrag.style.removeProperty('min-height');
       stage?.style?.removeProperty?.('max-height');
+      stage?.style?.removeProperty?.('width');
       return true;
     }
 
@@ -34,8 +33,6 @@
     const available=Math.max(0,Math.floor(view.innerHeight-top-bottomReserve));
     vortrag.style.setProperty('height',`${available}px`,'important');
     vortrag.style.setProperty('min-height','0','important');
-    vortrag.style.setProperty('overflow-y','auto','important');
-    vortrag.style.setProperty('overflow-x','hidden','important');
 
     if(!workspace||!stageWorkspace||!media||!controls||!monitor||!stage)return true;
 
@@ -48,9 +45,11 @@
     const monitorTopChrome=Math.max(0,stage.getBoundingClientRect().top-monitor.getBoundingClientRect().top);
     const monitorBottomChrome=Math.max(0,monitor.getBoundingClientRect().bottom-stage.getBoundingClientRect().bottom);
     const stageAvailable=Math.max(0,Math.floor(available-mediaHeight-workspaceGap-controlsHeight-stageGap-monitorTopChrome-monitorBottomChrome));
+    const stageWidth=Math.max(0,Math.floor(stageAvailable*16/9));
 
     vortrag.style.setProperty('--v1623-stage-max-height',`${stageAvailable}px`);
     stage.style.setProperty('max-height',`${stageAvailable}px`,'important');
+    stage.style.setProperty('width',`min(100%, ${stageWidth}px)`,'important');
     return true;
   }
 
