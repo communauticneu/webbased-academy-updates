@@ -24,7 +24,7 @@ test('V0.16.23 implements the approved four-area production workspace',()=>{
   assert.match(js,/className='v1623-scene-editor'/);
   assert.match(js,/title\.textContent='Szene bearbeiten'/);
   assert.match(js,/className='v1623-stage-controls'/);
-  assert.match(js,/className='v1623-media-workspace'/);
+  assert.match(js,/media\.classList\.add\('v1623-media-workspace'\)/);
   assert.match(js,/grid-template-columns:240px minmax\(0,1fr\) 430px/);
   assert.match(js,/grid-template-areas:"scenes stage editor" "media media editor"/);
   assert.match(js,/sceneCount\.textContent=`\$\{scenes\.length\} Szenen`/);
