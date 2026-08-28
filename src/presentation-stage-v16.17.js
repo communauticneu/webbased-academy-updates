@@ -80,7 +80,7 @@
         avatar.classList.add('medium');
       }
       const graphic=doc.getElementById('fullGraphic');
-      graphic?.classList?.remove?.('show');
+      graphic?.classList?.remove('show');
       doc.querySelectorAll?.('[data-camera]')?.forEach?.(button=>button.classList.toggle('active',button.dataset.camera==='medium'));
     }
     syncPresentationStage(doc);
@@ -217,7 +217,6 @@
       legacyControls.classList.add('v1623-legacy-controls');
       legacyControls.setAttribute('aria-hidden','true');
     }
-
     const timeline=centerCol.querySelector('.timeline-v3');
     if(timeline)timeline.classList.add('v1623-hidden-timeline');
 
@@ -233,229 +232,91 @@
       total.textContent='Gesamtdauer 40.0 s';
       const buttons=doc.createElement('div');
       buttons.className='v1623-stage-buttons';
-      const specs=[
-        ['▶ Vorschau','freeTalkPlay','v160Start'],
-        ['Ⅱ Pause','freeTalkPause','v160Pause'],
-        ['■ Stop','freeTalkStop','v160Pause'],
-        ['↻ Zurücksetzen','freeTalkReset','v160Reset']
-      ];
+      const specs=[['▶ Vorschau','freeTalkPlay','v160Start'],['Ⅱ Pause','freeTalkPause','v160Pause'],['■ Stop','freeTalkStop','v160Pause'],['↻ Zurücksetzen','freeTalkReset','v160Reset']];
       specs.forEach(([label,primaryId,fallbackId])=>{
-        const button=doc.createElement('button');
-        button.type='button';
-        button.className=label.includes('Vorschau')?'btn primary':'btn';
-        button.textContent=label;
-        button.addEventListener('click',()=>{
-          const target=doc.getElementById(primaryId)||doc.getElementById(fallbackId);
-          target?.click?.();
-        });
-        buttons.appendChild(button);
+        const button=doc.createElement('button');button.type='button';button.className=label.includes('Vorschau')?'btn primary':'btn';button.textContent=label;
+        button.addEventListener('click',()=>{const target=doc.getElementById(primaryId)||doc.getElementById(fallbackId);target?.click?.();});buttons.appendChild(button);
       });
-      stageControls.append(progress,total,buttons);
-      centerCol.appendChild(stageControls);
+      stageControls.append(progress,total,buttons);centerCol.appendChild(stageControls);
     }
 
     let editor=workspace.querySelector('.v1623-scene-editor');
     if(!editor){
-      editor=doc.createElement('aside');
-      editor.className='v1623-scene-editor';
-      const title=doc.createElement('h2');
-      title.textContent='Szene bearbeiten';
-      const meta=doc.createElement('div');
-      meta.className='v1623-editor-meta';
-      meta.textContent='Szene 1 von 4 · Gesamtdauer 40.0 s';
-      const body=doc.createElement('div');
-      body.className='v1623-editor-body';
+      editor=doc.createElement('aside');editor.className='v1623-scene-editor';
+      const title=doc.createElement('h2');title.textContent='Szene bearbeiten';
+      const meta=doc.createElement('div');meta.className='v1623-editor-meta';meta.textContent='Szene 1 von 4 · Gesamtdauer 40.0 s';
+      const body=doc.createElement('div');body.className='v1623-editor-body';
       body.innerHTML=`
-        <div class="v1623-field-grid">
-          <label>Szenenname<input id="v1623SceneName" value="Avatar · Einstieg"></label>
-          <label>Dauer (Sek.)<input id="v1623SceneDuration" value="10.0"></label>
-        </div>
-        <div class="v1623-field-grid">
-          <label>Darstellungsart<select id="v1623SceneType"><option>Avatar</option><option>Tafel / Präsentationsmedium</option><option>Grafik / 3D</option></select></label>
-          <label>Avatar-Ausschnitt<select id="v1623AvatarCrop"><option>Bis Nabel</option><option>Ganzkörper</option><option>Ohne Avatar</option></select></label>
-        </div>
-        <div class="v1623-section"><strong>Avatar & Darstellung</strong>
-          <label>Avatar<select><option>Lokaler Testavatar</option><option>HeyGen Testavatar</option></select></label>
-          <div class="v1623-field-grid"><label>Position<select><option>Rechts</option><option>Links</option><option>Mitte</option></select></label><label>Größe<input type="range" min="40" max="120" value="80"></label></div>
-        </div>
-        <div class="v1623-section"><strong>Präsentationsmedium</strong>
-          <div class="v1623-medium-grid"><button type="button" class="active"><span>▰</span>Tafel</button><button type="button"><span>▱</span>Flipchart</button><button type="button"><span>□</span>Whiteboard</button><button type="button"><span>＋</span>Benutzerdefiniert</button></div>
-        </div>
-        <div class="v1623-section"><strong>Tafel / Inhalt</strong>
-          <label>Modus<select><option>Text & Grafik</option><option>Nur Text</option><option>Nur Grafik</option></select></label>
-          <button type="button" class="btn v1623-edit-content">✎ Inhalt bearbeiten</button>
-        </div>
-        <div class="v1623-section"><strong>Hintergrund</strong>
-          <div class="v1623-background-grid"><button type="button" class="active"><span class="room"></span>Raum</button><button type="button"><span class="board"></span>Schultafel</button><button type="button"><span class="custom">＋</span>Benutzerdefiniert</button></div>
-        </div>`;
-      editor.append(title,meta,body);
-      workspace.appendChild(editor);
+        <div class="v1623-field-grid"><label>Szenenname<input id="v1623SceneName" value="Avatar · Einstieg"></label><label>Dauer (Sek.)<input id="v1623SceneDuration" value="10.0"></label></div>
+        <div class="v1623-field-grid"><label>Darstellungsart<select id="v1623SceneType"><option>Avatar</option><option>Tafel / Präsentationsmedium</option><option>Grafik / 3D</option></select></label><label>Avatar-Ausschnitt<select id="v1623AvatarCrop"><option>Bis Nabel</option><option>Ganzkörper</option><option>Ohne Avatar</option></select></label></div>
+        <div class="v1623-section"><strong>Avatar & Darstellung</strong><label>Avatar<select><option>Lokaler Testavatar</option><option>HeyGen Testavatar</option></select></label><div class="v1623-field-grid"><label>Position<select><option>Rechts</option><option>Links</option><option>Mitte</option></select></label><label>Größe<input type="range" min="40" max="120" value="80"></label></div></div>
+        <div class="v1623-section"><strong>Präsentationsmedium</strong><div class="v1623-medium-grid"><button type="button" class="active"><span>▰</span>Tafel</button><button type="button"><span>▱</span>Flipchart</button><button type="button"><span>□</span>Whiteboard</button><button type="button"><span>＋</span>Benutzerdefiniert</button></div></div>
+        <div class="v1623-section"><strong>Tafel / Inhalt</strong><label>Modus<select><option>Text & Grafik</option><option>Nur Text</option><option>Nur Grafik</option></select></label><button type="button" class="btn v1623-edit-content">✎ Inhalt bearbeiten</button></div>
+        <div class="v1623-section"><strong>Hintergrund</strong><div class="v1623-background-grid"><button type="button" class="active"><span class="room"></span>Raum</button><button type="button"><span class="board"></span>Schultafel</button><button type="button"><span class="custom">＋</span>Benutzerdefiniert</button></div></div>`;
+      editor.append(title,meta,body);workspace.appendChild(editor);
     }
 
-    const sceneName=editor.querySelector('#v1623SceneName');
-    const duration=editor.querySelector('#v1623SceneDuration');
-    const meta=editor.querySelector('.v1623-editor-meta');
-    const scenes=Array.from(doc.querySelectorAll('#sceneList .scene'));
-    const durations=['10.0','15.0','8.0','7.0'];
-    scenes.forEach((scene,index)=>{
-      if(scene.dataset.v1623Bound==='1')return;
-      scene.dataset.v1623Bound='1';
-      scene.addEventListener('click',()=>{
-        scenes.forEach(item=>item.classList.remove('active'));
-        scene.classList.add('active');
-        const sceneTitle=scene.querySelector('.t')?.textContent||`Szene ${index+1}`;
-        if(sceneName)sceneName.value=sceneTitle.replace('Avatar-','Avatar · ');
-        if(duration)duration.value=durations[index]||'10.0';
-        if(meta)meta.textContent=`Szene ${index+1} von ${scenes.length} · Gesamtdauer 40.0 s`;
-      });
-    });
+    const sceneName=editor.querySelector('#v1623SceneName');const duration=editor.querySelector('#v1623SceneDuration');const meta=editor.querySelector('.v1623-editor-meta');
+    const scenes=Array.from(doc.querySelectorAll('#sceneList .scene'));const durations=['10.0','15.0','8.0','7.0'];
+    scenes.forEach((scene,index)=>{if(scene.dataset.v1623Bound==='1')return;scene.dataset.v1623Bound='1';scene.addEventListener('click',()=>{scenes.forEach(item=>item.classList.remove('active'));scene.classList.add('active');const sceneTitle=scene.querySelector('.t')?.textContent||`Szene ${index+1}`;if(sceneName)sceneName.value=sceneTitle.replace('Avatar-','Avatar · ');if(duration)duration.value=durations[index]||'10.0';if(meta)meta.textContent=`Szene ${index+1} von ${scenes.length} · Gesamtdauer 40.0 s`;});});
 
     if(!doc.getElementById('v1623ProductionWorkspaceStyle')){
-      const style=doc.createElement('style');
-      style.id='v1623ProductionWorkspaceStyle';
-      style.textContent=`
-        /* V0.16.23 · Basislayout unter 1600px: Produktionsstruktur bleibt aktiv, statt auf alte Testbereiche zurückzufallen. */
-        @media (max-width:1599px){
-          #vortragView{overflow:auto!important}
-          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:210px minmax(760px,1fr)!important;grid-template-rows:auto auto auto!important;grid-template-areas:"scenes stage" "media media" "editor editor"!important;gap:10px!important;height:auto!important;min-width:1000px!important;overflow:visible!important}
-          .v1623-scenes-workspace{grid-area:scenes!important;min-height:520px!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:12px!important}
-          .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;min-height:520px!important;overflow:hidden!important}
-          .v1623-stage-workspace .monitor-card{height:100%!important;min-height:0!important;padding:8px!important}
-          .v1623-stage-workspace .stage{height:auto!important;width:100%!important;min-width:760px!important;max-width:100%!important;aspect-ratio:16/9!important;margin:auto!important}
-          .v1623-stage-controls{display:grid!important;grid-template-rows:auto auto 1fr!important;align-items:center!important;padding:4px 8px!important}
-          .v1623-stage-buttons{display:flex!important;justify-content:center!important;gap:7px!important;flex-wrap:wrap!important}
-          .v1623-stage-buttons .btn{min-width:105px!important;padding:8px 11px!important;font-size:12px!important}
+      const style=doc.createElement('style');style.id='v1623ProductionWorkspaceStyle';style.textContent=`
+        /* V0.16.23 · einheitliches Responsive-Layout */
+        @media (min-width:1251px) and (max-width:1599px){
+          #vortragView{overflow:hidden!important}
+          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:200px minmax(0,1fr) 300px!important;grid-template-rows:minmax(0,1fr) 178px!important;grid-template-areas:"scenes stage editor" "media media editor"!important;gap:8px!important;height:100%!important;min-width:0!important;overflow:hidden!important}
+          .v1623-scenes-workspace{grid-area:scenes!important;min-width:0!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:10px!important}
+          .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;min-width:0!important;overflow:hidden!important}
+          .v1623-stage-workspace .monitor-card{height:100%!important;min-width:0!important;min-height:0!important;padding:8px!important}
+          .v1623-stage-workspace .stage{height:auto!important;width:100%!important;min-width:0!important;max-width:100%!important;aspect-ratio:16/9!important;margin:auto!important}
+          .v1623-scene-editor{grid-area:editor!important;min-width:0!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:10px!important;overflow:auto!important;color:#eef6fb!important}
+          .v1623-media-workspace{grid-area:media!important;height:178px!important;min-width:0!important;margin:0!important;overflow:hidden!important}
           .v1623-legacy-controls,.v1623-hidden-timeline{display:none!important}
-          .v1623-scene-editor{grid-area:editor!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:12px!important;overflow:visible!important;color:#eef6fb!important}
+          .v1623-editor-body{display:block!important}.v1623-field-grid{grid-template-columns:1fr!important}
+        }
+        @media (max-width:1250px){
+          #vortragView{overflow:auto!important}
+          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:190px minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;grid-template-areas:"scenes stage" "media media" "editor editor"!important;gap:8px!important;height:auto!important;min-width:0!important;overflow:visible!important}
+          .v1623-scenes-workspace{grid-area:scenes!important;min-width:0!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:10px!important}
+          .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;min-width:0!important;overflow:hidden!important}
+          .v1623-stage-workspace .monitor-card{min-width:0!important;min-height:0!important;padding:8px!important}
+          .v1623-stage-workspace .stage{height:auto!important;width:100%!important;min-width:0!important;max-width:100%!important;aspect-ratio:16/9!important;margin:auto!important}
+          .v1623-media-workspace{grid-area:media!important;min-width:0!important;height:auto!important;min-height:170px!important;margin:0!important;overflow:visible!important}
+          .v1623-scene-editor{grid-area:editor!important;min-width:0!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:10px!important;overflow:visible!important;color:#eef6fb!important}
+          .v1623-legacy-controls,.v1623-hidden-timeline{display:none!important}
           .v1623-editor-body{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px 16px!important}
-          .v1623-media-workspace{grid-area:media!important;height:auto!important;min-height:170px!important;margin:0!important;overflow:visible!important}
-          .v1623-scene-head{padding:2px 2px 10px!important;border-bottom:1px solid #234052!important;margin-bottom:10px!important;position:relative!important}
-          .v1623-scene-title{font-size:17px!important;font-weight:700!important;color:#eef6fb!important}
-          .v1623-scene-sub{font-size:12px!important;color:#8fa8b8!important;margin-top:3px!important}
-          .v1623-scene-count{position:absolute!important;right:2px!important;top:2px!important;font-size:11px!important;color:#7fdcff!important;border:1px solid #28516a!important;border-radius:999px!important;padding:3px 7px!important}
-          .v1623-scenes-workspace .scene-list{gap:8px!important}
-          .v1623-scenes-workspace .scene{min-height:64px!important;padding:10px 11px!important;position:relative!important;border-radius:11px!important;background:#0b1b27!important;border-color:#26495d!important}
-          .v1623-scenes-workspace .scene.active{background:#123148!important;border-color:#4cc8ff!important}
-          .v1623-progress-row{display:grid!important;grid-template-columns:auto 1fr auto!important;gap:9px!important;align-items:center!important;font-size:11px!important;color:#9eb4c0!important}
-          .v1623-total{text-align:center!important;font-size:12px!important;color:#cde2ec!important;margin:3px 0!important}
-          .v1623-scene-editor h2{font-size:17px!important;margin:0 0 3px!important}
-          .v1623-editor-meta{font-size:11px!important;color:#8fa8b8!important;margin-bottom:14px!important}
-          .v1623-editor-body label{display:block!important;font-size:11px!important;color:#9eb4c0!important;margin:7px 0 3px!important}
-          .v1623-editor-body input,.v1623-editor-body select{width:100%!important;background:#071722!important;border:1px solid #284c60!important;color:#eef6fb!important;border-radius:8px!important;padding:7px 8px!important;font-size:12px!important}
-          .v1623-field-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
-          .v1623-section{border-top:1px solid #1f3a4d!important;margin-top:12px!important;padding-top:11px!important}
-          .v1623-medium-grid,.v1623-background-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:7px!important;margin-top:8px!important}
-          .v1623-background-grid{grid-template-columns:repeat(3,1fr)!important}
-          .v1623-edit-content{width:100%!important;margin-top:9px!important}
         }
         @media (min-width:1600px){
           #vortragView{grid-template-rows:auto minmax(0,1fr)!important;gap:8px!important}
-          #vortragView > .v1623-production-workspace{
-            display:grid!important;
-            grid-template-columns:240px minmax(0,1fr) 430px!important;
-            grid-template-rows:minmax(0,1fr) 178px!important;
-            grid-template-areas:"scenes stage editor" "media media editor"!important;
-            gap:10px!important;height:100%!important;min-height:0!important;overflow:hidden!important;
-          }
+          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:240px minmax(0,1fr) 430px!important;grid-template-rows:minmax(0,1fr) 178px!important;grid-template-areas:"scenes stage editor" "media media editor"!important;gap:10px!important;height:100%!important;min-height:0!important;overflow:hidden!important}
           .v1623-scenes-workspace{grid-area:scenes!important;height:100%!important;min-height:0!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:12px!important}
           .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;height:100%!important;min-height:0!important;overflow:hidden!important}
           .v1623-scene-editor{grid-area:editor!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:14px!important;overflow:auto!important;color:#eef6fb!important}
           .v1623-media-workspace{grid-area:media!important;height:178px!important;margin:0!important;min-height:0!important;overflow:hidden!important}
           .v1623-legacy-controls,.v1623-hidden-timeline{display:none!important}
-          .v1623-scene-head{padding:2px 2px 10px!important;border-bottom:1px solid #234052!important;margin-bottom:10px!important;position:relative!important}
-          .v1623-scene-title{font-size:17px!important;font-weight:700!important;color:#eef6fb!important}
-          .v1623-scene-sub{font-size:12px!important;color:#8fa8b8!important;margin-top:3px!important}
-          .v1623-scene-count{position:absolute!important;right:2px!important;top:2px!important;font-size:11px!important;color:#7fdcff!important;border:1px solid #28516a!important;border-radius:999px!important;padding:3px 7px!important}
-          .v1623-scenes-workspace .scene-list{gap:8px!important}
-          .v1623-scenes-workspace .scene{min-height:64px!important;padding:10px 11px!important;position:relative!important;border-radius:11px!important;background:#0b1b27!important;border-color:#26495d!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
-          .v1623-scenes-workspace .scene.active{background:#123148!important;border-color:#4cc8ff!important;box-shadow:0 0 0 1px rgba(76,200,255,.14)!important}
-          .v1623-scenes-workspace .scene.active:before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;background:#4cc8ff;border-radius:0 3px 3px 0}
           .v1623-stage-workspace .monitor-card{height:100%!important;min-height:0!important;padding:8px!important}
           .v1623-stage-workspace .stage{height:100%!important;width:auto!important;max-width:100%!important;aspect-ratio:16/9!important;margin:auto!important}
-          .v1623-stage-controls{display:grid!important;grid-template-rows:auto auto 1fr!important;align-items:center!important;padding:4px 8px!important}
-          .v1623-progress-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;font-size:11px;color:#9eb4c0}.v1623-progress-line{height:5px;background:#07141d;border:1px solid #234052;border-radius:999px;overflow:hidden}.v1623-progress-line i{display:block;width:0;height:100%;background:#4cc8ff}.v1623-total{text-align:center;font-size:12px;color:#cde2ec;margin:3px 0}.v1623-stage-buttons{display:flex;justify-content:center;gap:7px}.v1623-stage-buttons .btn{min-width:128px;padding:8px 11px!important;font-size:12px!important}
-          .v1623-scene-editor h2{font-size:17px!important;margin:0 0 3px!important}.v1623-editor-meta{font-size:11px;color:#8fa8b8;margin-bottom:14px}.v1623-editor-body label{display:block;font-size:11px;color:#9eb4c0;margin:7px 0 3px}.v1623-editor-body input,.v1623-editor-body select{width:100%;background:#071722;border:1px solid #284c60;color:#eef6fb;border-radius:8px;padding:7px 8px;font-size:12px}.v1623-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v1623-section{border-top:1px solid #1f3a4d;margin-top:12px;padding-top:11px}.v1623-section strong{font-size:13px}.v1623-medium-grid,.v1623-background-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}.v1623-background-grid{grid-template-columns:repeat(3,1fr)}.v1623-medium-grid button,.v1623-background-grid button{min-height:78px;background:#0a1821;border:1px solid #26495d;border-radius:9px;color:#b9ced9;font-size:10px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px}.v1623-medium-grid button.active,.v1623-background-grid button.active{border-color:#4cc8ff;background:#102b3d}.v1623-medium-grid span{font-size:26px}.v1623-background-grid span{display:block;width:54px;height:34px;border-radius:5px;background:linear-gradient(135deg,#3c4b52,#101820)}.v1623-background-grid span.board{background:#1d2a25}.v1623-background-grid span.custom{display:grid;place-items:center;background:#0a1821;border:1px dashed #45697c;font-size:18px}.v1623-edit-content{width:100%;margin-top:9px!important}
-          .v1623-media-workspace .media-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:8px!important}.v1623-media-workspace .media-item{height:104px!important}.v1623-media-workspace .media-item .thumb{height:72px!important}
         }
-      `;
-      (doc.head||doc.documentElement).appendChild(style);
+        .v1623-scene-head{padding:2px 2px 10px!important;border-bottom:1px solid #234052!important;margin-bottom:10px!important;position:relative!important}
+        .v1623-scene-title{font-size:17px!important;font-weight:700!important;color:#eef6fb!important}.v1623-scene-sub{font-size:12px!important;color:#8fa8b8!important;margin-top:3px!important}.v1623-scene-count{position:absolute!important;right:2px!important;top:2px!important;font-size:11px!important;color:#7fdcff!important;border:1px solid #28516a!important;border-radius:999px!important;padding:3px 7px!important}
+        .v1623-scenes-workspace .scene-list{gap:8px!important}.v1623-scenes-workspace .scene{min-height:64px!important;padding:10px 11px!important;position:relative!important;border-radius:11px!important;background:#0b1b27!important;border-color:#26495d!important}.v1623-scenes-workspace .scene.active{background:#123148!important;border-color:#4cc8ff!important}
+        .v1623-stage-controls{display:grid!important;grid-template-rows:auto auto 1fr!important;align-items:center!important;padding:4px 8px!important}.v1623-progress-row{display:grid!important;grid-template-columns:auto 1fr auto!important;gap:9px!important;align-items:center!important;font-size:11px!important;color:#9eb4c0!important}.v1623-total{text-align:center!important;font-size:12px!important;color:#cde2ec!important;margin:3px 0!important}.v1623-stage-buttons{display:flex!important;justify-content:center!important;gap:7px!important;flex-wrap:wrap!important}.v1623-stage-buttons .btn{min-width:105px!important;padding:8px 11px!important;font-size:12px!important}
+        .v1623-scene-editor h2{font-size:17px!important;margin:0 0 3px!important}.v1623-editor-meta{font-size:11px!important;color:#8fa8b8!important;margin-bottom:14px!important}.v1623-editor-body label{display:block!important;font-size:11px!important;color:#9eb4c0!important;margin:7px 0 3px!important}.v1623-editor-body input,.v1623-editor-body select{width:100%!important;background:#071722!important;border:1px solid #284c60!important;color:#eef6fb!important;border-radius:8px!important;padding:7px 8px!important;font-size:12px!important}.v1623-section{border-top:1px solid #1f3a4d!important;margin-top:12px!important;padding-top:11px!important}.v1623-medium-grid,.v1623-background-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:7px!important;margin-top:8px!important}.v1623-background-grid{grid-template-columns:repeat(3,1fr)!important}.v1623-edit-content{width:100%!important;margin-top:9px!important}
+      `;(doc.head||doc.documentElement).appendChild(style);
     }
     return true;
   }
 
   function install(doc){
-    if(!doc)return null;
-    const stage=doc.querySelector('.stage');
-    if(!stage)return null;
-    const rootScope=doc.defaultView||(typeof globalThis!=='undefined'?globalThis:null);
-    const sync=()=>syncPresentationStage(doc);
-    let surfaceObserver=null;
-    let observedSurface=null;
-    let lastVisibleSnapshot=null;
-
-    prepareSceneSidebarV1623(doc);
-    prepareProductionWorkspaceV1623(doc);
-    bindLegacyBoardToggle(doc);
-    const legacyBoardObserver=bindLegacyBoardBridge(doc);
-    const fixedProductionRoom=bindFixedProductionRoom(doc);
-    resetFixedAcademyStage(doc);
-    setTimeout(()=>{
-      fixedProductionRoom?.activate?.();
-      resetFixedAcademyStage(doc);
-      stage.classList.add('academy-startup-ready');
-    },1100);
-
-    function captureVisible(surface){
-      if(surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'){
-        lastVisibleSnapshot=surface.cloneNode(true);
-      }
-    }
-
-    function watchSurface(){
-      const surface=doc.getElementById('presentationSurface');
-      if(surface===observedSurface)return;
-      surfaceObserver?.disconnect();
-      surfaceObserver=null;
-      observedSurface=surface||null;
-      captureVisible(surface);
-      if(surface&&typeof MutationObserver==='function'){
-        surfaceObserver=new MutationObserver(records=>{
-          const leftVisibleState=records.some(record=>record.attributeName==='class'&&String(record.oldValue||'').includes('is-visible'));
-          if(leftVisibleState&&lastVisibleSnapshot){
-            animateExitSnapshot(stage,lastVisibleSnapshot,rootScope);
-            lastVisibleSnapshot=null;
-          }
-          captureVisible(surface);
-          sync();
-        });
-        surfaceObserver.observe(surface,{
-          attributes:true,
-          attributeOldValue:true,
-          attributeFilter:['class','aria-hidden','data-position','data-medium','data-size','data-enter','data-exit']
-        });
-      }
-      sync();
-    }
-
-    watchSurface();
-    if(typeof MutationObserver!=='function')return null;
-    const stageObserver=new MutationObserver(()=>{watchSurface();sync();});
-    stageObserver.observe(stage,{childList:true,subtree:true});
-
-    const boardText=doc.getElementById('boardText');
-    boardText?.addEventListener?.('input',()=>{
-      const surface=doc.getElementById('presentationSurface');
-      if(surface)syncLegacyBoardContent(doc,surface);
-    });
-
-    return {
-      disconnect(){
-        stageObserver.disconnect();
-        surfaceObserver?.disconnect();
-        legacyBoardObserver?.disconnect();
-        fixedProductionRoom?.deactivate?.();
-      }
-    };
+    if(!doc)return null;const stage=doc.querySelector('.stage');if(!stage)return null;const rootScope=doc.defaultView||(typeof globalThis!=='undefined'?globalThis:null);const sync=()=>syncPresentationStage(doc);let surfaceObserver=null;let observedSurface=null;let lastVisibleSnapshot=null;
+    prepareSceneSidebarV1623(doc);prepareProductionWorkspaceV1623(doc);bindLegacyBoardToggle(doc);const legacyBoardObserver=bindLegacyBoardBridge(doc);const fixedProductionRoom=bindFixedProductionRoom(doc);resetFixedAcademyStage(doc);
+    setTimeout(()=>{fixedProductionRoom?.activate?.();resetFixedAcademyStage(doc);stage.classList.add('academy-startup-ready');},1100);
+    function captureVisible(surface){if(surface&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true')lastVisibleSnapshot=surface.cloneNode(true);}
+    function watchSurface(){const surface=doc.getElementById('presentationSurface');if(surface===observedSurface)return;surfaceObserver?.disconnect();surfaceObserver=null;observedSurface=surface||null;captureVisible(surface);if(surface&&typeof MutationObserver==='function'){surfaceObserver=new MutationObserver(records=>{const leftVisibleState=records.some(record=>record.attributeName==='class'&&String(record.oldValue||'').includes('is-visible'));if(leftVisibleState&&lastVisibleSnapshot){animateExitSnapshot(stage,lastVisibleSnapshot,rootScope);lastVisibleSnapshot=null;}captureVisible(surface);sync();});surfaceObserver.observe(surface,{attributes:true,attributeOldValue:true,attributeFilter:['class','aria-hidden','data-position','data-medium','data-size','data-enter','data-exit']});}sync();}
+    watchSurface();if(typeof MutationObserver!=='function')return null;const stageObserver=new MutationObserver(()=>{watchSurface();sync();});stageObserver.observe(stage,{childList:true,subtree:true});
+    const boardText=doc.getElementById('boardText');boardText?.addEventListener?.('input',()=>{const surface=doc.getElementById('presentationSurface');if(surface)syncLegacyBoardContent(doc,surface);});
+    return {disconnect(){stageObserver.disconnect();surfaceObserver?.disconnect();legacyBoardObserver?.disconnect();fixedProductionRoom?.deactivate?.();}};
   }
 
   return {syncPresentationStage,transitionDurationMs,animateExitSnapshot,syncLegacyBoardContent,setAcademyBoardVisible,resetFixedAcademyStage,bindLegacyBoardToggle,bindLegacyBoardBridge,bindFixedProductionRoom,prepareSceneSidebarV1623,prepareProductionWorkspaceV1623,install};
