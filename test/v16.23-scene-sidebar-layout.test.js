@@ -58,6 +58,16 @@ test('V0.16.23 keeps stage and visual media useful when the window becomes narro
   assert.match(media,/height:110px!important/);
 });
 
+test('V0.16.23 production workspace must not fall back to legacy controls below 1600px',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  assert.match(js,/\/\* V0\.16\.23 · Basislayout unter 1600px/);
+  assert.match(js,/@media \(max-width:1599px\)/);
+  assert.match(js,/\.v1623-production-workspace\{display:grid!important/);
+  assert.match(js,/\.v1623-legacy-controls,.v1623-hidden-timeline\{display:none!important\}/);
+  assert.match(js,/\.v1623-scene-editor\{grid-area:editor!important/);
+  assert.match(js,/\.v1623-media-workspace\{grid-area:media!important/);
+});
+
 test('V0.16.23 does not remove the protected Academy production hooks',()=>{
   const html=read('src/index.html');
   for(const hook of ['v160Start','v160Pause','v160Reset','stage','boardOverlay','academyAutoUpdater']) assert.match(html,new RegExp(`id=["']${hook}["']`),`${hook} must remain available`);
