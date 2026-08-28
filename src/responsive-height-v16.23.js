@@ -17,6 +17,11 @@
         .v1623-medium-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
         .v1623-background-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;min-width:0!important;max-width:100%!important}
         .v1623-medium-grid button,.v1623-background-grid button{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;padding-left:4px!important;padding-right:4px!important}
+        .v1623-media-workspace .media-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;gap:8px!important;overflow-x:hidden!important;overflow-y:hidden!important;padding-bottom:0!important}
+        .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:86px!important;min-height:86px!important;padding:5px!important}
+        .v1623-media-workspace .media-item .thumb{height:54px!important}
+        .v1623-media-workspace .media-item .name{font-size:10px!important;margin-top:4px!important}
+        .v1623-media-workspace .dropzone{display:none!important}
       }
       @media (min-width:1251px) and (max-height:1050px){
         .v1623-scene-editor{overflow-y:hidden!important;padding:8px!important}
@@ -92,7 +97,7 @@
       (mediaGrid?.scrollHeight||mediaGrid?.getBoundingClientRect().height||0)+
       8
     );
-    const mediaHeight=Math.max(160,mediaContentHeight);
+    const mediaHeight=Math.max(118,mediaContentHeight);
     const controlsHeight=controls?.getBoundingClientRect().height||0;
     const workspaceGap=px(workspaceStyle?.rowGap||workspaceStyle?.gap);
     const stageGap=px(stageWorkspaceStyle?.rowGap||stageWorkspaceStyle?.gap);
