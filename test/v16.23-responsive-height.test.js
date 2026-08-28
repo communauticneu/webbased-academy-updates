@@ -16,11 +16,15 @@ test('V0.16.23 measures the real remaining viewport height and updates it on res
   assert.match(preload,/responsive-height-v16\.23\.js/);
 });
 
-test('V0.16.23 fits the stage to the actual monitor area without subtracting media and controls again',()=>{
+test('V0.16.23 fits the stage to the actual monitor content area without subtracting media and controls again',()=>{
   assert.match(js,/const monitor=vortrag\.querySelector\('\.monitor-card'\)/);
   assert.match(js,/const stage=vortrag\.querySelector\('\.v1623-stage-workspace \.stage'\)/);
-  assert.match(js,/const monitorWidth=Math\.max\(0,Math\.floor\(monitor\.clientWidth\)\)/);
-  assert.match(js,/const monitorHeight=Math\.max\(0,Math\.floor\(monitor\.clientHeight\)\)/);
+  assert.match(js,/const toolbar=monitor\.querySelector\('\.monitor-toolbar'\)/);
+  assert.match(js,/const monitorStyle=view\.getComputedStyle\?\.\(monitor\)/);
+  assert.match(js,/const monitorWidth=Math\.max\(0,Math\.floor\(monitor\.clientWidth-px\(monitorStyle\?\.paddingLeft\)-px\(monitorStyle\?\.paddingRight\)\)\)/);
+  assert.match(js,/const toolbarHeight=toolbar\?\.getBoundingClientRect\(\)\.height\|\|0/);
+  assert.match(js,/const toolbarMarginBottom=px\(toolbarStyle\?\.marginBottom\)/);
+  assert.match(js,/const monitorHeight=Math\.max\(0,Math\.floor\(monitor\.clientHeight-px\(monitorStyle\?\.paddingTop\)-px\(monitorStyle\?\.paddingBottom\)-toolbarHeight-toolbarMarginBottom\)\)/);
   assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(monitorHeight\*16\/9\)\)/);
   assert.match(js,/const stageHeight=Math\.floor\(stageWidth\*9\/16\)/);
   assert.match(js,/stage\.style\.setProperty\('width',`\$\{stageWidth\}px`,'important'\)/);
