@@ -7,12 +7,13 @@ const root=path.join(__dirname,'..');
 const js=fs.readFileSync(path.join(root,'src','responsive-height-v16.23.js'),'utf8');
 const preload=fs.readFileSync(path.join(root,'src','preload.js'),'utf8');
 
-test('V0.16.23 measures the real remaining viewport height and updates it on resize',()=>{
+test('V0.16.23 measures the real remaining viewport height and updates it after resize settles',()=>{
   assert.match(js,/function syncProductionWorkspaceHeightV1623\(doc\)/);
   assert.match(js,/getBoundingClientRect\(\)\.top/);
   assert.match(js,/innerHeight/);
   assert.match(js,/style\.setProperty\('height',`\$\{available\}px`,'important'\)/);
-  assert.match(js,/addEventListener\?\.\('resize',sync\)/);
+  assert.match(js,/const settle=\(\)=>view\?\.setTimeout\?\.\(sync,120\)/);
+  assert.match(js,/addEventListener\?\.\('resize',settle\)/);
   assert.match(preload,/responsive-height-v16\.23\.js/);
 });
 
