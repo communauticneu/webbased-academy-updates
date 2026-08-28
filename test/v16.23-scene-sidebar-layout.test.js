@@ -19,6 +19,16 @@ test('V0.16.23 keeps the existing scene controls and gives the scene column a cl
   }
 });
 
+test('V0.16.23 makes the scene area visibly different without changing production logic',()=>{
+  const js=read('src/presentation-stage-v16.17.js');
+  assert.match(js,/\/\* V0\.16\.23 · klare Szenenführung/);
+  assert.match(js,/\.scenecol\{background:#091722!important;border-color:#315e76!important/);
+  assert.match(js,/\.scene\{min-height:64px!important;padding:10px 11px!important;position:relative!important/);
+  assert.match(js,/\.scene\.active:before\{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px/);
+  assert.match(js,/sceneSub\.textContent='Vortragsablauf'/);
+  assert.match(js,/sceneCount\.textContent=`\$\{scenes\.length\} Szenen`/);
+});
+
 test('V0.16.23 does not remove the protected Academy production hooks',()=>{
   const html=read('src/index.html');
   for(const hook of ['v160Start','v160Pause','v160Reset','stage','boardOverlay','academyAutoUpdater']){
