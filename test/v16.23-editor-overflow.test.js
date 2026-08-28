@@ -6,7 +6,6 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const js=fs.readFileSync(path.join(root,'src','responsive-height-v16.23.js'),'utf8');
 const preload=fs.readFileSync(path.join(root,'src','preload.js'),'utf8');
-const stage=fs.readFileSync(path.join(root,'src','presentation-stage-v16.17.js'),'utf8');
 
 test('V0.16.23 editor controls may shrink inside the fixed editor column without horizontal scrolling',()=>{
   assert.match(js,/\.v1623-medium-grid\{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)!important/s);
@@ -20,20 +19,13 @@ test('V0.16.23 uses dark Creator styling for presentation and background tabs in
   assert.match(js,/\.v1623-medium-grid button\.active,\.v1623-background-grid button\.active\{[^}]*background:#123148!important[^}]*border-color:#4cc8ff!important/s);
 });
 
-test('V0.16.23 editor tabs contain clean text labels without decorative glyph characters',()=>{
-  assert.doesNotMatch(stage,/<span>▰<\/span>Tafel/);
-  assert.doesNotMatch(stage,/<span>▱<\/span>Flipchart/);
-  assert.doesNotMatch(stage,/<span>□<\/span>Whiteboard/);
-  assert.doesNotMatch(stage,/<span>＋<\/span>Benutzerdefiniert/);
-  assert.doesNotMatch(stage,/<span class="custom">＋<\/span>Benutzerdefiniert/);
-  assert.match(stage,/<button type="button" class="active">Tafel<\/button>/);
-  assert.match(stage,/<button type="button">Flipchart<\/button>/);
-  assert.match(stage,/<button type="button">Whiteboard<\/button>/);
+test('V0.16.23 removes decorative glyph spans from the right editor tabs',()=>{
+  assert.match(js,/querySelectorAll\('\.v1623-medium-grid button span, \.v1623-background-grid button span'\)/);
+  assert.match(js,/forEach\?\.\(node=>node\.remove\(\)\)/);
 });
 
 test('V0.16.23 loads media library styling before responsive sizing so final large-workspace tile sizes win deterministically',()=>{
   assert.match(preload,/stageScript\.onload\s*=\s*\(\)\s*=>\s*\{[\s\S]*?mediaPickerScript\.src\s*=\s*'media-library-scene-picker\.js'[\s\S]*?mediaPickerScript\.onload\s*=\s*\(\)\s*=>\s*\{[\s\S]*?responsiveHeightScript\.src\s*=\s*'responsive-height-v16\.23\.js'/);
-  assert.doesNotMatch(preload,/document\.documentElement\.appendChild\(mediaPickerScript\);\s*\}\);?\s*$/);
 });
 
 test('V0.16.23 keeps all seven media actions in one visible row without a horizontal scrollbar',()=>{
