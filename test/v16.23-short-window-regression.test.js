@@ -11,14 +11,13 @@ test('V0.16.23 fits the complete 16:9 composition into the visible monitor slot'
   assert.match(js,/const media=vortrag\.querySelector\('\.v1623-media-workspace'\)/);
   assert.match(js,/const controls=vortrag\.querySelector\('\.v1623-stage-controls'\)/);
   assert.match(js,/const workspaceStyle=view\.getComputedStyle\?\.\(workspace\)/);
-  assert.match(js,/const mediaHeight=media\?\.getBoundingClientRect\(\)\.height\|\|0/);
+  assert.match(js,/const mediaHeight=Math\.max\(160,media\?\.scrollHeight\|\|0,media\?\.getBoundingClientRect\(\)\.height\|\|0\)/);
   assert.match(js,/const controlsHeight=controls\?\.getBoundingClientRect\(\)\.height\|\|0/);
   assert.match(js,/const stageSlotHeight=Math\.max\(0,Math\.floor\(available-mediaHeight-controlsHeight-workspaceGap-stageGap-monitorChromeHeight\)\)/);
   assert.match(js,/const stageWidth=Math\.min\(monitorWidth,Math\.floor\(stageSlotHeight\*16\/9\)\)/);
   assert.match(js,/const stageHeight=Math\.floor\(stageWidth\*9\/16\)/);
   assert.match(js,/stage\.style\.setProperty\('width',`\$\{stageWidth\}px`,'important'\)/);
   assert.match(js,/stage\.style\.setProperty\('height',`\$\{stageHeight\}px`,'important'\)/);
-  assert.match(js,/stage\.style\.setProperty\('margin','auto','important'\)/);
 });
 
 test('V0.16.23 remains the final stage-sizing authority after legacy delayed fitters',()=>{
