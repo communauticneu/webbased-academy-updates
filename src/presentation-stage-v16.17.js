@@ -268,14 +268,14 @@
       const style=doc.createElement('style');style.id='v1623ProductionWorkspaceStyle';style.textContent=`
         /* V0.16.23 · einheitliches Responsive-Layout */
         @media (min-width:1251px) and (max-width:1599px){
-          #vortragView{overflow:hidden!important}
-          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:200px minmax(0,1fr) 300px!important;grid-template-rows:minmax(0,1fr) 178px!important;grid-template-areas:"scenes stage editor" "media media editor"!important;gap:8px!important;height:100%!important;min-width:0!important;overflow:hidden!important}
+          #vortragView{height:calc(100vh - 142px)!important;min-height:0!important;overflow:hidden!important}
+          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:200px minmax(0,1fr) 300px!important;grid-template-rows:minmax(0,1fr) 160px!important;grid-template-areas:"scenes stage editor" "media media editor"!important;gap:8px!important;height:100%!important;min-width:0!important;overflow:hidden!important}
           .v1623-scenes-workspace{grid-area:scenes!important;min-width:0!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:10px!important}
           .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;min-width:0!important;overflow:hidden!important}
           .v1623-stage-workspace .monitor-card{height:100%!important;min-width:0!important;min-height:0!important;padding:8px!important}
           .v1623-stage-workspace .stage{height:auto!important;width:100%!important;min-width:0!important;max-width:100%!important;aspect-ratio:16/9!important;max-height:min(calc(100vh - 360px),760px)!important;margin:auto!important}
           .v1623-scene-editor{grid-area:editor!important;min-width:0!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:10px!important;overflow:auto!important;color:#eef6fb!important}
-          .v1623-media-workspace{grid-area:media!important;height:178px!important;min-width:0!important;margin:0!important;overflow:hidden!important}
+          .v1623-media-workspace{grid-area:media!important;height:160px!important;min-width:0!important;margin:0!important;overflow:hidden!important}
           .v1623-legacy-controls,.v1623-hidden-timeline{display:none!important}
           .v1623-editor-body{display:block!important}.v1623-field-grid{grid-template-columns:1fr!important}
         }
@@ -292,15 +292,15 @@
           .v1623-editor-body{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px 16px!important}
         }
         @media (min-width:1600px){
-          #vortragView{grid-template-rows:auto minmax(0,1fr)!important;gap:8px!important}
-          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:240px minmax(0,1fr) 430px!important;grid-template-rows:minmax(0,1fr) 178px!important;grid-template-areas:"scenes stage editor" "media media editor"!important;gap:10px!important;height:100%!important;width:100%!important;max-width:2000px!important;margin:0 auto!important;min-height:0!important;overflow:hidden!important}
+          #vortragView{height:calc(100vh - 142px)!important;min-height:0!important;grid-template-rows:auto minmax(0,1fr)!important;gap:8px!important;overflow:hidden!important}
+          #vortragView > .v1623-production-workspace{display:grid!important;grid-template-columns:240px minmax(0,1fr) 430px!important;grid-template-rows:minmax(0,1fr) 160px!important;grid-template-areas:"scenes stage editor" "media media editor"!important;gap:10px!important;height:100%!important;width:100%!important;min-height:0!important;overflow:hidden!important}
           .v1623-scenes-workspace{grid-area:scenes!important;height:100%!important;min-height:0!important;overflow:auto!important;background:#091722!important;border-color:#315e76!important;padding:12px!important}
           .v1623-stage-workspace{grid-area:stage!important;display:grid!important;grid-template-rows:minmax(0,1fr) 86px!important;gap:8px!important;height:100%!important;min-height:0!important;overflow:hidden!important}
           .v1623-scene-editor{grid-area:editor!important;background:#0d1b26!important;border:1px solid #315e76!important;border-radius:14px!important;padding:14px!important;overflow:auto!important;color:#eef6fb!important}
-          .v1623-media-workspace{grid-area:media!important;height:178px!important;margin:0!important;min-height:0!important;overflow:hidden!important}
+          .v1623-media-workspace{grid-area:media!important;height:160px!important;margin:0!important;min-height:0!important;overflow:hidden!important}
           .v1623-legacy-controls,.v1623-hidden-timeline{display:none!important}
           .v1623-stage-workspace .monitor-card{height:100%!important;min-height:0!important;padding:8px!important}
-          .v1623-stage-workspace .stage{height:auto!important;width:100%!important;max-width:100%!important;aspect-ratio:16/9!important;max-height:min(calc(100vh - 360px),760px)!important;margin:auto!important}
+          .v1623-stage-workspace .stage{height:auto!important;width:100%!important;max-width:1351px!important;aspect-ratio:16/9!important;max-height:min(calc(100vh - 360px),760px)!important;margin:auto!important}
         }
         .v1623-scene-head{padding:2px 2px 10px!important;border-bottom:1px solid #234052!important;margin-bottom:10px!important;position:relative!important}
         .v1623-scene-title{font-size:17px!important;font-weight:700!important;color:#eef6fb!important}.v1623-scene-sub{font-size:12px!important;color:#8fa8b8!important;margin-top:3px!important}.v1623-scene-count{position:absolute!important;right:2px!important;top:2px!important;font-size:11px!important;color:#7fdcff!important;border:1px solid #28516a!important;border-radius:999px!important;padding:3px 7px!important}
