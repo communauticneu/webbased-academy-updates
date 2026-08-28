@@ -25,6 +25,7 @@
         .v1623-media-workspace .dropzone{display:none!important}
       }
       @media (min-width:1600px) and (min-height:1100px){
+        .v1623-media-workspace .media-grid{grid-template-columns:repeat(7,220px)!important;justify-content:start!important}
         .v1623-media-workspace .media-item,.v1623-media-workspace .v1623-import-tile{height:150px!important;min-height:150px!important;padding:8px!important}
         .v1623-media-workspace .media-item .thumb{height:108px!important}
         .v1623-media-workspace .media-item .name{font-size:12px!important;margin-top:7px!important}
