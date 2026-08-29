@@ -28,10 +28,10 @@ test('diagnostics publishing is isolated from the development branch',()=>{
   assert.doesNotMatch(cmd,/git add \.\s*$/im);
 });
 
-test('failed tests publish a compact sanitized assertion summary without machine paths',()=>{
+test('failed tests publish a sanitized tail without machine paths',()=>{
   assert.match(cmd,/TEST_LOG=academy-test-output\.txt/i);
-  assert.match(cmd,/Fehlerdetails/i);
-  assert.match(cmd,/not ok\|error:\|code:\|expected:\|actual:\|operator:/i);
+  assert.match(cmd,/Fehlerdetails Tests:/i);
+  assert.match(cmd,/Get-Content -LiteralPath '%TEST_LOG%'\s*\^\|\s*Select-Object -Last 80/i);
   assert.match(cmd,/USERPROFILE/i);
   assert.match(cmd,/<USER>/i);
   assert.match(cmd,/<PROJECT>/i);
@@ -42,5 +42,5 @@ test('visual failure diagnostics always include a sanitized tail of the visual l
   assert.match(cmd,/VISUAL_LOG=academy-visual-output\.txt/i);
   assert.match(cmd,/visual:check\s*>"%VISUAL_LOG%"\s*2>&1/i);
   assert.match(cmd,/Fehlerdetails Visual:/i);
-  assert.match(cmd,/Get-Content -LiteralPath '%VISUAL_LOG%'\s*\|\s*Select-Object -Last 40/i);
+  assert.match(cmd,/Get-Content -LiteralPath '%VISUAL_LOG%'\s*\^\|\s*Select-Object -Last 40/i);
 });
