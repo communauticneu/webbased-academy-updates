@@ -79,7 +79,7 @@ if /I "%TEST_STATUS%"=="ERROR" (
   )
   if exist "%VISUAL_LOG%" (
     >>"%DIAG_FILE%" echo Fehlerdetails Visual:
-    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%VISUAL_LOG%' ^| Select-String -Pattern 'VISUAL CHECK FEHLER|VISUAL CHECK konnte nicht ausgefuehrt werden|^\s*-\s' ^| Select-Object -First 24 ^| ForEach-Object { ($_.Line -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%VISUAL_LOG%' ^| Select-Object -Last 40 ^| ForEach-Object { ($_.Line -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
   )
 )
 exit /b 0
