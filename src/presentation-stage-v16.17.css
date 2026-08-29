@@ -24,12 +24,12 @@
 .stage.v169-fixed-test-active .media,
 .stage.v169-fixed-test-active #userStageImage{display:none!important}
 
-/* KREIDE-PRÄSENTATIONSFLÄCHE: ausschließlich die gelieferte Academy-Tafelvorlage, ohne künstliche Optik oder Perspektive. */
+/* KREIDE-PRÄSENTATIONSFLÄCHE: nur ein sauberer Ausschnitt der gelieferten Academy-Tafelvorlage. Dummytext und eingebetteter Avatar liegen außerhalb des sichtbaren Ausschnitts. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:transparent!important;
   background-image:url('assets/academy-tafel-vorlage.png')!important;
-  background-size:100% 100%!important;
-  background-position:center!important;
+  background-size:185% 125%!important;
+  background-position:left bottom!important;
   background-repeat:no-repeat!important;
   border:0!important;
   border-radius:0!important;
