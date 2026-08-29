@@ -40,7 +40,7 @@ echo %BACKUP_FILE%
 echo ================================================
 echo.
 
-powershell.exe -NoProfile -Command "$keep=%KEEP_BACKUPS%; Get-ChildItem -LiteralPath '%BACKUP_TARGET%' -Filter 'Webbased-Academy-Creator_Backup_*.zip' -File ^| Sort-Object LastWriteTime -Descending ^| Select-Object -Skip $keep ^| Remove-Item -Force"
+powershell.exe -NoProfile -Command "$keep=%KEEP_BACKUPS%; Get-ChildItem -LiteralPath '%BACKUP_TARGET%' -Filter 'Webbased-Academy-Creator_Backup_*.zip' -File | Sort-Object LastWriteTime -Descending | Select-Object -Skip $keep | Remove-Item -Force"
 if errorlevel 1 (
   echo HINWEIS: Backup ist sicher, aber alte Backups konnten nicht vollstaendig bereinigt werden.
 ) else (
