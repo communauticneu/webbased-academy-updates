@@ -11,7 +11,8 @@ const preload=fs.readFileSync(path.join(__dirname,'../src/preload.js'),'utf8');
 test('text button only creates text; editing and deletion live on stage',()=>{
   assert.match(preload,/presentation-text-direct-ux\.js/,'direct text UX helper must load after the editor');
   assert.match(helper,/academy-board-content-field/,'right-side content editor must be hidden by direct UX');
-  assert.match(helper,/data-board-delete/,'legacy delete action may only be used internally');
+  assert.match(helper,/deleteSelected\?\.\(doc\)/,'on-stage delete must use the direct editor delete API');
+  assert.doesNotMatch(helper,/querySelector\?\.\('\[data-board-delete\]'\)\?\.click/,'direct UX must not simulate the hidden legacy delete button');
   assert.match(helper,/academy-board-object-delete/,'selected text needs an on-stage delete control');
   assert.match(helper,/dblclick/,'text must enter direct editing on double click');
   assert.match(helper,/contentEditable/,'direct editing must happen inside the text object');
