@@ -1,5 +1,6 @@
 Webbased Academy Creator - Diagnose
-Zeitpunkt: 29.08.2026 20:03:52,92
-Teststatus: GREEN
+Zeitpunkt: 29.08.2026 20:07:49,16
+Teststatus: ERROR
 Version: 0.16.24
-Commit: bb588fe
+Commit: 53919c4
+Fehlerdetails Tests:
