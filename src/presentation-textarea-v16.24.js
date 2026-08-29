@@ -14,7 +14,10 @@ function upgrade(doc){
   textarea.value=input.value||'';
   textarea.className=input.className||'';
   input.parentNode.replaceChild(textarea,input);
-  textarea.addEventListener('input',()=>input.dispatchEvent?.(new Event('input',{bubbles:true})));
+  textarea.addEventListener('input',()=>{
+    input.value=textarea.value;
+    input.dispatchEvent?.(new Event('input',{bubbles:true}));
+  });
   return true;
 }
 function install(doc){
