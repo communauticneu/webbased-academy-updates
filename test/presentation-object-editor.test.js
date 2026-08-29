@@ -2,11 +2,19 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const editor=require('../src/presentation-object-editor');
 
-test('chalkboard editor exposes the compact Academy tool set',()=>{
+test('presentation editor exposes the compact Academy tool set',()=>{
   const html=editor.editorMarkup();
-  for(const label of ['Kreidetext','Post-it','Grafik','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
+  for(const label of ['Text','Post-it','Grafik','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
+  assert.doesNotMatch(html,/Kreidetext/);
   assert.match(html,/academyBoardObjectToolbar/);
   assert.match(html,/academyBoardObjectList/);
+});
+
+test('text is a neutral reusable presentation object',()=>{
+  const object=editor.createObjectDraft('text');
+  assert.equal(object.type,'text');
+  assert.equal(object.content,'Neuer Text');
+  assert.equal(object.enter,'fade');
 });
 
 test('editor creates reusable presentation objects without timeline coupling',()=>{
