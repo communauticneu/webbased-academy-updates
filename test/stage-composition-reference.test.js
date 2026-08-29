@@ -14,7 +14,7 @@ test('Academy stage uses temporary room 3',()=>{
 test('Academy chalk surface uses clean supplied board texture, stays flat and has no synthetic frame',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   const board=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
-  assert.match(board,/background-image:url\('assets\/academy-tafel-flaeche\.png'\)!important/);
+  assert.match(board,/background-image:url\('assets\/academy-tafel-flaeche\.svg'\)!important/);
   assert.match(board,/border:\s*0!important/);
   assert.match(board,/box-shadow:\s*none!important/);
   assert.doesNotMatch(board,/academy-tafel-vorlage\.png/);
