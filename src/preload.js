@@ -32,6 +32,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const stageScript = document.createElement('script');
   stageScript.src = 'presentation-stage-v16.17.js';
   stageScript.onload = () => {
+    const objectModelScript = document.createElement('script');
+    objectModelScript.src = 'presentation-object-model.js';
+    objectModelScript.onload = () => {
+      const objectEditorScript = document.createElement('script');
+      objectEditorScript.src = 'presentation-object-editor.js';
+      document.documentElement.appendChild(objectEditorScript);
+    };
+    document.documentElement.appendChild(objectModelScript);
+
     const mediaPickerScript = document.createElement('script');
     mediaPickerScript.src = 'media-library-scene-picker.js';
     mediaPickerScript.onload = () => {
