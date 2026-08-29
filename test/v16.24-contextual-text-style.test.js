@@ -10,10 +10,8 @@ test('generic Text tool does not force the chalkboard visible',()=>{
   assert.doesNotMatch(editor,/function add\([^)]*\)[\s\S]*?classList\.add\('presentation-chalkboard','is-visible'\)/,'adding an object must not force the chalkboard visible');
 });
 
-test('new text picks its visual style from the active presentation medium',()=>{
-  assert.match(editor,/function activeTextStyle\(/,'editor must resolve a text style from the active medium');
-  assert.match(editor,/presentationMedium==='chalkboard'[^\n]*'chalk'/,'chalkboard must map to chalk text');
-  assert.match(editor,/return 'standard'/,'no active medium must fall back to standard text');
-  assert.match(editor,/academy-board-object-text-standard/,'standard text style must exist');
-  assert.match(editor,/academy-board-object-text-chalk/,'chalk text style must exist');
+test('text styling follows the active presentation medium without changing the object type',()=>{
+  assert.match(editor,/\.academy-board-object-text\{[^}]*font-family:Arial/,'no active medium must use standard Arial text');
+  assert.match(editor,/\.presentation-chalkboard \.academy-board-object-text\{[^}]*DJB Chalk It Up/,'chalkboard must apply chalk styling to the same text object');
+  assert.doesNotMatch(editor,/type:'chalktext'/,'text must remain one reusable object type');
 });
