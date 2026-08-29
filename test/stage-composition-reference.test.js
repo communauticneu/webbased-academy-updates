@@ -11,12 +11,14 @@ test('Academy stage uses temporary room 3',()=>{
   assert.match(css,/\.stage\.v1617-presentation-active \.floor[\s\S]*?display:\s*none!important/);
 });
 
-test('Academy chalk surface is room-height, frameless and slightly perspective',()=>{
+test('Academy chalk surface is room-height, frameless and flat',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   assert.match(css,/presentation-surface\.presentation-chalkboard[\s\S]*?border:\s*0!important/);
   assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*-4%!important[\s\S]*?bottom:\s*0!important[\s\S]*?width:\s*68%!important[\s\S]*?height:\s*108%!important/);
   assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*-2%!important/);
-  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?transform:\s*perspective\(900px\) rotateY\(3\.5deg\)!important/);
+  assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?transform:\s*none!important/);
+  assert.doesNotMatch(css,/perspective\(/);
+  assert.doesNotMatch(css,/rotateY\(/);
 });
 
 test('visible Academy board uses approved responsive navel avatar composition on the right',()=>{
