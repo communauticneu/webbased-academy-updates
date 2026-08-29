@@ -24,6 +24,7 @@ call npm.cmd test
 if errorlevel 1 goto :error
 set "TEST_STATUS=GREEN"
 call :write_diagnostics
+call :publish_diagnostics
 
 echo.
 echo [3/3] Alle Tests gruen - Creator wird gestartet...
@@ -34,6 +35,7 @@ goto :end
 :error
 set "TEST_STATUS=ERROR"
 call :write_diagnostics
+call :publish_diagnostics
 echo.
 echo ==============================================
 echo   FEHLER - Creator wurde NICHT gestartet.
@@ -52,6 +54,26 @@ exit /b 1
 >>"%DIAG_FILE%" node -p "require('./package.json').version" 2>nul
 >>"%DIAG_FILE%" <nul set /p "=Commit: "
 >>"%DIAG_FILE%" git rev-parse --short HEAD 2>nul
+exit /b 0
+
+:publish_diagnostics
+set "DIAG_WORKTREE=%TEMP%\academy-creator-diagnostics"
+git fetch origin academy-diagnostics >nul 2>&1
+git worktree remove --force "%DIAG_WORKTREE%" >nul 2>&1
+if exist "%DIAG_WORKTREE%" rmdir /s /q "%DIAG_WORKTREE%"
+git worktree add --force -B academy-diagnostics "%DIAG_WORKTREE%" origin/academy-diagnostics >nul 2>&1
+if errorlevel 1 exit /b 0
+copy /y "%DIAG_FILE%" "%DIAG_WORKTREE%\academy-diagnostics.txt" >nul
+pushd "%DIAG_WORKTREE%"
+git add academy-diagnostics.txt
+git diff --cached --quiet
+if not errorlevel 1 goto :publish_cleanup
+git commit -m "diagnostics: update latest test status" >nul 2>&1
+if errorlevel 1 goto :publish_cleanup
+git push origin HEAD:academy-diagnostics >nul 2>&1
+:publish_cleanup
+popd
+git worktree remove --force "%DIAG_WORKTREE%" >nul 2>&1
 exit /b 0
 
 :end
