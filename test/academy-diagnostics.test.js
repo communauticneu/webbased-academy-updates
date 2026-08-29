@@ -21,3 +21,13 @@ test('diagnostics publishing is isolated from the development branch',()=>{
   assert.doesNotMatch(cmd,/git push origin dev-stage-composition/i);
   assert.doesNotMatch(cmd,/git add \.\s*$/im);
 });
+
+test('failed tests publish a compact sanitized assertion summary without machine paths',()=>{
+  assert.match(cmd,/TEST_LOG=academy-test-output\.txt/i);
+  assert.match(cmd,/Fehlerdetails:/i);
+  assert.match(cmd,/not ok\|error:\|code:\|expected:\|actual:\|operator:/i);
+  assert.match(cmd,/USERPROFILE/i);
+  assert.match(cmd,/<USER>/i);
+  assert.match(cmd,/<PROJECT>/i);
+  assert.doesNotMatch(cmd,/type\s+"?%TEST_LOG%"?\s*>>\s*"?%DIAG_FILE%"?/i);
+});
