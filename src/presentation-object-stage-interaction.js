@@ -22,6 +22,7 @@ function install(doc){
   layer.addEventListener('pointerdown',event=>{
     if(event.target?.isContentEditable)return;
     if(event.target?.closest?.('[data-direct-delete]'))return;
+    if(root.AcademyPresentationTextDirectUx?.isEditingGesture?.(event))return;
     const node=event.target?.closest?.('[data-object-id]');
     if(!node)return;
     event.preventDefault();
