@@ -31,8 +31,8 @@
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
-  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 84%,transparent 100%)!important;
-  mask-image:linear-gradient(to right,#000 0%,#000 84%,transparent 100%)!important;
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 91%,transparent 100%)!important;
+  mask-image:linear-gradient(to right,#000 0%,#000 91%,transparent 100%)!important;
   border:0!important;
   border-radius:0!important;
   box-shadow:none!important;
