@@ -20,8 +20,12 @@ test('legacy brown board can never render on stage',()=>{
 
 test('approved Academy board remains the only visible chalkboard surface',()=>{
   const css=read('src/presentation-stage-v16.17.css');
-  assert.match(css,/presentation-surface\.presentation-chalkboard/);
-  assert.match(css,/assets\/academy-tafel-vorlage\.png/);
+  const block=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
+  assert.ok(block,'chalkboard style block must exist');
+  assert.match(block,/assets\/tafel-academy\.jpg/);
+  assert.doesNotMatch(block,/assets\/academy-tafel-vorlage\.png/);
+  assert.doesNotMatch(block,/perspective\(/);
+  assert.doesNotMatch(block,/rotateY\(/);
 });
 
 test('fixed 40-second production keeps Room 3 and suppresses legacy background layers',()=>{
