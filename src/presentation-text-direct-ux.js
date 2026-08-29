@@ -14,16 +14,22 @@ function install(doc){
   }
 
   const decorate=()=>{
-    layer.querySelectorAll?.('.academy-board-object-delete')?.forEach?.(button=>button.remove());
     const selected=layer.querySelector?.('.academy-board-object-text.selected');
-    if(!selected||selected.dataset.editing==='1')return;
-    const button=doc.createElement('button');
-    button.type='button';
-    button.className='academy-board-object-delete';
-    button.dataset.directDelete='1';
-    button.setAttribute('aria-label','Text löschen');
-    button.title='Text löschen';
-    button.textContent='🗑';
+    const existing=layer.querySelector?.('.academy-board-object-delete');
+    if(!selected||selected.dataset.editing==='1'){
+      existing?.remove?.();
+      return;
+    }
+    if(existing?.parentElement===selected)return;
+    const button=existing||doc.createElement('button');
+    if(!existing){
+      button.type='button';
+      button.className='academy-board-object-delete';
+      button.dataset.directDelete='1';
+      button.setAttribute('aria-label','Text löschen');
+      button.title='Text löschen';
+      button.textContent='🗑';
+    }
     selected.appendChild(button);
   };
 
