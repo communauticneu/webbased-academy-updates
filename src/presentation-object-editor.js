@@ -2,6 +2,11 @@
   const api=factory();
   if(typeof module==='object'&&module.exports)module.exports=api;
   if(root)root.AcademyPresentationObjectEditor=api;
+  if(root&&root.document){
+    const boot=()=>api.install(root.document);
+    if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',boot,{once:true});
+    else boot();
+  }
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
 
@@ -38,7 +43,26 @@
     return '.academy-board-object-editor{display:grid;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(10,18,24,.48)}'+
       '.academy-board-editor-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.academy-board-editor-head span{font-size:12px;opacity:.72}'+
       '.academy-board-object-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.academy-board-object-toolbar button{min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer}'+
-      '.academy-board-object-toolbar button:hover{background:rgba(255,255,255,.11)}.academy-board-object-list{display:grid;gap:6px;max-height:150px;overflow:auto}';
+      '.academy-board-object-toolbar button:hover{background:rgba(255,255,255,.11)}.academy-board-object-list{display:grid;gap:6px;max-height:150px;overflow:auto}.academy-board-object-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border-radius:7px;background:rgba(255,255,255,.05);font-size:12px}';
+  }
+
+  function labelFor(type){
+    return ({text:'Kreidetext',postit:'Post-it',graphic:'Grafik',arrow:'Pfeil',circle:'Kreis',line:'Linie'})[type]||'Element';
+  }
+
+  function appendDraft(doc,draft){
+    if(!doc||!draft)return null;
+    const list=doc.getElementById('academyBoardObjectList');
+    if(!list)return null;
+    const row=doc.createElement('div');
+    row.className='academy-board-object-row';
+    const name=doc.createElement('span');
+    name.textContent=labelFor(draft.type)+(draft.content?` · ${draft.content}`:'');
+    const state=doc.createElement('span');
+    state.textContent='bereit';
+    row.append(name,state);
+    list.appendChild(row);
+    return row;
   }
 
   function install(doc,onCreate){
@@ -58,13 +82,14 @@
       style.textContent=editorStyles();
       doc.head?.appendChild(style);
     }
+    const create=typeof onCreate==='function'?onCreate:(draft=>appendDraft(doc,draft));
     editor.querySelectorAll('[data-board-object]').forEach(button=>{
       if(button.dataset.bound==='1')return;
       button.dataset.bound='1';
-      button.addEventListener('click',()=>onCreate?.(createObjectDraft(button.dataset.boardObject)));
+      button.addEventListener('click',()=>create(createObjectDraft(button.dataset.boardObject)));
     });
     return true;
   }
 
-  return {createObjectDraft,editorMarkup,editorStyles,install};
+  return {createObjectDraft,editorMarkup,editorStyles,appendDraft,install};
 });
