@@ -24,3 +24,13 @@ test('object updates preserve normalized position size and content',()=>{
   assert.equal(object.content,'Neu');
   assert.deepEqual(object.frame,{x:25,y:35,width:50,height:20,rotation:5});
 });
+
+test('normal board toolbar stays compact and hides precision fields behind details',()=>{
+  const html=editor.editorMarkup();
+  assert.match(html,/academyBoardObjectToolbar/);
+  assert.match(html,/<details[^>]*academy-board-object-precision/);
+  assert.match(html,/>Feinjustierung</);
+  assert.match(html,/data-prop="x"/);
+  assert.match(html,/data-prop="rotation"/);
+  assert.doesNotMatch(html,/<div id="academyBoardObjectProperties"[^>]*hidden>/);
+});
