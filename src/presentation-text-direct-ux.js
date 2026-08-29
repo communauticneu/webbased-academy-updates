@@ -72,7 +72,11 @@ function install(doc){
       event.stopImmediatePropagation();
       return;
     }
-    if(event.target?.closest?.('[data-direct-delete]'))return;
+    if(event.target?.closest?.('[data-direct-delete]')){
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      return;
+    }
     const node=event.target?.closest?.('.academy-board-object-text[data-object-id]');
     if(node&&!event.target?.closest?.('[data-resize-handle]'))activate(node);
   },true);
@@ -117,10 +121,9 @@ function install(doc){
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    const row=editor.querySelector?.(`[data-list-id="${CSS.escape(id)}"]`);
-    row?.click?.();
-    editor.querySelector?.('[data-board-delete]')?.click?.();
-    delete layer.dataset.activeTextId;
+    root.AcademyPresentationObjectEditor?.selectWithoutRender?.(doc,id,node);
+    const deleted=root.AcademyPresentationObjectEditor?.deleteSelected?.(doc);
+    if(deleted)delete layer.dataset.activeTextId;
     setTimeout(decorate,0);
   },true);
 
