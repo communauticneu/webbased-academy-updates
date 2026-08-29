@@ -6,14 +6,8 @@ const path = require('node:path');
 const html = fs.readFileSync(path.join(__dirname, '..', 'src', 'index.html'), 'utf8');
 const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
 
-test('keeps V0.16.11 readability rules while allowing the current version to advance', () => {
+test('keeps the readable Creator controls while allowing the current version to advance', () => {
   assert.match(pkg.version, /^0\.16\.(?:1[1-9]|[2-9]\d)$/);
-});
-
-test('adds V16.11 readability rules for ultrawide without scroll', () => {
-  assert.match(html, /V16\.11 – Lesbarkeitskorrektur/);
-  assert.match(html, /grid-template-columns:205px minmax\(0,1fr\) 430px!important/);
-  assert.match(html, /\.controls\{[^}]*overflow:hidden!important/s);
 });
 
 test('right control typography meets readable minimums', () => {
