@@ -1,5 +1,126 @@
 Webbased Academy Creator - Diagnose
-Zeitpunkt: 29.08.2026 20:56:36,88
-Teststatus: GREEN
+Zeitpunkt: 29.08.2026 21:04:29,31
+Teststatus: ERROR
 Version: 0.16.24
-Commit: b364396
+Commit: 1ed116d
+Fehlerdetails Tests:
+ƒo" free presentation model supports add duplicate delete and move (7.5922ms)
+ƒo" scene duration determines automatic total duration (1.1753ms)
+ƒo" scene normalization supplies older projects with safe defaults (0.8491ms)
+ƒo" presentation runner advances scenes and exposes scene/total clocks (1.6813ms)
+ƒo" presentation runner pause continue stop and reset are reliable (1.3922ms)
+ƒo" scene fields support avatar board graphic background speech gesture and transition (1.7449ms)
+ƒo" project migration preserves existing data and adds presentation scenes (1.295ms)
+ƒo" HTML exposes free presentation editor and preview without automatic HeyGen (3.1781ms)
+ƒo" free preview starts the scene speech and local avatar state without HeyGen (3.2936ms)
+ƒo" scene display kind drives board graphic and background on the Academy stage (3.9224ms)
+ƒo" new presentation scenes are included in project, workspace, backup and local persistence (2.1175ms)
+ƒo" free presentation UI reuses the fixed production panel instead of adding a tall permanent sidebar (2.78ms)
+ƒo" 40-second production mode remains exactly unchanged (2.0082ms)
+ƒo" hardware-friendly implementation uses timers, DOM and speech synthesis only (3.386ms)
+ƒo" 3440 readability/layout safeguards remain intact (3.0468ms)
+ƒo" V0.16.15 media persistence remains available in later versions (2.2953ms)
+ƒo" media picker module replaces manual medium id/path entry with library selection (0.8168ms)
+ƒo" imported image media is converted to durable data URL instead of blob URL (0.9574ms)
+ƒo" selected medium writes its durable source before existing scene save handler runs (3.1167ms)
+ƒo" saved scene media is restored as a selectable saved-library entry after restart (0.6361ms)
+ƒo" preload loads the media picker after renderer DOM is ready (0.4824ms)
+ƒo" existing free presentation persistence remains unchanged (2.0221ms)
+ƒo" custom presentation medium uses selected image as the surface only (2.5728ms)
+ƒo" normal chalkboard still permits text plus selected graphic (0.5199ms)
+ƒo" presentation-media feature is present in V0.16.17 or later (2.7947ms)
+ƒo" V0.16.17 scene model supports interchangeable presentation media (4.4356ms)
+ƒo" older scenes receive safe presentation-medium defaults (1.0094ms)
+ƒo" presentation media values are validated for predictable hardware-friendly effects (3.3275ms)
+ƒo" stage keeps a snapshot of the last visible presentation medium (2.7564ms)
+ƒo" outgoing presentation medium gets a temporary exit clone (0.7487ms)
+ƒo" exit clone is removed after its lightweight CSS transition (2.1726ms)
+ƒo" mutation history detects a visible-to-next-scene transition even if final surface is visible (0.7799ms)
+ƒo" stage remains in presentation composition while an exit clone is animating (0.6965ms)
+ƒo" Schultafel button routes visibility to the Academy presentation surface and removes covering full graphic (7.49ms)
+ƒo" legacy board button is routed to presentationSurface instead of boardOverlay (3.3183ms)
+ƒo" legacy brown board can never render on stage (0.7143ms)
+ƒo" approved Academy board remains direct supplied flat chalkboard surface (3.5858ms)
+ƒo" fixed 40-second production keeps Room 3 and suppresses legacy background layers (1.8297ms)
+ƒo" medium Academy avatar uses the real 600x577 asset ratio and scales with the stage (1.4135ms)
+ƒo" approved Bis Nabel avatar keeps one crop and defaults to the right (0.7558ms)
+ƒo" fixed Academy startup reapplies its clean stage after legacy local restore (0.8271ms)
+ƒo" preload hides stage before DOMContentLoaded and delayed reset is the only startup release (0.7689ms)
+ƒo" desktop window is not shown on ready-to-show before delayed scene restore settles (0.6975ms)
+ƒo" V0.16.23 editor controls may shrink inside the fixed editor column without horizontal scrolling (2.1046ms)
+ƒo" V0.16.23 uses dark Creator styling for presentation and background tabs instead of native white buttons (0.4479ms)
+ƒo" V0.16.23 removes decorative glyph spans from the right editor tabs (0.3384ms)
+ƒo" V0.16.23 loads media library styling before responsive sizing so final large-workspace tile sizes win deterministically (0.4902ms)
+ƒo" V0.16.23 keeps all seven media actions in one visible row without a horizontal scrollbar (0.5792ms)
+ƒo" V0.16.23 keeps large-workspace media tiles at a fixed proportional width instead of stretching across the row (2.6745ms)
+ƒo" V0.16.23 keeps the compact short-height editor without introducing media clipping (0.6639ms)
+ƒo" V0.16.23 keeps medium-width media tiles in one scrollable row instead of clipping a second row (1.6036ms)
+ƒo" V0.16.23 measures the real remaining viewport height and updates it after resize settles (1.846ms)
+ƒo" V0.16.23 loads responsive sizing only after the production workspace script finished (0.5829ms)
+ƒo" V0.16.23 reserves the complete lower Creator UI before fitting the 16:9 stage (0.517ms)
+ƒo" V0.16.23 keeps the existing scene controls and gives the scene column a clear production layout (5.1258ms)
+ƒo" V0.16.23 implements the approved four-area production workspace (2.1365ms)
+ƒo" V0.16.23 protects the global creator navigation while restructuring Vortrag (2.4886ms)
+ƒo" V0.16.23 media library follows the approved visual tile reference (1.7577ms)
+ƒo" V0.16.23 uses one coherent responsive layout instead of fixed widths that push the editor off-screen (1.0765ms)
+ƒo" V0.16.23 detaches its production columns from legacy workspace layout classes (6.3369ms)
+ƒo" V0.16.23 uses the available ultrawide width instead of a narrow centered 2000px block (0.9795ms)
+ƒo" V0.16.23 reserves the real viewport height so the media library bottom edge stays visible (0.9992ms)
+ƒo" V0.16.23 media tiles remain visual and readable at narrower widths (1.7266ms)
+ƒo" V0.16.23 keeps legacy test controls hidden across responsive layouts (2.543ms)
+ƒo" V0.16.23 does not remove the protected Academy production hooks (3.2812ms)
+ƒo" V0.16.23 fits the complete 16:9 composition into the visible monitor slot (1.531ms)
+ƒo" V0.16.23 reserves the full media content instead of forcing a clipped short-height media row (0.3772ms)
+ƒo" V0.16.23 keeps the room composition itself unchanged while only scaling the stage box (0.253ms)
+ƒo" V0.16.23 remains the final stage-sizing authority after legacy delayed fitters (0.1762ms)
+ƒo" avatar stays visible but does not block presentation object editing (3.0133ms)
+ƒo" movable board objects show the standard four-way move cursor (1.6918ms)
+ƒo" chalk text can be grabbed and freely repositioned on the board (4.2243ms)
+ƒo" creating chalk text must not activate the chalkboard by itself (1.8577ms)
+ƒo" chalk write effect reveals text progressively like writing, not as a simple fade (1.8851ms)
+ƒo" generic Text tool does not force the chalkboard visible (2.3044ms)
+ƒo" text styling follows the active presentation medium without changing the object type (0.6134ms)
+ƒo" direct delete survives pointerdown and deletes selected object directly (2.0835ms)
+ƒo" text button only creates text; editing and deletion live on stage (2.1047ms)
+ƒo" active chalkboard button toggles the board off again (0.5545ms)
+ƒo- double click edits the selected text directly on stage (2.412ms)
+ƒo" selected text can be deleted with button and Delete key (0.4397ms)
+ƒo" double click editing is not swallowed by text drag pointer capture (1.5889ms)
+ƒo" direct text decoration does not remove and recreate its delete button on every observed mutation (1.9033ms)
+ƒo" presentation objects are moved to a neutral stage layer outside the medium surface (1.5724ms)
+ƒo" dragging updates the existing node without re-rendering it during pointermove (0.6096ms)
+ƒo" selected text remains visibly selected and delete control is reachable (1.7602ms)
+ƒo" legacy editor pointer binding leaves text objects to direct stage UX only (2.2388ms)
+ƒo" text drag starts only after real pointer movement so double click remains native (1.7052ms)
+ƒo" selected text is interactable above avatar while editing and delete remains clickable (1.8178ms)
+ƒo" full text frame is the persistent selection and interaction area (0.9668ms)
+ƒo" visual guard captures a real Creator screenshot and checks approved Academy composition (1.9018ms)
+ƒo" test launcher runs unit tests then visual screenshot guard before normal Creator start (0.7845ms)
+ƒo" generated screenshot is excluded from Git history (0.3446ms)
+ƒ"û tests 176
+ƒ"û suites 0
+ƒ"û pass 175
+ƒ"û fail 1
+ƒ"û cancelled 0
+ƒ"û skipped 0
+ƒ"û todo 0
+ƒ"û duration_ms 1494.7462
+
+ƒo- failing tests:
+
+test at test\v16.24-direct-text-edit-delete.test.js:8:1
+ƒo- double click edits the selected text directly on stage (2.412ms)
+  AssertionError [ERR_ASSERTION]: text objects need a double-click edit interaction
+      at TestContext.<anonymous> (<PROJECT>\test\v16.24-direct-text-edit-delete.test.js:9:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '(function(root,factory){\r\n  const api=factory();\r\n  if(typeof module===\'object\'&&module.exports)module.exports=api;\r\n  if(root)root.AcademyPresentationObjectEditor=api;\r\n  if(root&&root.document){const boot=()=>api.install(root.document);if(root.document.readyState===\'loading\')root.document.addEventListener(\'DOMContentLoaded\',boot,{once:true});else boot();}\r\n})(typeof globalThis!==\'undefined\'?globalThis:this,function(){\r\n\'use strict\';\r\nconst DRAFTS={text:{type:\'text\',content:\'Neuer Text\',x:12,y:12,width:42,height:14,rotation:0,enter:\'fade\',exit:\'fade\'},postit:{type:\'postit\',content:\'Neuer Hinweis\',x:12,y:28,width:30,height:14,rotation:-2,enter:\'unroll\',exit:\'wipe\'},graphic:{type:\'graphic\',content:\'\',x:48,y:18,width:38,height:38,rotation:0,enter:\'fade\',exit:\'wipe\'},arrow:{type:\'arrow\',content:\'\',x:18,y:48,width:30,height:12,rotation:0,enter:\'draw\',exit:\'wipe\'},circle:{type:\'circle\',content:\'\',x:50,y:44,width:24,height:18,rotation:0,enter:\'draw\',exit:\'wipe\'},line:{type:\'line\',content:\'\',x:18,y:66,width:34,height:4,rotation:0,enter:\'draw\',exit:\'wipe\'}};\r\nlet objects=[],selectedId=null,counter=0;\r\nconst clamp=(v,min,max)=>Math.max(min,Math.min(max,Number(v)||0));\r\nfunction createObjectDraft(type){return {...(DRAFTS[type]||DRAFTS.text)};}\r\nfunction isPngFile(file){if(!file)return false;return file.type===\'image/png\'||(!file.type&&/\\.png$/i.test(file.name||\'\'));}\r\nfunction normalizeDraft(d){const model=globalThis.AcademyPresentationObjects;if(model?.normalizePresentationObject)return model.normalizePresentationObject(d);return {id:d.id||`board-object-${++counter}`,type:d.type||\'text\',content:d.content||\'\',assetId:d.assetId||\'\',assetUrl:d.assetUrl||\'\',frame:{x:clamp(d.x??d.frame?.x,0,100),y:clamp(d.y??d.frame?.y,0,100),width:clamp(d.width??d.frame?.width,1,100),height:clamp(d.height??d.frame?.height,1,100),rotation:Number(d.rotation??d.frame?.rotation)||0},animation:{enter:d.enter||\'fade\',exit:d.exit||\'fade\'},timing:{start:0,enterDuration:.6,end:0,exitDuration:.6}};}\r\nfunction updateObject(object,patch={}){const frame=object.frame||{};return {...object,content:patch.content===undefined?object.content:String(patch.content),frame:{x:clamp(patch.x??frame.x,0,100),y:clamp(patch.y??frame.y,0,100),width:clamp(patch.width??frame.width,1,100),height:clamp(patch.height??frame.height,1,100),rotation:Number(patch.rotation??frame.rotation)||0}};}\r\nfunction moveObject(object,dx,dy){const f=object.frame||{};const width=clamp(f.width,1,100),height=clamp(f.height,1,100);return {...object,frame:{...f,width,height,x:clamp(Number(f.x||0)+Number(dx||0),0,100-width),y:clamp(Number(f.y||0)+Number(dy||0),0,100-height)}};}\r\nfunction resizeObject(object,dw,dh){const f=object.frame||{};const x=clamp(f.x,0,100),y=clamp(f.y,0,100);return {...object,frame:{...f,x,y,width:clamp(Number(f.width||4)+Number(dw||0),4,100-x),height:clamp(Number(f.height||4)+Number(dh||0),4,100-y)}};}\r\nfunction esc(s){return String(s??\'\').replace(/[&<>"\']/g,c=>({\'&\':\'&amp;\',\'<\':\'&lt;\',\'>\':\'&gt;\',\'"\':\'&quot;\',"\'":\'&#39;\'}[c]));}\r\nfunction boardObjectMarkup(o,explicitSelectedId){const f=o.frame||{},isSelected=o.id===(explicitSelectedId===undefined?selectedId:explicitSelectedId);const style=`left:${f.x||0}%;top:${f.y||0}%;width:${f.width||20}%;height:${f.height||10}%;transform:rotate(${f.rotation||0}deg)`;let inner=\'\';if(o.type===\'text\')inner=`<span>${esc(o.content)}</span>`;else if(o.type===\'postit\')inner=`<span>${esc(o.content)}</span>`;else if(o.type===\'graphic\')inner=o.assetUrl?`<img src="${esc(o.assetUrl)}" alt="${esc(o.content||\'Grafik\')}">`:\'<span class="academy-board-graphic-placeholder">PNG</span>\';else if(o.type===\'arrow\')inner=\'<span class="academy-chalk-arrow">ƒzo</span>\';else if(o.type===\'circle\')inner=\'<span class="academy-chalk-circle"></span>\';else inner=\'<span class="academy-chalk-line"></span>\';const handle=isSelected?\'<button type="button" class="academy-board-resize-handle" data-resize-handle aria-label="GrÇôÇYe ÇÏndern"></button>\':\'\';return `<div class="academy-board-object academy-board-object-${esc(o.type)}${isSelected?\' selected\':\'\'}" data-object-id="${esc(o.id)}" style="${style}">${inner}${handle}</div>`;}\r\nfunction editorMarkup(){return \'<section id="academyBoardObjectEditor" class="academy-board-object-editor" aria-label="Darstellungsinhalte"><div class="academy-board-editor-head"><strong>Inhalte</strong><span>Direkt in der Darstellung bearbeiten</span></div><div id="academyBoardObjectToolbar" class="academy-board-object-toolbar"><button type="button" data-board-object="text">ƒoZ Text</button><button type="button" data-board-object="postit">ƒ-ø Post-it</button><button type="button" data-board-object="graphic">ƒ-õ Grafik</button><button type="button" data-board-object="arrow">ƒzo Pfeil</button><button type="button" data-board-object="circle">ƒ-î Kreis</button><button type="button" data-board-object="line">ƒñ Linie</button><input id="academyBoardGraphicFile" type="file" accept="image/png" hidden></div><div id="academyBoardObjectList" class="academy-board-object-list" aria-live="polite"></div><div id="academyBoardObjectProperties" class="academy-board-object-properties" hidden><label class="academy-board-content-field">Inhalt<input data-prop="content"></label><div class="academy-board-quick-actions"><button type="button" data-board-delete>Element lÇôschen</button></div><details class="academy-board-object-precision"><summary>Feinjustierung</summary><div class="academy-board-precision-grid"><label>X<input data-prop="x" type="number" min="0" max="100"></label><label>Y<input data-prop="y" type="number" min="0" max="100"></label><label>Breite<input data-prop="width" type="number" min="1" max="100"></label><label>HÇôhe<input data-prop="height" type="number" min="1" max="100"></label><label>Drehung<input data-prop="rotation" type="number" min="-180" max="180"></label></div></details></div></section>\';}\r\nfunction editorStyles(){return \'.academy-board-object-editor{display:grid;gap:7px;padding:9px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(10,18,24,.48)}.academy-board-editor-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.academy-board-editor-head span{font-size:10px;opacity:.68}.academy-board-object-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.academy-board-object-toolbar button,.academy-board-object-properties button{min-height:29px;border:1px solid rgba(255,255,255,.14);border-radius:7px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer;padding:4px 6px}.academy-board-object-list{display:flex;gap:5px;overflow-x:auto;max-height:29px}.academy-board-object-row{flex:0 0 auto;padding:5px 7px;border-radius:7px;background:rgba(255,255,255,.05);font-size:10px;cursor:pointer;white-space:nowrap}.academy-board-object-row.selected{outline:1px solid #70d4ff}.academy-board-object-properties{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;align-items:end}.academy-board-content-field{font-size:9px;color:#8fa8b8}.academy-board-object-properties input{width:100%;margin-top:2px;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:6px;padding:4px}.academy-board-quick-actions button{min-height:27px;font-size:10px}.academy-board-object-precision{grid-column:1/-1;font-size:10px;color:#8fa8b8}.academy-board-object-precision summary{cursor:pointer;padding:2px 0}.academy-board-precision-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding-top:4px}.academy-board-precision-grid label{font-size:9px}.academy-board-object-layer{position:absolute;inset:8%;z-index:3;pointer-events:auto;touch-action:none}.academy-board-object{position:absolute;cursor:move;display:grid;place-items:center;box-sizing:border-box;user-select:none;touch-action:none}.academy-board-object.selected{outline:2px dashed #70d4ff;outline-offset:3px}.academy-board-object-text [contenteditable="true"]{cursor:text;user-select:text;outline:none;min-width:1em}.academy-board-resize-handle{position:absolute!important;right:-7px!important;bottom:-7px!important;width:15px!important;height:15px!important;min-height:15px!important;padding:0!important;border:2px solid #0b1a24!important;border-radius:50%!important;background:#70d4ff!important;cursor:nwse-resize!important;z-index:5}.academy-board-object-text{color:#f5f7fa;font-family:Arial,"Helvetica Neue",sans-serif;font-size:clamp(12px,1.25vw,28px);line-height:1.05;letter-spacing:.01em}.presentation-chalkboard .academy-board-object-text{color:#f3f0df;font-family:"DJB Chalk It Up","Segoe Print","Comic Sans MS",cursive;text-shadow:0 0 1px rgba(255,255,255,.9),0 0 3px rgba(255,255,255,.22);filter:contrast(1.03)}.academy-board-object-postit{position:absolute;overflow:visible;background:linear-gradient(145deg,#fff9c7 0%,#fff1a2 42%,#eadb72 100%);color:#2c2a21;padding:10px 12px 12px;border:1px solid rgba(126,110,42,.18);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,2px 6px 12px rgba(0,0,0,.33),10px 14px 24px rgba(0,0,0,.12);font-family:"Segoe Print","Comic Sans MS",cursive;line-height:1.15}.academy-board-object-postit::before{content:"";position:absolute;left:5%;right:5%;top:-4px;height:9px;border-radius:50%;background:linear-gradient(to bottom,rgba(255,255,255,.78),rgba(226,210,112,.32));filter:blur(.3px);opacity:.9}.academy-board-object-postit::after{content:"";position:absolute;right:-1px;bottom:-1px;width:24%;height:28%;background:linear-gradient(135deg,rgba(255,255,255,0) 0 47%,rgba(210,192,91,.44) 49%,rgba(255,244,161,.92) 68%,rgba(255,255,255,.65) 100%);clip-path:polygon(100% 0,100% 100%,0 100%);filter:drop-shadow(-2px -1px 1px rgba(0,0,0,.1));pointer-events:none}.academy-board-object-graphic img{width:100%;height:100%;object-fit:contain;pointer-events:none}.academy-board-graphic-placeholder{border:1px dashed rgba(255,255,255,.5);padding:8px;color:#eee}.academy-chalk-arrow{color:#f3f0df;font-size:clamp(18px,2.4vw,48px);width:100%;text-align:center}.academy-chalk-circle{width:100%;height:100%;border:3px solid #f3f0df;border-radius:50%;f'... 7001 more characters,
+    expected: /dblclick/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
