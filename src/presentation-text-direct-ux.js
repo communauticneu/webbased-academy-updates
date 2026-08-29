@@ -9,7 +9,7 @@ function install(doc){
   if(!doc.getElementById('academyDirectTextUxStyle')){
     const style=doc.createElement('style');
     style.id='academyDirectTextUxStyle';
-    style.textContent='.academy-board-content-field,.academy-board-quick-actions{display:none!important}.academy-board-object-text{pointer-events:auto}.academy-board-object-text span{pointer-events:none}.academy-board-object-text span[contenteditable="true"]{pointer-events:auto;cursor:text;user-select:text;white-space:pre-wrap;outline:none}.academy-board-object-delete{position:absolute;right:-13px;top:-13px;width:24px;height:24px;border:0;border-radius:50%;display:grid;place-items:center;background:#b92f3b;color:#fff;font:700 14px/1 Arial,sans-serif;cursor:pointer;z-index:8;box-shadow:0 2px 7px rgba(0,0,0,.35)}';
+    style.textContent='.academy-board-content-field,.academy-board-quick-actions{display:none!important}.academy-board-object-text{pointer-events:auto}.academy-board-object-text.selected{z-index:50!important;pointer-events:auto}.academy-board-object-text span{pointer-events:none}.academy-board-object-text span[contenteditable="true"]{pointer-events:auto;cursor:text;user-select:text;white-space:pre-wrap;outline:none}.academy-board-object-delete{position:absolute;right:-13px;top:-13px;width:24px;height:24px;border:0;border-radius:50%;display:grid;place-items:center;background:#b92f3b;color:#fff;font:700 14px/1 Arial,sans-serif;cursor:pointer;pointer-events:auto;z-index:80;box-shadow:0 2px 7px rgba(0,0,0,.35)}';
     doc.head?.appendChild(style);
   }
 
@@ -72,8 +72,9 @@ function install(doc){
       event.stopImmediatePropagation();
       return;
     }
+    if(event.target?.closest?.('[data-direct-delete]'))return;
     const node=event.target?.closest?.('.academy-board-object-text[data-object-id]');
-    if(node&&!event.target?.closest?.('[data-resize-handle]')&&!event.target?.closest?.('[data-direct-delete]'))activate(node);
+    if(node&&!event.target?.closest?.('[data-resize-handle]'))activate(node);
   },true);
 
   layer.addEventListener('dblclick',event=>{
