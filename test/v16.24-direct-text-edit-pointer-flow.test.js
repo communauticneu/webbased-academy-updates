@@ -7,10 +7,12 @@ const interaction=fs.readFileSync(path.join(__dirname,'../src/presentation-objec
 const ux=fs.readFileSync(path.join(__dirname,'../src/presentation-text-direct-ux.js'),'utf8');
 
 test('double click editing is not swallowed by text drag pointer capture',()=>{
-  assert.match(interaction,/AcademyPresentationTextDirectUx\?\.isEditingGesture\?\.\(event\)/,
-    'stage interaction must let the direct text UX own an editing gesture');
-  assert.match(ux,/isEditingGesture/,
-    'direct text UX must expose editing gesture detection');
-  assert.match(ux,/Number\(event\.detail\)\s*>?=\s*2/,
-    'second pointer press of a double click must be recognized as editing intent');
+  assert.match(interaction,/pendingDrag/,
+    'text pointerdown must stay pending instead of capturing the pointer immediately');
+  assert.match(interaction,/Math\.hypot\(/,
+    'text drag must wait for actual pointer movement');
+  assert.match(ux,/addEventListener\('dblclick'/,
+    'direct text UX must own the native double click');
+  assert.match(ux,/contentEditable='true'/,
+    'double click must switch the text span into editing mode');
 });
