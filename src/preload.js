@@ -32,6 +32,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const stageScript = document.createElement('script');
   stageScript.src = 'presentation-stage-v16.17.js';
   stageScript.onload = () => {
+    const obsoleteBackgroundScript = document.createElement('script');
+    obsoleteBackgroundScript.src = 'obsolete-background-controls.js';
+    document.documentElement.appendChild(obsoleteBackgroundScript);
+
     const mediumSelectionScript = document.createElement('script');
     mediumSelectionScript.src = 'presentation-medium-selection.js';
     document.documentElement.appendChild(mediumSelectionScript);
