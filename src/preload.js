@@ -32,6 +32,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const stageScript = document.createElement('script');
   stageScript.src = 'presentation-stage-v16.17.js';
   stageScript.onload = () => {
+    const mediumSelectionScript = document.createElement('script');
+    mediumSelectionScript.src = 'presentation-medium-selection.js';
+    document.documentElement.appendChild(mediumSelectionScript);
+
     const objectModelScript = document.createElement('script');
     objectModelScript.src = 'presentation-object-model.js';
     objectModelScript.onload = () => {
