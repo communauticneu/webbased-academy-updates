@@ -28,13 +28,14 @@ test('chalk text prioritizes DJB Chalk It Up with safe fallbacks and readable st
   assert.match(stage,/\.stage \.academy-board-object-text\{[^}]*font-size:clamp\(24px,2\.4vw,54px\)!important/);
 });
 
-test('Academy chalkboard keeps supplied full-resolution reference proportional',()=>{
+test('Academy chalkboard uses supplied 4K texture without enlargement',()=>{
   const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.css'),'utf8');
   const board=stage.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
-  assert.match(board,/background-image:url\('assets\/academy-tafel-vorlage\.png'\)!important/);
-  assert.match(board,/background-size:181\.739% auto!important/);
-  assert.match(board,/background-position:left bottom!important/);
+  assert.match(board,/background-image:url\('assets\/academy-tafel-oberflaeche\.png'\)!important/);
+  assert.match(board,/background-size:cover!important/);
+  assert.match(board,/background-position:center center!important/);
   assert.match(board,/mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
+  assert.doesNotMatch(board,/academy-tafel-vorlage\.png/);
   assert.doesNotMatch(board,/academy-tafel-original-crop\.svg/);
   assert.doesNotMatch(board,/radial-gradient/);
   assert.doesNotMatch(board,/tafel-academy\.jpg/);
