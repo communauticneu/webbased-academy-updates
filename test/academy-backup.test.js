@@ -18,3 +18,14 @@ test('Academy backup is a safe one-click fileserver backup', () => {
   assert.doesNotMatch(cmd, /git push/i);
   assert.doesNotMatch(cmd, /\.github\\workflows/i);
 });
+
+test('Academy backup keeps only the newest 30 backup packages after success', () => {
+  const cmd = fs.readFileSync(backupPath, 'utf8');
+  assert.match(cmd, /KEEP_BACKUPS=30/i);
+  assert.match(cmd, /Webbased-Academy-Creator_Backup_\*\.zip/i);
+  assert.match(cmd, /Sort-Object\s+LastWriteTime\s+-Descending/i);
+  assert.match(cmd, /Select-Object\s+-Skip\s+\$keep/i);
+  const successPos = cmd.indexOf('BACKUP ERFOLGREICH');
+  const cleanupPos = cmd.indexOf('Select-Object -Skip $keep');
+  assert.ok(successPos >= 0 && cleanupPos > successPos, 'old backups may only be deleted after the new backup was confirmed');
+});
