@@ -17,8 +17,8 @@ test('Academy chalk surface uses the supplied 4K texture without enlargement and
   assert.match(board,/background-image:url\('assets\/academy-tafel-oberflaeche\.png'\)!important/);
   assert.match(board,/background-size:cover!important/);
   assert.match(board,/background-position:center center!important/);
-  assert.match(board,/-webkit-mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
-  assert.match(board,/mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
+  assert.match(board,/-webkit-mask-image:linear-gradient\(to right,#000 0%,#000 91%,transparent 100%\)!important/);
+  assert.match(board,/mask-image:linear-gradient\(to right,#000 0%,#000 91%,transparent 100%\)!important/);
   assert.match(board,/border:\s*0!important/);
   assert.match(board,/box-shadow:\s*none!important/);
   assert.doesNotMatch(board,/academy-tafel-vorlage\.png/);
