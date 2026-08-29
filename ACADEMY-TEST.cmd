@@ -4,9 +4,11 @@ cd /d "%~dp0"
 title Webbased Academy Creator - Teststart
 set "DIAG_FILE=academy-diagnostics.txt"
 set "TEST_LOG=academy-test-output.txt"
+set "VISUAL_LOG=academy-visual-output.txt"
 set "TEST_STATUS=STARTED"
 set "DEV_REPO=https://github.com/communauticneu/webbased-academy-updates.git"
 if exist "%TEST_LOG%" del /q "%TEST_LOG%" >nul 2>&1
+if exist "%VISUAL_LOG%" del /q "%VISUAL_LOG%" >nul 2>&1
 call :write_diagnostics
 
 echo.
@@ -32,8 +34,10 @@ if not "%TEST_EXIT%"=="0" goto :error
 
 echo.
 echo [3/4] Automatischen Screenshot- und Layoutcheck ausfuehren...
-call npm.cmd run visual:check
-if errorlevel 1 goto :error
+call npm.cmd run visual:check >"%VISUAL_LOG%" 2>&1
+set "VISUAL_EXIT=%ERRORLEVEL%"
+type "%VISUAL_LOG%"
+if not "%VISUAL_EXIT%"=="0" goto :error
 
 set "TEST_STATUS=GREEN"
 call :write_diagnostics
@@ -68,9 +72,15 @@ exit /b 1
 >>"%DIAG_FILE%" node -p "require('./package.json').version" 2>nul
 >>"%DIAG_FILE%" <nul set /p "=Commit: "
 >>"%DIAG_FILE%" git rev-parse --short HEAD 2>nul
-if /I "%TEST_STATUS%"=="ERROR" if exist "%TEST_LOG%" (
-  >>"%DIAG_FILE%" echo Fehlerdetails:
-  powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%TEST_LOG%' ^| Select-String -Pattern '^\s*(not ok|error:|code:|expected:|actual:|operator:)' ^| Select-Object -First 24 ^| ForEach-Object { ($_.Line -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+if /I "%TEST_STATUS%"=="ERROR" (
+  if exist "%TEST_LOG%" (
+    >>"%DIAG_FILE%" echo Fehlerdetails Tests:
+    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%TEST_LOG%' ^| Select-String -Pattern '^\s*(not ok|error:|code:|expected:|actual:|operator:)' ^| Select-Object -First 24 ^| ForEach-Object { ($_.Line -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+  )
+  if exist "%VISUAL_LOG%" (
+    >>"%DIAG_FILE%" echo Fehlerdetails Visual:
+    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%VISUAL_LOG%' ^| Select-String -Pattern 'VISUAL CHECK FEHLER|VISUAL CHECK konnte nicht ausgefuehrt werden|^\s*-\s' ^| Select-Object -First 24 ^| ForEach-Object { ($_.Line -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+  )
 )
 exit /b 0
 
