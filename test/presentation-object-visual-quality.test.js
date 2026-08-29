@@ -22,10 +22,10 @@ test('post-it styling uses realistic paper treatment rather than a flat rectangl
 
 test('chalk text prioritizes DJB Chalk It Up with safe fallbacks and readable stage size',()=>{
   const css=editor.editorStyles();
+  const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.css'),'utf8');
   assert.match(css,/DJB Chalk It Up/);
   assert.match(css,/Segoe Print/);
-  const text=css.match(/\.academy-board-object-text\{[^}]*\}/)?.[0]||'';
-  assert.match(text,/font-size:clamp\(24px,2\.4vw,54px\)/);
+  assert.match(stage,/\.stage \.academy-board-object-text\{[^}]*font-size:clamp\(24px,2\.4vw,54px\)!important/);
 });
 
 test('Academy chalkboard is dark and does not use the washed-out texture image',()=>{
