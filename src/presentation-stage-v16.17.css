@@ -24,25 +24,24 @@
 .stage.v169-fixed-test-active .media,
 .stage.v169-fixed-test-active #userStageImage{display:none!important}
 
-/* KREIDE-PRÄSENTATIONSFLÄCHE – kein klassisches Tafelobjekt. */
+/* KREIDE-PRÄSENTATIONSFLÄCHE: reine Tafeloberfläche, ohne eingebetteten Avatar und ohne Perspektivverzerrung. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:#262928;
-  background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/academy-tafel-vorlage.png')!important;
+  background-image:linear-gradient(rgba(3,8,11,.04),rgba(3,8,11,.08)),url('assets/tafel-academy.jpg')!important;
   background-size:cover!important;
   background-position:center!important;
   background-repeat:no-repeat!important;
   border:0!important;
   border-radius:0!important;
   box-shadow:none!important;
-  transform-origin:left bottom!important;
-  clip-path:polygon(0 0,96% 2%,100% 100%,0 100%)!important;
+  transform:none!important;
+  transform-origin:center center!important;
 }
 
 .stage #boardOverlay{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .stage.v1617-presentation-active #userStageImage{display:none!important}
 
-/* REFERENZKOMPOSITION: raumhoch; oben aus dem Bild; unten am Boden sichtbar;
-   rechter Abschluss leicht perspektivisch und Raum 3 rechts sichtbar. */
+/* FESTE REFERENZKOMPOSITION: rechteckige Tafel links, Raum 3 rechts sichtbar. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
   position:absolute!important;
   top:-4%!important;
@@ -51,11 +50,11 @@
   height:108%!important;
   max-width:none!important;
   max-height:none!important;
-  transform:perspective(900px) rotateY(3.5deg)!important;
+  transform:none!important;
 }
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:-2%!important;right:auto!important}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:perspective(900px) rotateY(-3.5deg)!important}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:-2%!important;right:auto!important;transform:none!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:none!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important;transform:none!important}
 
 /* REALISTISCHER TESTAVATAR – „Bis Nabel“: echtes 600×577-Asset, ein Ausschnitt, rechts, proportional zur Academy-Bühne. */
 .stage.v1617-presentation-active .avatar,
@@ -84,5 +83,5 @@
 .stage .presentation-surface.presentation-flipchart,.stage .presentation-surface.presentation-whiteboard{border:0!important}
 
 @media (max-width:1599px){
-  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-4%!important;bottom:0!important;width:68%!important;height:108%!important;transform:perspective(900px) rotateY(3.5deg)!important}
+  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-4%!important;bottom:0!important;width:68%!important;height:108%!important;transform:none!important}
 }
