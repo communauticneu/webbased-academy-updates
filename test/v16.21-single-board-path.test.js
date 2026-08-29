@@ -23,11 +23,11 @@ test('approved Academy board remains direct supplied flat chalkboard surface',()
   const block=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
   assert.ok(block,'chalkboard style block must exist');
   assert.match(block,/background-image:url\('assets\/academy-tafel-vorlage\.png'\)!important/);
-  assert.match(block,/background-size:181\.739% 111\.891%!important/);
+  assert.match(block,/background-size:181\.739% auto!important/);
   assert.match(block,/background-position:left bottom!important/);
+  assert.match(block,/mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
   assert.doesNotMatch(block,/academy-tafel-original-crop\.svg/);
   assert.doesNotMatch(block,/radial-gradient/);
-  assert.doesNotMatch(block,/linear-gradient/);
   assert.doesNotMatch(block,/assets\/tafel-academy\.jpg/);
   assert.doesNotMatch(block,/perspective\(/);
   assert.doesNotMatch(block,/rotateY\(/);
