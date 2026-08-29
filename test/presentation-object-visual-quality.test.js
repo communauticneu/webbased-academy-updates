@@ -34,7 +34,7 @@ test('Academy chalkboard uses supplied 4K texture without enlargement',()=>{
   assert.match(board,/background-image:url\('assets\/academy-tafel-oberflaeche\.png'\)!important/);
   assert.match(board,/background-size:cover!important/);
   assert.match(board,/background-position:center center!important/);
-  assert.match(board,/mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
+  assert.match(board,/mask-image:linear-gradient\(to right,#000 0%,#000 91%,transparent 100%\)!important/);
   assert.doesNotMatch(board,/academy-tafel-vorlage\.png/);
   assert.doesNotMatch(board,/academy-tafel-original-crop\.svg/);
   assert.doesNotMatch(board,/radial-gradient/);
