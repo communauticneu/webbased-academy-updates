@@ -37,3 +37,9 @@ test('failed tests publish a compact sanitized assertion summary without machine
   assert.match(cmd,/<PROJECT>/i);
   assert.doesNotMatch(cmd,/type\s+"?%TEST_LOG%"?\s*>>\s*"?%DIAG_FILE%"?/i);
 });
+
+test('visual check output is captured and included in diagnostics on failure',()=>{
+  assert.match(cmd,/VISUAL_LOG=academy-visual-output\.txt/i);
+  assert.match(cmd,/visual:check\s*>"%VISUAL_LOG%"\s*2>&1/i);
+  assert.match(cmd,/VISUAL CHECK FEHLER\|VISUAL CHECK konnte nicht ausgefuehrt werden/i);
+});
