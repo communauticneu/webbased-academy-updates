@@ -30,7 +30,7 @@ test('diagnostics publishing is isolated from the development branch',()=>{
 
 test('failed tests publish a compact sanitized assertion summary without machine paths',()=>{
   assert.match(cmd,/TEST_LOG=academy-test-output\.txt/i);
-  assert.match(cmd,/Fehlerdetails:/i);
+  assert.match(cmd,/Fehlerdetails/i);
   assert.match(cmd,/not ok\|error:\|code:\|expected:\|actual:\|operator:/i);
   assert.match(cmd,/USERPROFILE/i);
   assert.match(cmd,/<USER>/i);
@@ -38,8 +38,9 @@ test('failed tests publish a compact sanitized assertion summary without machine
   assert.doesNotMatch(cmd,/type\s+"?%TEST_LOG%"?\s*>>\s*"?%DIAG_FILE%"?/i);
 });
 
-test('visual check output is captured and included in diagnostics on failure',()=>{
+test('visual failure diagnostics always include a sanitized tail of the visual log',()=>{
   assert.match(cmd,/VISUAL_LOG=academy-visual-output\.txt/i);
   assert.match(cmd,/visual:check\s*>"%VISUAL_LOG%"\s*2>&1/i);
-  assert.match(cmd,/VISUAL CHECK FEHLER\|VISUAL CHECK konnte nicht ausgefuehrt werden/i);
+  assert.match(cmd,/Fehlerdetails Visual:/i);
+  assert.match(cmd,/Get-Content -LiteralPath '%VISUAL_LOG%'\s*\|\s*Select-Object -Last 40/i);
 });
