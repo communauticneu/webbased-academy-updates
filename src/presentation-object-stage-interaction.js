@@ -27,7 +27,8 @@ function install(doc){
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    root.AcademyPresentationObjectEditor?.selectWithoutRender?.(doc,node.dataset.objectId,node);
+    if(node.classList?.contains?.('academy-board-object-text'))root.AcademyPresentationTextDirectUx?.activate?.(doc,node);
+    else root.AcademyPresentationObjectEditor?.selectWithoutRender?.(doc,node.dataset.objectId,node);
     const rect=layer.getBoundingClientRect();
     const isResize=!!event.target.closest?.('[data-resize-handle]');
     drag={node,startX:event.clientX,startY:event.clientY,left:parseFloat(node.style.left)||0,top:parseFloat(node.style.top)||0,width:parseFloat(node.style.width)||20,height:parseFloat(node.style.height)||10,isResize,rect};
