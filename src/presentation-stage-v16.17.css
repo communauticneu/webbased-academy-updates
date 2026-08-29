@@ -42,20 +42,20 @@
 .stage #boardOverlay{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .stage.v1617-presentation-active #userStageImage{display:none!important}
 
-/* FESTE REFERENZKOMPOSITION: rechteckige Tafel links, Raum 3 rechts sichtbar. */
+/* REFERENZKOMPOSITION: große Tafel links wie in der gelieferten Vorlage, Raum bleibt rechts sichtbar. */
 .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{
   position:absolute!important;
-  top:-4%!important;
+  top:0!important;
   bottom:0!important;
-  width:68%!important;
-  height:108%!important;
+  width:82%!important;
+  height:100%!important;
   max-width:none!important;
   max-height:none!important;
   transform:none!important;
 }
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:-2%!important;right:auto!important;transform:none!important}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:-2%!important;left:auto!important;transform:none!important}
-.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:16%!important;right:auto!important;transform:none!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="left"]{left:0!important;right:auto!important;transform:none!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="right"]{right:0!important;left:auto!important;transform:none!important}
+.stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-position="center"]{left:9%!important;right:auto!important;transform:none!important}
 
 /* REALISTISCHER TESTAVATAR – „Bis Nabel“: echtes 600×577-Asset, ein Ausschnitt, rechts, proportional zur Academy-Bühne. */
 .stage.v1617-presentation-active .avatar,
@@ -86,5 +86,5 @@
 .stage .presentation-surface.presentation-flipchart,.stage .presentation-surface.presentation-whiteboard{border:0!important}
 
 @media (max-width:1599px){
-  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:-4%!important;bottom:0!important;width:68%!important;height:108%!important;transform:none!important}
+  .stage.v1617-presentation-active .presentation-surface.presentation-chalkboard[data-size="large"]{top:0!important;bottom:0!important;width:82%!important;height:100%!important;transform:none!important}
 }
