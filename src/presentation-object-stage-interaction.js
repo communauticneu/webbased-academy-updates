@@ -18,25 +18,41 @@ function install(doc){
   if(layer.dataset.stableDragBound==='1')return true;
   layer.dataset.stableDragBound='1';
   let drag=null;
+  let pendingDrag=null;
+  const dragThreshold=4;
+
+  const buildDrag=(event,node)=>{
+    const rect=layer.getBoundingClientRect();
+    const isResize=!!event.target.closest?.('[data-resize-handle]');
+    return {node,startX:event.clientX,startY:event.clientY,left:parseFloat(node.style.left)||0,top:parseFloat(node.style.top)||0,width:parseFloat(node.style.width)||20,height:parseFloat(node.style.height)||10,isResize,rect,pointerId:event.pointerId};
+  };
 
   layer.addEventListener('pointerdown',event=>{
     if(event.target?.isContentEditable)return;
     if(event.target?.closest?.('[data-direct-delete]'))return;
-    if(root.AcademyPresentationTextDirectUx?.isEditingGesture?.(event))return;
     const node=event.target?.closest?.('[data-object-id]');
     if(!node)return;
+    if(node.classList?.contains?.('academy-board-object-text')){
+      root.AcademyPresentationTextDirectUx?.activate?.(doc,node);
+      pendingDrag=buildDrag(event,node);
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    if(node.classList?.contains?.('academy-board-object-text'))root.AcademyPresentationTextDirectUx?.activate?.(doc,node);
-    else root.AcademyPresentationObjectEditor?.selectWithoutRender?.(doc,node.dataset.objectId,node);
-    const rect=layer.getBoundingClientRect();
-    const isResize=!!event.target.closest?.('[data-resize-handle]');
-    drag={node,startX:event.clientX,startY:event.clientY,left:parseFloat(node.style.left)||0,top:parseFloat(node.style.top)||0,width:parseFloat(node.style.width)||20,height:parseFloat(node.style.height)||10,isResize,rect};
+    root.AcademyPresentationObjectEditor?.selectWithoutRender?.(doc,node.dataset.objectId,node);
+    drag=buildDrag(event,node);
     node.setPointerCapture?.(event.pointerId);
   },true);
 
   layer.addEventListener('pointermove',event=>{
+    if(!drag&&pendingDrag){
+      const distance=Math.hypot(event.clientX-pendingDrag.startX,event.clientY-pendingDrag.startY);
+      if(distance<dragThreshold)return;
+      drag=pendingDrag;
+      pendingDrag=null;
+      drag.node.setPointerCapture?.(drag.pointerId);
+    }
     if(!drag)return;
     event.preventDefault();
     event.stopPropagation();
@@ -53,7 +69,7 @@ function install(doc){
   },true);
 
   const finish=event=>{
-    if(!drag)return;
+    if(!drag){pendingDrag=null;return;}
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
@@ -64,6 +80,7 @@ function install(doc){
       if(input){input.value=String(value);input.dispatchEvent(new Event('input',{bubbles:true}));}
     }
     drag=null;
+    pendingDrag=null;
   };
   layer.addEventListener('pointerup',finish,true);
   layer.addEventListener('pointercancel',finish,true);
