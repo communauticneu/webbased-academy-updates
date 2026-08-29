@@ -49,9 +49,14 @@ window.addEventListener('DOMContentLoaded', () => {
         const objectEditorScript = document.createElement('script');
         objectEditorScript.src = 'presentation-object-editor.js';
         objectEditorScript.onload = () => {
-          const stageInteractionScript = document.createElement('script');
-          stageInteractionScript.src = 'presentation-object-stage-interaction.js';
-          document.documentElement.appendChild(stageInteractionScript);
+          const directTextUxScript = document.createElement('script');
+          directTextUxScript.src = 'presentation-text-direct-ux.js';
+          directTextUxScript.onload = () => {
+            const stageInteractionScript = document.createElement('script');
+            stageInteractionScript.src = 'presentation-object-stage-interaction.js';
+            document.documentElement.appendChild(stageInteractionScript);
+          };
+          document.documentElement.appendChild(directTextUxScript);
 
           const textareaScript = document.createElement('script');
           textareaScript.src = 'presentation-textarea-v16.24.js';
