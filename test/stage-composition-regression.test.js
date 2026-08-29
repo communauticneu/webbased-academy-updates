@@ -16,7 +16,7 @@ test('board surface uses the supplied 4K original with a soft right edge',()=>{
   assert.match(block,/background-image:url\('assets\/academy-tafel-oberflaeche\.png'\)!important/);
   assert.match(block,/background-size:cover!important/);
   assert.match(block,/background-position:center center!important/);
-  assert.match(block,/mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
+  assert.match(block,/mask-image:linear-gradient\(to right,#000 0%,#000 91%,transparent 100%\)!important/);
   assert.doesNotMatch(block,/academy-tafel-vorlage\.png/);
   assert.doesNotMatch(block,/academy-tafel-original-crop\.svg/);
   assert.doesNotMatch(block,/radial-gradient/);
