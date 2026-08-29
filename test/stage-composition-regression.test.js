@@ -10,14 +10,14 @@ test('chalkboard remains flat without reintroducing perspective geometry',()=>{
   assert.doesNotMatch(css,/clip-path\s*:/);
 });
 
-test('board surface crops the supplied original directly without SVG indirection',()=>{
+test('board surface uses the supplied original proportionally with a soft right edge',()=>{
   const block=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
   assert.ok(block,'chalkboard style block must exist');
   assert.match(block,/background-image:url\('assets\/academy-tafel-vorlage\.png'\)!important/);
-  assert.match(block,/background-size:181\.739% 111\.891%!important/);
+  assert.match(block,/background-size:181\.739% auto!important/);
   assert.match(block,/background-position:left bottom!important/);
+  assert.match(block,/mask-image:linear-gradient\(to right,#000 0%,#000 84%,transparent 100%\)!important/);
   assert.doesNotMatch(block,/academy-tafel-original-crop\.svg/);
   assert.doesNotMatch(block,/radial-gradient/);
-  assert.doesNotMatch(block,/linear-gradient/);
   assert.doesNotMatch(block,/tafel-academy\.jpg/);
 });
