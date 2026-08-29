@@ -11,12 +11,13 @@ test('Academy stage uses temporary room 3',()=>{
   assert.match(css,/\.stage\.v1617-presentation-active \.floor[\s\S]*?display:\s*none!important/);
 });
 
-test('Academy chalk surface uses supplied artwork, stays flat and has no synthetic frame',()=>{
+test('Academy chalk surface uses clean supplied board texture, stays flat and has no synthetic frame',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   const board=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
-  assert.match(board,/background-image:url\('assets\/academy-tafel-vorlage\.png'\)!important/);
+  assert.match(board,/background-image:url\('assets\/academy-tafel-flaeche\.png'\)!important/);
   assert.match(board,/border:\s*0!important/);
   assert.match(board,/box-shadow:\s*none!important/);
+  assert.doesNotMatch(board,/academy-tafel-vorlage\.png/);
   assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?top:\s*-4%!important[\s\S]*?bottom:\s*0!important[\s\S]*?width:\s*68%!important[\s\S]*?height:\s*108%!important/);
   assert.match(css,/presentation-chalkboard\[data-position="left"\][\s\S]*?left:\s*-2%!important/);
   assert.match(css,/presentation-chalkboard\[data-size="large"\][\s\S]*?transform:\s*none!important/);
