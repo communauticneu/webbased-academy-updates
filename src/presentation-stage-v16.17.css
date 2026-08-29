@@ -24,12 +24,12 @@
 .stage.v169-fixed-test-active .media,
 .stage.v169-fixed-test-active #userStageImage{display:none!important}
 
-/* KREIDE-PRÄSENTATIONSFLÄCHE: exakter Pixel-Ausschnitt direkt aus der gelieferten Originalvorlage. */
+/* KREIDE-PRÄSENTATIONSFLÄCHE: exakter Ausschnitt direkt aus der gelieferten Original-PNG. */
 .stage .presentation-surface.presentation-chalkboard{
   background-color:transparent!important;
-  background-image:url('assets/academy-tafel-original-crop.svg')!important;
-  background-size:cover!important;
-  background-position:center center!important;
+  background-image:url('assets/academy-tafel-vorlage.png')!important;
+  background-size:181.739% 111.891%!important;
+  background-position:left bottom!important;
   background-repeat:no-repeat!important;
   border:0!important;
   border-radius:0!important;
