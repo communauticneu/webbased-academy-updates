@@ -35,9 +35,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const objectModelScript = document.createElement('script');
     objectModelScript.src = 'presentation-object-model.js';
     objectModelScript.onload = () => {
-      const objectEditorScript = document.createElement('script');
-      objectEditorScript.src = 'presentation-object-editor.js';
-      document.documentElement.appendChild(objectEditorScript);
+      const animationScript = document.createElement('script');
+      animationScript.src = 'presentation-object-animation.js';
+      animationScript.onload = () => {
+        const objectEditorScript = document.createElement('script');
+        objectEditorScript.src = 'presentation-object-editor.js';
+        document.documentElement.appendChild(objectEditorScript);
+      };
+      document.documentElement.appendChild(animationScript);
     };
     document.documentElement.appendChild(objectModelScript);
 
