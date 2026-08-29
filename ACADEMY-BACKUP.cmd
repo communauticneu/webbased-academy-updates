@@ -3,6 +3,7 @@ setlocal
 cd /d "%~dp0"
 
 set "BACKUP_TARGET=\\FILESERVER\datenarchiv\communautic_Ebenbichler_KG\Webbased_Academy_Backups"
+set "KEEP_BACKUPS=30"
 
 if not exist "%BACKUP_TARGET%\" (
   echo.
@@ -37,6 +38,15 @@ echo ================================================
 echo BACKUP ERFOLGREICH
 echo %BACKUP_FILE%
 echo ================================================
+echo.
+
+powershell.exe -NoProfile -Command "$keep=%KEEP_BACKUPS%; Get-ChildItem -LiteralPath '%BACKUP_TARGET%' -Filter 'Webbased-Academy-Creator_Backup_*.zip' -File ^| Sort-Object LastWriteTime -Descending ^| Select-Object -Skip $keep ^| Remove-Item -Force"
+if errorlevel 1 (
+  echo HINWEIS: Backup ist sicher, aber alte Backups konnten nicht vollstaendig bereinigt werden.
+) else (
+  echo Backup-Bestand automatisch auf maximal %KEEP_BACKUPS% Pakete begrenzt.
+)
+
 echo.
 pause
 exit /b 0
