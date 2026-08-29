@@ -5,6 +5,7 @@ title Webbased Academy Creator - Teststart
 set "DIAG_FILE=academy-diagnostics.txt"
 set "TEST_LOG=academy-test-output.txt"
 set "TEST_STATUS=STARTED"
+set "DEV_REPO=https://github.com/communauticneu/webbased-academy-updates.git"
 if exist "%TEST_LOG%" del /q "%TEST_LOG%" >nul 2>&1
 call :write_diagnostics
 
@@ -15,10 +16,12 @@ echo ==============================================
 echo.
 
 echo [1/4] Exakten GitHub-Entwicklungsstand holen...
-git fetch origin dev-stage-composition
+git fetch --no-tags "%DEV_REPO%" dev-stage-composition
 if errorlevel 1 goto :error
-git reset --hard origin/dev-stage-composition
+git reset --hard FETCH_HEAD
 if errorlevel 1 goto :error
+echo Aktueller Entwicklungsstand:
+git rev-parse --short HEAD
 
 echo.
 echo [2/4] Vollstaendige Testsuite ausfuehren...
