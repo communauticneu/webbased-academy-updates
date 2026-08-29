@@ -11,6 +11,6 @@ test('double click editing is not swallowed by text drag pointer capture',()=>{
     'stage interaction must let the direct text UX own an editing gesture');
   assert.match(ux,/isEditingGesture/,
     'direct text UX must expose editing gesture detection');
-  assert.match(ux,/detail\s*>?=\s*2/,
+  assert.match(ux,/Number\(event\.detail\)\s*>?=\s*2/,
     'second pointer press of a double click must be recognized as editing intent');
 });
