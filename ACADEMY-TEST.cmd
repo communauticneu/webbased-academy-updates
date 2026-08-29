@@ -12,22 +12,28 @@ echo   WEBBASED ACADEMY CREATOR - TESTSTART
 echo ==============================================
 echo.
 
-echo [1/3] Exakten GitHub-Entwicklungsstand holen...
+echo [1/4] Exakten GitHub-Entwicklungsstand holen...
 git fetch origin dev-stage-composition
 if errorlevel 1 goto :error
 git reset --hard origin/dev-stage-composition
 if errorlevel 1 goto :error
 
 echo.
-echo [2/3] Vollstaendige Testsuite ausfuehren...
+echo [2/4] Vollstaendige Testsuite ausfuehren...
 call npm.cmd test
 if errorlevel 1 goto :error
+
+echo.
+echo [3/4] Automatischen Screenshot- und Layoutcheck ausfuehren...
+call npm.cmd run visual:check
+if errorlevel 1 goto :error
+
 set "TEST_STATUS=GREEN"
 call :write_diagnostics
 call :publish_diagnostics
 
 echo.
-echo [3/3] Alle Tests gruen - Creator wird gestartet...
+echo [4/4] Tests und Screenshotcheck gruen - Creator wird gestartet...
 echo.
 call npm.cmd start
 goto :end
@@ -42,6 +48,7 @@ echo   FEHLER - Creator wurde NICHT gestartet.
 echo ==============================================
 echo.
 echo Diagnose wurde lokal in academy-diagnostics.txt gespeichert.
+if exist "academy-visual-latest.png" echo Letzter visueller Test: academy-visual-latest.png
 echo.
 pause
 exit /b 1
