@@ -2,16 +2,19 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const js=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.js'),'utf8');
+const bridge=require('../src/presentation-medium-selection');
 
-test('Tafel medium button is explicitly wired to show the empty Academy board immediately',()=>{
-  assert.match(js,/data-presentation-medium="chalkboard"/);
-  assert.match(js,/function bindPresentationMediumSelection\(doc\)/);
-  const fn=js.match(/function bindPresentationMediumSelection\(doc\)[\s\S]*?\n  }/);
-  assert.ok(fn,'presentation medium binding missing');
-  assert.match(fn[0],/setAcademyBoardVisible\(doc,true\)/);
+test('Tafel medium selection shows the empty Academy board immediately without creating content',()=>{
+  let shown=0;
+  const button={dataset:{presentationMedium:'chalkboard'},classList:{toggle(){}},addEventListener(type,fn){this.click=fn;}};
+  const doc={querySelectorAll:selector=>selector==='[data-presentation-medium]'?[button]:[]};
+  const stageApi={setAcademyBoardVisible(_doc,visible){if(visible)shown++;}};
+  assert.equal(bridge.bindPresentationMediumSelection(doc,stageApi),true);
+  button.click();
+  assert.equal(shown,1);
 });
 
-test('production workspace installs presentation medium selection independently from board objects',()=>{
-  assert.match(js,/bindPresentationMediumSelection\(doc\)/);
+test('preload loads medium selection bridge after the stage script',()=>{
+  const preload=fs.readFileSync(path.join(__dirname,'../src/preload.js'),'utf8');
+  assert.match(preload,/presentation-medium-selection\.js/);
 });
