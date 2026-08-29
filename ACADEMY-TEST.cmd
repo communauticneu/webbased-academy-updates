@@ -75,11 +75,11 @@ exit /b 1
 if /I "%TEST_STATUS%"=="ERROR" (
   if exist "%TEST_LOG%" (
     >>"%DIAG_FILE%" echo Fehlerdetails Tests:
-    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%TEST_LOG%' ^| Select-Object -Last 80 ^| ForEach-Object { ($_ -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); $s=Get-Content -LiteralPath '%TEST_LOG%' -Raw -ErrorAction SilentlyContinue; if($null -ne $s){$s=$s -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>'; $lines=$s -split '\r?\n'; $start=[Math]::Max(0,$lines.Count-120); for($i=$start;$i -lt $lines.Count;$i++){[Console]::WriteLine($lines[$i])}}" >>"%DIAG_FILE%" 2>nul
   )
   if exist "%VISUAL_LOG%" (
     >>"%DIAG_FILE%" echo Fehlerdetails Visual:
-    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%VISUAL_LOG%' ^| Select-Object -Last 40 ^| ForEach-Object { ($_ -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+    powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); $s=Get-Content -LiteralPath '%VISUAL_LOG%' -Raw -ErrorAction SilentlyContinue; if($null -ne $s){$s=$s -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>'; $lines=$s -split '\r?\n'; $start=[Math]::Max(0,$lines.Count-80); for($i=$start;$i -lt $lines.Count;$i++){[Console]::WriteLine($lines[$i])}}" >>"%DIAG_FILE%" 2>nul
   )
 )
 exit /b 0
