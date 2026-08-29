@@ -3,7 +3,9 @@ setlocal
 cd /d "%~dp0"
 title Webbased Academy Creator - Teststart
 set "DIAG_FILE=academy-diagnostics.txt"
+set "TEST_LOG=academy-test-output.txt"
 set "TEST_STATUS=STARTED"
+if exist "%TEST_LOG%" del /q "%TEST_LOG%" >nul 2>&1
 call :write_diagnostics
 
 echo.
@@ -20,8 +22,10 @@ if errorlevel 1 goto :error
 
 echo.
 echo [2/4] Vollstaendige Testsuite ausfuehren...
-call npm.cmd test
-if errorlevel 1 goto :error
+call npm.cmd test >"%TEST_LOG%" 2>&1
+set "TEST_EXIT=%ERRORLEVEL%"
+type "%TEST_LOG%"
+if not "%TEST_EXIT%"=="0" goto :error
 
 echo.
 echo [3/4] Automatischen Screenshot- und Layoutcheck ausfuehren...
@@ -61,6 +65,10 @@ exit /b 1
 >>"%DIAG_FILE%" node -p "require('./package.json').version" 2>nul
 >>"%DIAG_FILE%" <nul set /p "=Commit: "
 >>"%DIAG_FILE%" git rev-parse --short HEAD 2>nul
+if /I "%TEST_STATUS%"=="ERROR" if exist "%TEST_LOG%" (
+  >>"%DIAG_FILE%" echo Fehlerdetails:
+  powershell -NoProfile -Command "$p=[regex]::Escape('%CD%'); $u=[regex]::Escape('%USERPROFILE%'); Get-Content -LiteralPath '%TEST_LOG%' ^| Select-String -Pattern '^\s*(not ok|error:|code:|expected:|actual:|operator:)' ^| Select-Object -First 24 ^| ForEach-Object { ($_.Line -replace $p,'<PROJECT>' -replace $u,'<USER>' -replace 'https?://\S+','<URL>') }" >>"%DIAG_FILE%" 2>nul
+)
 exit /b 0
 
 :publish_diagnostics
