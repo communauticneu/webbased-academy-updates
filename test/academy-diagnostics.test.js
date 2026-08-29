@@ -15,6 +15,12 @@ test('test launcher writes a local sanitized diagnostic status',()=>{
   assert.doesNotMatch(cmd,/set\s*>/i);
 });
 
+test('launcher fetches the canonical development branch directly and resets to FETCH_HEAD',()=>{
+  assert.match(cmd,/https:\/\/github\.com\/communauticneu\/webbased-academy-updates\.git/i);
+  assert.match(cmd,/git fetch --no-tags .*dev-stage-composition/i);
+  assert.match(cmd,/git reset --hard FETCH_HEAD/i);
+});
+
 test('diagnostics publishing is isolated from the development branch',()=>{
   assert.match(cmd,/academy-diagnostics/i);
   assert.match(cmd,/git push origin HEAD:academy-diagnostics/i);
