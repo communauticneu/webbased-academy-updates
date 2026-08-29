@@ -32,6 +32,12 @@
       if(button.dataset.mediumSelectionBound==='1')return;
       button.dataset.mediumSelectionBound='1';
       button.addEventListener('click',()=>{
+        const wasActive=button.classList?.contains?.('active');
+        if(button.dataset.presentationMedium==='chalkboard'&&wasActive){
+          buttons.forEach(item=>item.classList?.remove?.('active'));
+          stageApi.setAcademyBoardVisible(doc,false);
+          return;
+        }
         buttons.forEach(item=>item.classList?.toggle?.('active',item===button));
         if(button.dataset.presentationMedium==='chalkboard'){
           stageApi.setAcademyBoardVisible(doc,true);
