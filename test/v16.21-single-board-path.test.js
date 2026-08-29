@@ -18,11 +18,13 @@ test('legacy brown board can never render on stage',()=>{
   assert.match(css,/\.stage #boardOverlay\s*\{[\s\S]*?display:\s*none!important/);
 });
 
-test('approved Academy board remains the only visible chalkboard surface',()=>{
+test('approved Academy board remains the only visible flat dark chalkboard surface',()=>{
   const css=read('src/presentation-stage-v16.17.css');
   const block=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
   assert.ok(block,'chalkboard style block must exist');
-  assert.match(block,/assets\/tafel-academy\.jpg/);
+  assert.match(block,/background-color:#1b2422/);
+  assert.match(block,/radial-gradient/);
+  assert.doesNotMatch(block,/assets\/tafel-academy\.jpg/);
   assert.doesNotMatch(block,/assets\/academy-tafel-vorlage\.png/);
   assert.doesNotMatch(block,/perspective\(/);
   assert.doesNotMatch(block,/rotateY\(/);
