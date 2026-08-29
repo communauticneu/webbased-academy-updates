@@ -1,6 +1,10 @@
 (function(root){
 'use strict';
 
+function isEditingGesture(event){
+  return !!event?.target?.closest?.('.academy-board-object-text[data-object-id]') && Number(event.detail)>=2;
+}
+
 function install(doc){
   const layer=doc?.getElementById?.('academyBoardObjectLayer');
   const editor=doc?.getElementById?.('academyBoardObjectEditor');
@@ -133,7 +137,7 @@ function install(doc){
   return true;
 }
 
-root.AcademyPresentationTextDirectUx={install,activate:(doc,node)=>{
+root.AcademyPresentationTextDirectUx={install,isEditingGesture,activate:(doc,node)=>{
   const layer=doc?.getElementById?.('academyBoardObjectLayer');
   if(!layer||!node?.dataset?.objectId)return false;
   layer.dataset.activeTextId=node.dataset.objectId;
