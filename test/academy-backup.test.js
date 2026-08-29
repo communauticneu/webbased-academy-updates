@@ -25,6 +25,7 @@ test('Academy backup keeps only the newest 30 backup packages after success', ()
   assert.match(cmd, /Webbased-Academy-Creator_Backup_\*\.zip/i);
   assert.match(cmd, /Sort-Object\s+LastWriteTime\s+-Descending/i);
   assert.match(cmd, /Select-Object\s+-Skip\s+\$keep/i);
+  assert.doesNotMatch(cmd, /\^\|/, 'PowerShell pipeline must not use CMD caret escaping inside the quoted command');
   const successPos = cmd.indexOf('BACKUP ERFOLGREICH');
   const cleanupPos = cmd.indexOf('Select-Object -Skip $keep');
   assert.ok(successPos >= 0 && cleanupPos > successPos, 'old backups may only be deleted after the new backup was confirmed');
