@@ -32,5 +32,6 @@ test('normal board toolbar stays compact and hides precision fields behind detai
   assert.match(html,/>Feinjustierung</);
   assert.match(html,/data-prop="x"/);
   assert.match(html,/data-prop="rotation"/);
-  assert.doesNotMatch(html,/<div id="academyBoardObjectProperties"[^>]*hidden>/);
+  assert.match(html,/<div id="academyBoardObjectProperties"[^>]*hidden>/);
+  assert.doesNotMatch(html,/<details[^>]*academy-board-object-precision[^>]*open/);
 });
