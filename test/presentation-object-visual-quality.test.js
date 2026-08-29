@@ -28,10 +28,11 @@ test('chalk text prioritizes DJB Chalk It Up with safe fallbacks and readable st
   assert.match(stage,/\.stage \.academy-board-object-text\{[^}]*font-size:clamp\(24px,2\.4vw,54px\)!important/);
 });
 
-test('Academy chalkboard uses only the supplied board artwork',()=>{
+test('Academy chalkboard uses the clean board-only crop from the supplied reference',()=>{
   const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.css'),'utf8');
   const board=stage.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
-  assert.match(board,/background-image:url\('assets\/academy-tafel-vorlage\.png'\)!important/);
+  assert.match(board,/background-image:url\('assets\/academy-tafel-flaeche\.png'\)!important/);
+  assert.doesNotMatch(board,/academy-tafel-vorlage\.png/);
   assert.doesNotMatch(board,/radial-gradient/);
   assert.doesNotMatch(board,/linear-gradient/);
   assert.doesNotMatch(board,/tafel-academy\.jpg/);
