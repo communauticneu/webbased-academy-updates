@@ -13,7 +13,7 @@ test('chalkboard remains flat without reintroducing perspective geometry',()=>{
 test('board surface uses only the clean board-only crop of the supplied reference',()=>{
   const block=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
   assert.ok(block,'chalkboard style block must exist');
-  assert.match(block,/background-image:url\('assets\/academy-tafel-flaeche\.png'\)!important/);
+  assert.match(block,/background-image:url\('assets\/academy-tafel-flaeche\.svg'\)!important/);
   assert.match(block,/background-size:cover!important/);
   assert.doesNotMatch(block,/academy-tafel-vorlage\.png/);
   assert.doesNotMatch(block,/radial-gradient/);
