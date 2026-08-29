@@ -1,5 +1,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
 const editor=require('../src/presentation-object-editor');
 
 test('text and post-it keep direct editable content without expanding sidebar',()=>{
@@ -18,8 +20,18 @@ test('post-it styling uses realistic paper treatment rather than a flat rectangl
   assert.match(css,/::after/);
 });
 
-test('chalk text prioritizes DJB Chalk It Up with safe fallbacks',()=>{
+test('chalk text prioritizes DJB Chalk It Up with safe fallbacks and readable stage size',()=>{
   const css=editor.editorStyles();
   assert.match(css,/DJB Chalk It Up/);
   assert.match(css,/Segoe Print/);
+  const text=css.match(/\.academy-board-object-text\{[^}]*\}/)?.[0]||'';
+  assert.match(text,/font-size:clamp\(24px,2\.4vw,54px\)/);
+});
+
+test('Academy chalkboard is dark and does not use the washed-out texture image',()=>{
+  const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.css'),'utf8');
+  const board=stage.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
+  assert.match(board,/background-color:#1b2422/);
+  assert.match(board,/radial-gradient/);
+  assert.doesNotMatch(board,/tafel-academy\.jpg/);
 });
