@@ -49,6 +49,10 @@ window.addEventListener('DOMContentLoaded', () => {
         const objectEditorScript = document.createElement('script');
         objectEditorScript.src = 'presentation-object-editor.js';
         objectEditorScript.onload = () => {
+          const textareaScript = document.createElement('script');
+          textareaScript.src = 'presentation-textarea-v16.24.js';
+          document.documentElement.appendChild(textareaScript);
+
           const objectEffectsScript = document.createElement('script');
           objectEffectsScript.src = 'presentation-object-effects.js';
           document.documentElement.appendChild(objectEffectsScript);
