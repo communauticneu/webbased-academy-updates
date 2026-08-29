@@ -22,9 +22,8 @@ test('approved Academy board remains the only visible supplied flat chalkboard s
   const css=read('src/presentation-stage-v16.17.css');
   const block=css.match(/\.stage \.presentation-surface\.presentation-chalkboard\{[\s\S]*?\}/)?.[0]||'';
   assert.ok(block,'chalkboard style block must exist');
-  assert.match(block,/background-image:url\('assets\/academy-tafel-vorlage\.png'\)!important/);
-  assert.match(block,/background-size:185\.8% 117\.6%!important/);
-  assert.match(block,/background-position:left 71%!important/);
+  assert.match(block,/background-image:url\('assets\/academy-tafel-original-crop\.svg'\)!important/);
+  assert.match(block,/background-size:cover!important/);
   assert.doesNotMatch(block,/academy-tafel-flaeche\.svg/);
   assert.doesNotMatch(block,/radial-gradient/);
   assert.doesNotMatch(block,/linear-gradient/);
