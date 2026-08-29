@@ -40,6 +40,11 @@ window.addEventListener('DOMContentLoaded', () => {
       animationScript.onload = () => {
         const objectEditorScript = document.createElement('script');
         objectEditorScript.src = 'presentation-object-editor.js';
+        objectEditorScript.onload = () => {
+          const objectEffectsScript = document.createElement('script');
+          objectEffectsScript.src = 'presentation-object-effects.js';
+          document.documentElement.appendChild(objectEffectsScript);
+        };
         document.documentElement.appendChild(objectEditorScript);
       };
       document.documentElement.appendChild(animationScript);
