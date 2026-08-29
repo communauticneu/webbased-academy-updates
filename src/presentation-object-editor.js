@@ -2,94 +2,25 @@
   const api=factory();
   if(typeof module==='object'&&module.exports)module.exports=api;
   if(root)root.AcademyPresentationObjectEditor=api;
-  if(root&&root.document){
-    const boot=()=>api.install(root.document);
-    if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',boot,{once:true});
-    else boot();
-  }
+  if(root&&root.document){const boot=()=>api.install(root.document);if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();}
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
-  'use strict';
-
-  const DRAFTS={
-    text:{type:'text',content:'Neuer Kreidetext',x:12,y:12,width:42,height:14,rotation:0,enter:'write',exit:'wipe'},
-    postit:{type:'postit',content:'Neuer Hinweis',x:12,y:28,width:30,height:14,rotation:0,enter:'unroll',exit:'wipe'},
-    graphic:{type:'graphic',content:'',x:48,y:18,width:38,height:38,rotation:0,enter:'fade',exit:'wipe'},
-    arrow:{type:'arrow',content:'',x:18,y:48,width:30,height:12,rotation:0,enter:'draw',exit:'wipe'},
-    circle:{type:'circle',content:'',x:50,y:44,width:24,height:18,rotation:0,enter:'draw',exit:'wipe'},
-    line:{type:'line',content:'',x:18,y:66,width:34,height:4,rotation:0,enter:'draw',exit:'wipe'}
-  };
-
-  function createObjectDraft(type){
-    const source=DRAFTS[type]||DRAFTS.text;
-    return {...source};
-  }
-
-  function editorMarkup(){
-    return '<section id="academyBoardObjectEditor" class="academy-board-object-editor" aria-label="Tafelinhalte">'+
-      '<div class="academy-board-editor-head"><strong>Tafelinhalte</strong><span>Element wählen und direkt auf der Tafel platzieren</span></div>'+
-      '<div id="academyBoardObjectToolbar" class="academy-board-object-toolbar">'+
-        '<button type="button" data-board-object="text">✎ Kreidetext</button>'+
-        '<button type="button" data-board-object="postit">▰ Post-it</button>'+
-        '<button type="button" data-board-object="graphic">▧ Grafik</button>'+
-        '<button type="button" data-board-object="arrow">➜ Pfeil</button>'+
-        '<button type="button" data-board-object="circle">◯ Kreis</button>'+
-        '<button type="button" data-board-object="line">╱ Linie</button>'+
-      '</div>'+
-      '<div id="academyBoardObjectList" class="academy-board-object-list" aria-live="polite"></div>'+
-    '</section>';
-  }
-
-  function editorStyles(){
-    return '.academy-board-object-editor{display:grid;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(10,18,24,.48)}'+
-      '.academy-board-editor-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.academy-board-editor-head span{font-size:12px;opacity:.72}'+
-      '.academy-board-object-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.academy-board-object-toolbar button{min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer}'+
-      '.academy-board-object-toolbar button:hover{background:rgba(255,255,255,.11)}.academy-board-object-list{display:grid;gap:6px;max-height:150px;overflow:auto}.academy-board-object-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border-radius:7px;background:rgba(255,255,255,.05);font-size:12px}';
-  }
-
-  function labelFor(type){
-    return ({text:'Kreidetext',postit:'Post-it',graphic:'Grafik',arrow:'Pfeil',circle:'Kreis',line:'Linie'})[type]||'Element';
-  }
-
-  function appendDraft(doc,draft){
-    if(!doc||!draft)return null;
-    const list=doc.getElementById('academyBoardObjectList');
-    if(!list)return null;
-    const row=doc.createElement('div');
-    row.className='academy-board-object-row';
-    const name=doc.createElement('span');
-    name.textContent=labelFor(draft.type)+(draft.content?` · ${draft.content}`:'');
-    const state=doc.createElement('span');
-    state.textContent='bereit';
-    row.append(name,state);
-    list.appendChild(row);
-    return row;
-  }
-
-  function install(doc,onCreate){
-    if(!doc)return false;
-    const host=doc.querySelector('.v1623-edit-content')?.parentElement;
-    if(!host)return false;
-    let editor=doc.getElementById('academyBoardObjectEditor');
-    if(!editor){
-      const wrap=doc.createElement('div');
-      wrap.innerHTML=editorMarkup();
-      editor=wrap.firstElementChild;
-      host.appendChild(editor);
-    }
-    if(!doc.getElementById('academyBoardObjectEditorStyle')){
-      const style=doc.createElement('style');
-      style.id='academyBoardObjectEditorStyle';
-      style.textContent=editorStyles();
-      doc.head?.appendChild(style);
-    }
-    const create=typeof onCreate==='function'?onCreate:(draft=>appendDraft(doc,draft));
-    editor.querySelectorAll('[data-board-object]').forEach(button=>{
-      if(button.dataset.bound==='1')return;
-      button.dataset.bound='1';
-      button.addEventListener('click',()=>create(createObjectDraft(button.dataset.boardObject)));
-    });
-    return true;
-  }
-
-  return {createObjectDraft,editorMarkup,editorStyles,appendDraft,install};
+'use strict';
+const DRAFTS={text:{type:'text',content:'Neuer Kreidetext',x:12,y:12,width:42,height:14,rotation:0,enter:'write',exit:'wipe'},postit:{type:'postit',content:'Neuer Hinweis',x:12,y:28,width:30,height:14,rotation:-2,enter:'unroll',exit:'wipe'},graphic:{type:'graphic',content:'',x:48,y:18,width:38,height:38,rotation:0,enter:'fade',exit:'wipe'},arrow:{type:'arrow',content:'',x:18,y:48,width:30,height:12,rotation:0,enter:'draw',exit:'wipe'},circle:{type:'circle',content:'',x:50,y:44,width:24,height:18,rotation:0,enter:'draw',exit:'wipe'},line:{type:'line',content:'',x:18,y:66,width:34,height:4,rotation:0,enter:'draw',exit:'wipe'}};
+let objects=[],selectedId=null,counter=0;
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,Number(v)||0));
+function createObjectDraft(type){return {...(DRAFTS[type]||DRAFTS.text)};}
+function normalizeDraft(d){const model=globalThis.AcademyPresentationObjects;if(model?.normalizePresentationObject)return model.normalizePresentationObject(d);return {id:d.id||`board-object-${++counter}`,type:d.type||'text',content:d.content||'',assetId:d.assetId||'',assetUrl:d.assetUrl||'',frame:{x:clamp(d.x??d.frame?.x,0,100),y:clamp(d.y??d.frame?.y,0,100),width:clamp(d.width??d.frame?.width,1,100),height:clamp(d.height??d.frame?.height,1,100),rotation:Number(d.rotation??d.frame?.rotation)||0},animation:{enter:d.enter||'fade',exit:d.exit||'fade'},timing:{start:0,enterDuration:.6,end:0,exitDuration:.6}};}
+function updateObject(object,patch={}){const frame=object.frame||{};return {...object,content:patch.content===undefined?object.content:String(patch.content),frame:{x:clamp(patch.x??frame.x,0,100),y:clamp(patch.y??frame.y,0,100),width:clamp(patch.width??frame.width,1,100),height:clamp(patch.height??frame.height,1,100),rotation:Number(patch.rotation??frame.rotation)||0}};}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function boardObjectMarkup(o){const f=o.frame||{};const style=`left:${f.x||0}%;top:${f.y||0}%;width:${f.width||20}%;height:${f.height||10}%;transform:rotate(${f.rotation||0}deg)`;let inner='';if(o.type==='text')inner=`<span>${esc(o.content)}</span>`;else if(o.type==='postit')inner=`<span>${esc(o.content)}</span>`;else if(o.type==='graphic')inner=o.assetUrl?`<img src="${esc(o.assetUrl)}" alt="">`:'<span class="academy-board-graphic-placeholder">PNG</span>';else if(o.type==='arrow')inner='<span class="academy-chalk-arrow">➜</span>';else if(o.type==='circle')inner='<span class="academy-chalk-circle"></span>';else inner='<span class="academy-chalk-line"></span>';return `<div class="academy-board-object academy-board-object-${esc(o.type)}${o.id===selectedId?' selected':''}" data-object-id="${esc(o.id)}" style="${style}">${inner}</div>`;}
+function editorMarkup(){return '<section id="academyBoardObjectEditor" class="academy-board-object-editor" aria-label="Tafelinhalte"><div class="academy-board-editor-head"><strong>Tafelinhalte</strong><span>Element wählen und direkt auf der Tafel platzieren</span></div><div id="academyBoardObjectToolbar" class="academy-board-object-toolbar"><button type="button" data-board-object="text">✎ Kreidetext</button><button type="button" data-board-object="postit">▰ Post-it</button><button type="button" data-board-object="graphic">▧ Grafik</button><button type="button" data-board-object="arrow">➜ Pfeil</button><button type="button" data-board-object="circle">◯ Kreis</button><button type="button" data-board-object="line">╱ Linie</button></div><div id="academyBoardObjectList" class="academy-board-object-list" aria-live="polite"></div><div id="academyBoardObjectProperties" class="academy-board-object-properties" hidden><label>Inhalt<input data-prop="content"></label><div><label>X<input data-prop="x" type="number" min="0" max="100"></label><label>Y<input data-prop="y" type="number" min="0" max="100"></label></div><div><label>Breite<input data-prop="width" type="number" min="1" max="100"></label><label>Höhe<input data-prop="height" type="number" min="1" max="100"></label></div><label>Drehung<input data-prop="rotation" type="number" min="-180" max="180"></label><button type="button" data-board-delete>Element löschen</button></div></section>';}
+function editorStyles(){return '.academy-board-object-editor{display:grid;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(10,18,24,.48)}.academy-board-editor-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.academy-board-editor-head span{font-size:12px;opacity:.72}.academy-board-object-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.academy-board-object-toolbar button,.academy-board-object-properties button{min-height:34px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer}.academy-board-object-list{display:grid;gap:5px;max-height:100px;overflow:auto}.academy-board-object-row{padding:6px 8px;border-radius:7px;background:rgba(255,255,255,.05);font-size:11px;cursor:pointer}.academy-board-object-row.selected{outline:1px solid #70d4ff}.academy-board-object-properties{display:grid;gap:6px}.academy-board-object-properties>div{display:grid;grid-template-columns:1fr 1fr;gap:6px}.academy-board-object-properties label{font-size:10px;color:#8fa8b8}.academy-board-object-properties input{width:100%;margin-top:3px;background:#0b1a24;border:1px solid #234052;color:#eef6fb;border-radius:6px;padding:5px}.academy-board-object-layer{position:absolute;inset:8%;z-index:3;pointer-events:auto}.academy-board-object{position:absolute;cursor:pointer;display:grid;place-items:center;box-sizing:border-box}.academy-board-object.selected{outline:2px dashed #70d4ff;outline-offset:3px}.academy-board-object-text{color:#f3f0df;font-family:"DJB Chalk It Up","Segoe Print","Comic Sans MS",cursive;font-size:clamp(12px,1.25vw,28px);text-shadow:0 0 2px rgba(255,255,255,.35)}.academy-board-object-postit{background:linear-gradient(145deg,#fff3a8,#eadb72);color:#2c2a21;padding:8px;box-shadow:2px 5px 10px rgba(0,0,0,.35);font-family:"Segoe Print",cursive}.academy-board-object-graphic img{width:100%;height:100%;object-fit:contain}.academy-board-graphic-placeholder{border:1px dashed rgba(255,255,255,.5);padding:8px;color:#eee}.academy-chalk-arrow{color:#f3f0df;font-size:clamp(18px,2.4vw,48px);width:100%;text-align:center}.academy-chalk-circle{width:100%;height:100%;border:3px solid #f3f0df;border-radius:50%;filter:drop-shadow(0 0 1px #fff)}.academy-chalk-line{width:100%;border-top:3px solid #f3f0df;transform:rotate(-5deg);filter:drop-shadow(0 0 1px #fff)}';}
+function labelFor(t){return ({text:'Kreidetext',postit:'Post-it',graphic:'Grafik',arrow:'Pfeil',circle:'Kreis',line:'Linie'})[t]||'Element';}
+function ensureLayer(doc){const surface=doc.getElementById('presentationSurface');if(!surface)return null;let layer=doc.getElementById('academyBoardObjectLayer');if(!layer){layer=doc.createElement('div');layer.id='academyBoardObjectLayer';layer.className='academy-board-object-layer';surface.appendChild(layer);}return layer;}
+function render(doc){const layer=ensureLayer(doc),list=doc.getElementById('academyBoardObjectList');if(layer){layer.innerHTML=objects.map(boardObjectMarkup).join('');layer.querySelectorAll('[data-object-id]').forEach(n=>n.addEventListener('click',e=>{e.stopPropagation();select(doc,n.dataset.objectId);}));}if(list){list.innerHTML=objects.map(o=>`<div class="academy-board-object-row${o.id===selectedId?' selected':''}" data-list-id="${esc(o.id)}">${labelFor(o.type)}${o.content?' · '+esc(o.content):''}</div>`).join('');list.querySelectorAll('[data-list-id]').forEach(n=>n.addEventListener('click',()=>select(doc,n.dataset.listId)));}syncProperties(doc);}
+function select(doc,id){selectedId=id;render(doc);}
+function syncProperties(doc){const panel=doc.getElementById('academyBoardObjectProperties'),o=objects.find(x=>x.id===selectedId);if(!panel)return;panel.hidden=!o;if(!o)return;panel.querySelector('[data-prop="content"]').value=o.content||'';for(const k of ['x','y','width','height','rotation'])panel.querySelector(`[data-prop="${k}"]`).value=o.frame[k];}
+function add(doc,draft){const o=normalizeDraft(draft);objects.push(o);selectedId=o.id;const surface=doc.getElementById('presentationSurface');surface?.classList.add('presentation-chalkboard','is-visible');surface?.setAttribute('aria-hidden','false');render(doc);return o;}
+function install(doc,onCreate){if(!doc)return false;const host=doc.querySelector('.v1623-edit-content')?.parentElement;if(!host)return false;let editor=doc.getElementById('academyBoardObjectEditor');if(!editor){const wrap=doc.createElement('div');wrap.innerHTML=editorMarkup();editor=wrap.firstElementChild;host.appendChild(editor);}if(!doc.getElementById('academyBoardObjectEditorStyle')){const style=doc.createElement('style');style.id='academyBoardObjectEditorStyle';style.textContent=editorStyles();doc.head?.appendChild(style);}ensureLayer(doc);const create=typeof onCreate==='function'?onCreate:(draft=>add(doc,draft));editor.querySelectorAll('[data-board-object]').forEach(b=>{if(b.dataset.bound==='1')return;b.dataset.bound='1';b.addEventListener('click',()=>create(createObjectDraft(b.dataset.boardObject)));});editor.querySelectorAll('[data-prop]').forEach(input=>input.addEventListener('input',()=>{const i=objects.findIndex(x=>x.id===selectedId);if(i<0)return;objects[i]=updateObject(objects[i],{[input.dataset.prop]:input.value});render(doc);}));editor.querySelector('[data-board-delete]')?.addEventListener('click',()=>{objects=objects.filter(x=>x.id!==selectedId);selectedId=objects[0]?.id||null;render(doc);});render(doc);return true;}
+return {createObjectDraft,normalizeDraft,updateObject,boardObjectMarkup,editorMarkup,editorStyles,install};
 });
