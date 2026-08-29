@@ -7,7 +7,7 @@ const editor=require('../src/presentation-object-editor');
 test('text and post-it keep direct editable content without expanding sidebar',()=>{
   const html=editor.editorMarkup();
   assert.match(html,/academy-board-content-field/);
-  assert.match(html,/Direkt auf der Tafel bearbeiten/);
+  assert.match(html,/Direkt in der Darstellung bearbeiten/);
   assert.match(html,/Feinjustierung/);
 });
 
@@ -20,7 +20,7 @@ test('post-it styling uses realistic paper treatment rather than a flat rectangl
   assert.match(css,/::after/);
 });
 
-test('chalk text prioritizes DJB Chalk It Up with safe fallbacks and readable stage size',()=>{
+test('chalkboard context prioritizes DJB Chalk It Up with safe fallbacks and readable stage size',()=>{
   const css=editor.editorStyles();
   const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.css'),'utf8');
   assert.match(css,/DJB Chalk It Up/);
