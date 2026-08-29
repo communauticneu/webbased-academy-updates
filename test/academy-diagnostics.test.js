@@ -14,3 +14,10 @@ test('test launcher writes a local sanitized diagnostic status',()=>{
   assert.doesNotMatch(cmd,/git remote -v/i);
   assert.doesNotMatch(cmd,/set\s*>/i);
 });
+
+test('diagnostics publishing is isolated from the development branch',()=>{
+  assert.match(cmd,/academy-diagnostics/i);
+  assert.match(cmd,/git push origin HEAD:academy-diagnostics/i);
+  assert.doesNotMatch(cmd,/git push origin dev-stage-composition/i);
+  assert.doesNotMatch(cmd,/git add \.\s*$/im);
+});
