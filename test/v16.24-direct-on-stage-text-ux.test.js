@@ -5,6 +5,7 @@ const path=require('node:path');
 
 const helperPath=path.join(__dirname,'../src/presentation-text-direct-ux.js');
 const helper=fs.existsSync(helperPath)?fs.readFileSync(helperPath,'utf8'):'';
+const editor=fs.readFileSync(path.join(__dirname,'../src/presentation-object-editor.js'),'utf8');
 const medium=fs.readFileSync(path.join(__dirname,'../src/presentation-medium-selection.js'),'utf8');
 const preload=fs.readFileSync(path.join(__dirname,'../src/preload.js'),'utf8');
 
@@ -15,7 +16,9 @@ test('text button only creates text; editing and deletion live on stage',()=>{
   assert.doesNotMatch(helper,/querySelector\?\.\('\[data-board-delete\]'\)\?\.click/,'direct UX must not simulate the hidden legacy delete button');
   assert.match(helper,/academy-board-object-delete/,'selected text needs an on-stage delete control');
   assert.match(helper,/dblclick/,'text must enter direct editing on double click');
-  assert.match(helper,/contentEditable/,'direct editing must happen inside the text object');
+  assert.match(helper,/beginDirectTextEdit\?\.\(doc,node\)/,'direct UX must delegate editing to the existing editor object');
+  assert.match(editor,/function beginDirectTextEdit\(doc,node\)/,'editor must own the direct text editing implementation');
+  assert.match(editor,/contentEditable='true'/,'editing must happen inside the existing text object');
 });
 
 test('active chalkboard button toggles the board off again',()=>{
