@@ -13,6 +13,6 @@ test('double click editing is not swallowed by text drag pointer capture',()=>{
     'text drag must wait for actual pointer movement');
   assert.match(ux,/addEventListener\('dblclick'/,
     'direct text UX must own the native double click');
-  assert.match(ux,/contentEditable='true'/,
-    'double click must switch the text span into editing mode');
+  assert.match(ux,/beginDirectTextEdit\?\.\(doc,node\)/,
+    'double click must delegate editing to the existing object model so its position stays unchanged');
 });
