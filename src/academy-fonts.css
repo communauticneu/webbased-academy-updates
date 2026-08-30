@@ -5,3 +5,11 @@
   font-weight:400;
   font-display:block;
 }
+
+@font-face{
+  font-family:"DJB Chalk It Up";
+  src:url("./assets/fonts/DJB Chalk It Up.ttf") format("truetype");
+  font-style:normal;
+  font-weight:400;
+  font-display:block;
+}
