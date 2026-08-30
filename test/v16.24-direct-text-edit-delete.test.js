@@ -8,8 +8,9 @@ const ux=fs.readFileSync(path.join(__dirname,'../src/presentation-text-direct-ux
 
 test('double click edits the selected text directly on stage',()=>{
   assert.match(ux,/addEventListener\('dblclick'/,'direct text UX needs a double-click edit interaction');
-  assert.match(ux,/contentEditable='true'/,'double-click editing must make the text content editable');
-  assert.match(ux,/textContent/,'direct editing must write the changed text back to the object');
+  assert.match(ux,/beginDirectTextEdit\?\.\(doc,node\)/,'double-click editing must delegate to the editor model');
+  assert.match(editor,/contentEditable='true'/,'editor model must make the existing text content editable');
+  assert.match(editor,/textContent/,'editor model must write the changed text back to the same object');
 });
 
 test('selected text can be deleted with button and Delete key',()=>{
