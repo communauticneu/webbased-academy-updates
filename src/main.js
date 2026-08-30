@@ -24,8 +24,28 @@ function createWindow() {
   });
   win.maximize();
   win.webContents.once('did-finish-load', () => {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!win || win.isDestroyed()) return;
+      try {
+        const diagnostic = await win.webContents.executeJavaScript(`(() => {
+          const surface=document.getElementById('presentationSurface');
+          const text=document.querySelector('.academy-board-object-text');
+          const fontLink=Array.from(document.styleSheets).find(s=>String(s.href||'').includes('academy-fonts.css'));
+          return {
+            href:location.href,
+            fontStylesheet:fontLink?.href||null,
+            fontCheck:document.fonts.check('24px "KG Second Chances Sketch"'),
+            surfaceClass:surface?.className||null,
+            surfaceMedium:surface?.dataset?.medium||null,
+            textExists:!!text,
+            textClass:text?.className||null,
+            computedFont:text?getComputedStyle(text).fontFamily:null
+          };
+        })()`);
+        console.log('ACADEMY FONT DIAG '+JSON.stringify(diagnostic));
+      } catch (error) {
+        console.log('ACADEMY FONT DIAG ERROR '+String(error?.message||error));
+      }
       win.show();
     }, 1200);
   });
