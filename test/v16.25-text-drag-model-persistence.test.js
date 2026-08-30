@@ -2,10 +2,12 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const source=fs.readFileSync(path.join(__dirname,'../src/presentation-object-stage-interaction.js'),'utf8');
+const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-object-stage-interaction.js'),'utf8');
+const editor=fs.readFileSync(path.join(__dirname,'../src/presentation-object-editor.js'),'utf8');
 
-test('text pointerdown selects the editor model before drag persistence',()=>{
-  const textBranch=source.match(/if\(node\.classList\?\.contains\?\.\('academy-board-object-text'\)\)\{([\s\S]*?)pendingDrag=buildDrag/);
-  assert.ok(textBranch,'text drag branch must exist');
-  assert.match(textBranch[1],/AcademyPresentationObjectEditor\?\.selectWithoutRender\?\.\(doc,node\.dataset\.objectId,node\)/);
+test('text drag persists its final frame directly into the editor model',()=>{
+  assert.match(stage,/AcademyPresentationObjectEditor\?\.persistFrame\?\.\(doc,drag\.node\.dataset\.objectId,values\)/);
+  assert.doesNotMatch(stage,/data-prop=|dispatchEvent\(new Event\('input'/);
+  assert.match(editor,/function persistFrame\(doc,id,patch\)/);
+  assert.match(editor,/objects\[i\]=updateObject\(objects\[i\],patch\)/);
 });
