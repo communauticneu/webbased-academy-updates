@@ -10,14 +10,16 @@ test('presentation editor exposes Text & Zeichen without graphics or legacy prop
   assert.doesNotMatch(html,/academyBoardObjectProperties/);
   assert.doesNotMatch(html,/Feinjustierung/);
   assert.doesNotMatch(html,/data-prop="content"/);
+  assert.doesNotMatch(html,/<strong>Grafiken<\/strong>/);
   assert.match(html,/academyBoardObjectToolbar/);
   assert.match(html,/academyBoardObjectList/);
 });
 
-test('graphics have their own prepared section instead of being a Text & Zeichen tool',()=>{
-  const html=editor.editorMarkup();
+test('graphics are a separate prepared section for placement after presentation medium',()=>{
+  const html=editor.graphicsMarkup();
   assert.match(html,/<strong>Grafiken<\/strong>/);
   assert.match(html,/data-graphics-open/);
+  assert.doesNotMatch(html,/Text &amp; Zeichen|Text & Zeichen/);
 });
 
 test('text is a neutral reusable presentation object',()=>{
