@@ -58,19 +58,6 @@ function install(doc){
     return true;
   };
 
-  const persistText=(node,text)=>{
-    const id=node?.dataset?.objectId;
-    if(!id)return;
-    layer.dataset.activeTextId=id;
-    const row=editor.querySelector?.(`[data-list-id="${CSS.escape(id)}"]`);
-    row?.click?.();
-    const input=editor.querySelector?.('[data-prop="content"]');
-    if(input){
-      input.value=text;
-      input.dispatchEvent(new Event('input',{bubbles:true}));
-    }
-  };
-
   layer.addEventListener('pointerdown',event=>{
     if(event.target?.isContentEditable){
       event.stopImmediatePropagation();
@@ -88,32 +75,12 @@ function install(doc){
   layer.addEventListener('dblclick',event=>{
     const node=event.target?.closest?.('.academy-board-object-text[data-object-id]');
     if(!node)return;
-    const text=node.querySelector?.('span');
-    if(!text)return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
     activate(node);
-    node.dataset.editing='1';
     node.querySelector?.('[data-direct-delete]')?.remove?.();
-    text.contentEditable='true';
-    text.focus?.();
-    const selection=root.getSelection?.();
-    if(selection&&doc.createRange){
-      const range=doc.createRange();
-      range.selectNodeContents(text);
-      range.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-    const finish=()=>{
-      const value=text.textContent||'';
-      text.contentEditable='false';
-      delete node.dataset.editing;
-      persistText(node,value);
-      setTimeout(decorate,0);
-    };
-    text.addEventListener('blur',finish,{once:true});
+    root.AcademyPresentationObjectEditor?.beginDirectTextEdit?.(doc,node);
   },true);
 
   layer.addEventListener('click',event=>{
