@@ -8,10 +8,10 @@ const preload=fs.readFileSync(path.join(__dirname,'../src/preload.js'),'utf8');
 const fontsCss=fs.readFileSync(path.join(__dirname,'../src/academy-fonts.css'),'utf8');
 const fontPath=path.join(__dirname,'../src/assets/fonts/KGSecondChancesSketch.ttf');
 
-test('bundled chalk font is declared in a static renderer stylesheet',()=>{
+test('bundled chalk font uses an Academy-only alias to avoid family collisions',()=>{
   assert.match(fontsCss,/@font-face/);
-  assert.match(fontsCss,/font-family:\"KG Second Chances Sketch\"/);
-  assert.match(fontsCss,/url\(\"\.\/assets\/fonts\/KGSecondChancesSketch\.ttf\"\)/);
+  assert.match(fontsCss,/font-family:"Academy KG Sketch"/);
+  assert.match(fontsCss,/url\("\.\/assets\/fonts\/KGSecondChancesSketch\.ttf"\)/);
 });
 
 test('font stylesheet loads before presentation scripts',()=>{
@@ -24,6 +24,8 @@ test('bundled chalk font asset exists in the Creator project',()=>{
   assert.ok(fs.existsSync(fontPath),'KGSecondChancesSketch.ttf must be bundled under src/assets/fonts');
 });
 
-test('chalkboard text requests KG Second Chances Sketch',()=>{
-  assert.match(ux,/\.presentation-chalkboard \.academy-board-object-text\{[^}]*font-family:\"KG Second Chances Sketch\"!important/);
+test('chalk font is applied only while the chalkboard is visibly active',()=>{
+  assert.match(ux,/const boardActive=.*presentation-chalkboard.*is-visible/s);
+  assert.match(ux,/font-family','"Academy KG Sketch"','important'/);
+  assert.match(ux,/removeProperty\('font-family'\)/);
 });
