@@ -4,8 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const editor=fs.readFileSync(path.join(__dirname,'../src/presentation-object-editor.js'),'utf8');
 
-test('chalkboard typography uses bundled KG Second Chances Sketch',()=>{
-  assert.match(editor,/@font-face\{font-family:"KG Second Chances Sketch";src:url\("\.\/assets\/fonts\/KGSecondChancesSketch\.ttf"\) format\("truetype"\);font-display:swap\}/);
+test('chalkboard typography selects KG Second Chances Sketch when available',()=>{
   assert.match(editor,/\.presentation-chalkboard \.academy-board-object-text\{[^}]*font-family:"KG Second Chances Sketch"/);
 });
 
