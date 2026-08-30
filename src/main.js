@@ -28,33 +28,29 @@ function createWindow() {
       if (!win || win.isDestroyed()) return;
       try {
         const diagnostic = await win.webContents.executeJavaScript(`(async() => {
-          const surface=document.getElementById('presentationSurface');
-          const fontLink=Array.from(document.styleSheets).find(s=>String(s.href||'').includes('academy-fonts.css'));
-          const probe=document.createElement('div');
-          probe.className='academy-board-object academy-board-object-text academy-text-heading';
-          const span=document.createElement('span');
-          span.textContent='FONTTEST';
-          probe.appendChild(span);
-          surface?.appendChild(probe);
-          try{await document.fonts.load('46px "KG Second Chances Sketch"','FONTTEST');}catch{}
-          const computed=surface?getComputedStyle(probe):null;
-          const spanComputed=surface?getComputedStyle(span):null;
-          const result={
-            href:location.href,
-            fontStylesheet:fontLink?.href||null,
-            fontCheck:document.fonts.check('46px "KG Second Chances Sketch"','FONTTEST'),
-            surfaceClass:surface?.className||null,
-            surfaceMedium:surface?.dataset?.medium||null,
-            probeFont:computed?.fontFamily||null,
-            probeSize:computed?.fontSize||null,
-            spanFont:spanComputed?.fontFamily||null
+          const family='KG Second Chances Sketch';
+          const sample='Neue Überschrift ABCDEFG 12345';
+          try{await document.fonts.load('46px "'+family+'"',sample);}catch{}
+          const canvas=document.createElement('canvas');
+          const ctx=canvas.getContext('2d');
+          ctx.font='46px "'+family+'"';
+          const kgWidth=ctx.measureText(sample).width;
+          ctx.font='46px Arial';
+          const arialWidth=ctx.measureText(sample).width;
+          const real=document.querySelector('.academy-board-object-text');
+          return {
+            fontCheck:document.fonts.check('46px "'+family+'"',sample),
+            kgWidth:Number(kgWidth.toFixed(2)),
+            arialWidth:Number(arialWidth.toFixed(2)),
+            glyphsDiffer:Math.abs(kgWidth-arialWidth)>1,
+            realTextExists:!!real,
+            realTextFont:real?getComputedStyle(real).fontFamily:null,
+            readyClass:document.documentElement.classList.contains('academy-chalk-font-ready')
           };
-          probe.remove();
-          return result;
         })()`);
-        console.log('ACADEMY FONT DIAG '+JSON.stringify(diagnostic));
+        console.log('ACADEMY FONT GLYPH '+JSON.stringify(diagnostic));
       } catch (error) {
-        console.log('ACADEMY FONT DIAG ERROR '+String(error?.message||error));
+        console.log('ACADEMY FONT GLYPH ERROR '+String(error?.message||error));
       }
       win.show();
     }, 1200);
