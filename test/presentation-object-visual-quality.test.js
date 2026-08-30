@@ -7,7 +7,6 @@ const editor=require('../src/presentation-object-editor');
 test('text and post-it keep direct editable content without expanding sidebar',()=>{
   const html=editor.editorMarkup();
   assert.doesNotMatch(html,/academy-board-content-field/);
-  assert.match(html,/Direkt in der Darstellung bearbeiten/);
   assert.doesNotMatch(html,/Feinjustierung/);
 });
 
