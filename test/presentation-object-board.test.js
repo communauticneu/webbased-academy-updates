@@ -25,13 +25,13 @@ test('object updates preserve normalized position size and content',()=>{
   assert.deepEqual(object.frame,{x:25,y:35,width:50,height:20,rotation:5});
 });
 
-test('normal board toolbar stays compact and hides precision fields behind details',()=>{
+test('normal board toolbar stays compact and exposes only direct tools',()=>{
   const html=editor.editorMarkup();
   assert.match(html,/academyBoardObjectToolbar/);
-  assert.match(html,/<details[^>]*academy-board-object-precision/);
-  assert.match(html,/>Feinjustierung</);
-  assert.match(html,/data-prop="x"/);
-  assert.match(html,/data-prop="rotation"/);
-  assert.match(html,/<div id="academyBoardObjectProperties"[^>]*hidden>/);
-  assert.doesNotMatch(html,/<details[^>]*academy-board-object-precision[^>]*open/);
+  for(const label of ['Text','Post-it','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
+  assert.doesNotMatch(html,/academy-board-object-precision/);
+  assert.doesNotMatch(html,/>Feinjustierung</);
+  assert.doesNotMatch(html,/data-prop="x"/);
+  assert.doesNotMatch(html,/data-prop="rotation"/);
+  assert.doesNotMatch(html,/academyBoardObjectProperties/);
 });
