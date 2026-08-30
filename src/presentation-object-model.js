@@ -6,6 +6,7 @@
   'use strict';
 
   const TYPES=new Set(['text','graphic','postit','arrow','circle','line','frame']);
+  const TEXT_KINDS=new Set(['heading','normal','small']);
   const ENTERS=new Set(['instant','fade','write','draw','unroll']);
   const EXITS=new Set(['instant','fade','wipe']);
   const OPTIONS=new Set(['chalkboard','whiteboard','pinwall','3d']);
@@ -25,6 +26,7 @@
     return {
       id:string(source.id)||id(),
       type:TYPES.has(source.type)?source.type:'text',
+      textKind:TEXT_KINDS.has(source.textKind)?source.textKind:'normal',
       content:string(source.content),
       assetId:string(source.assetId),
       assetUrl:string(source.assetUrl),
