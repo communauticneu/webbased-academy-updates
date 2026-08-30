@@ -13,11 +13,15 @@ function classes(initial=[]){
   };
 }
 
-test('presentation medium buttons start neutral and Tafel becomes active only after click',()=>{
-  const button={dataset:{},classList:classes(['active']),addEventListener(type,fn){this.click=fn;}};
-  const doc={querySelectorAll:selector=>selector==='.v1623-medium-grid button'?[button]:selector==='[data-presentation-medium]'?[button]:[]};
+test('presentation medium choices are Tafel, Whiteboard and Pinwall with no legacy fourth medium',()=>{
+  const buttons=Array.from({length:4},()=>({dataset:{},classList:classes(['active']),hidden:false,textContent:'legacy'}));
+  const doc={querySelectorAll:selector=>selector==='.v1623-medium-grid button'?buttons:[]};
   assert.equal(bridge.prepareButtons(doc),true);
-  assert.equal(button.classList.contains('active'),false);
+  assert.deepEqual(buttons.slice(0,3).map(button=>button.textContent),['Tafel','Whiteboard','Pinwall']);
+  assert.deepEqual(buttons.slice(0,3).map(button=>button.dataset.presentationMedium),['chalkboard','whiteboard','pinwall']);
+  assert.equal(buttons[3].hidden,true);
+  assert.equal(buttons[3].dataset.presentationMedium,undefined);
+  assert.equal(buttons.some(button=>button.classList.contains('active')),false);
 });
 
 test('Tafel medium selection shows an empty Academy board immediately without dummy legacy content',()=>{
