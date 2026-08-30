@@ -8,28 +8,25 @@ function isEditingGesture(event){
 function install(doc){
   const layer=doc?.getElementById?.('academyBoardObjectLayer');
   const editor=doc?.getElementById?.('academyBoardObjectEditor');
-  if(!layer||!editor)return false;
+  const surface=doc?.getElementById?.('presentationSurface');
+  if(!layer||!editor||!surface)return false;
   editor.querySelector?.('[data-text-kind-menu]')?.classList?.add('academy-submenu');
 
   if(!doc.getElementById('academyDirectTextUxStyle')){
     const style=doc.createElement('style');
     style.id='academyDirectTextUxStyle';
-    const fontUrl=new URL('assets/fonts/KGSecondChancesSketch.ttf',doc.baseURI).href;
-    if(typeof root.FontFace==='function'&&doc.fonts?.add){
-      const face=new root.FontFace('KG Second Chances Sketch',`url("${fontUrl}")`,{style:'normal',weight:'400'});
-      face.load().then(loaded=>{
-        doc.fonts.add(loaded);
-        doc.documentElement.classList.add('academy-chalk-font-ready');
-        doc.querySelectorAll?.('.academy-board-object-text')?.forEach?.(node=>node.style.setProperty('font-family','"KG Second Chances Sketch"','important'));
-      }).catch(error=>{
-        doc.documentElement.dataset.kgFontRuntime='fontface-error';
-        console.error('[KG FONT] FontFace load failed',fontUrl,error);
-      });
-    }
-    style.textContent=`@font-face{font-family:"KG Second Chances Sketch";src:url("${fontUrl}") format("truetype");font-style:normal;font-weight:400;font-display:block}.academy-board-content-field,.academy-board-quick-actions{display:none!important}.academy-board-editor-head span{display:none!important}.academy-board-object-list{display:none!important;overflow:hidden!important;max-width:100%!important;min-width:0!important}.academy-board-object-row{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}.academy-submenu,.academy-text-kind-menu{position:relative;margin-left:10px!important;margin-right:10px!important;padding:20px 6px 6px!important;border:1px solid rgba(76,200,255,.42)!important;border-radius:8px!important;background:rgba(76,200,255,.12)!important;box-shadow:0 4px 14px rgba(0,0,0,.16)!important}.academy-text-kind-menu::before{content:"Textart";position:absolute;left:8px;top:4px;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.78;pointer-events:none}.academy-text-kind-menu button{min-height:24px!important;padding:2px 5px!important;font-size:10px!important;background:rgba(3,18,28,.38)!important}.academy-text-kind-menu button:hover{background:rgba(76,200,255,.18)!important}.academy-board-object-layer{inset:0!important;overflow:hidden!important}.academy-room-avatar{pointer-events:none!important}.stage>.avatar,.stage .avatar{pointer-events:none!important}.academy-board-object-text{pointer-events:auto;height:auto!important;min-height:1.15em!important;align-items:flex-start!important;overflow:visible!important;padding:3px 4px!important}.presentation-chalkboard .academy-board-object-text{font-family:"KG Second Chances Sketch"!important;line-height:1.08!important}.presentation-chalkboard .academy-board-object-text.academy-text-heading{font-size:clamp(22px,2.05vw,46px)!important;font-weight:400!important}.presentation-chalkboard .academy-board-object-text.academy-text-normal{font-size:clamp(17px,1.55vw,34px)!important;font-weight:400!important}.presentation-chalkboard .academy-board-object-text.academy-text-small{font-size:clamp(14px,1.2vw,27px)!important;font-weight:400!important}.academy-board-object-text.selected{z-index:50!important;pointer-events:auto}.academy-board-object-text span{pointer-events:auto;display:block;width:100%;min-height:1em}.academy-board-object-text span[contenteditable="true"]{pointer-events:auto;cursor:text;user-select:text;white-space:pre-wrap;outline:none}.academy-board-object-delete{position:absolute;right:-13px;top:-13px;width:24px;height:24px;border:0;border-radius:50%;display:grid;place-items:center;background:#b92f3b;color:#fff;font:700 14px/1 Arial,sans-serif;cursor:pointer;pointer-events:auto;z-index:80;box-shadow:0 2px 7px rgba(0,0,0,.35)}`;
+    style.textContent=`.academy-board-content-field,.academy-board-quick-actions{display:none!important}.academy-board-editor-head span{display:none!important}.academy-board-object-list{display:none!important;overflow:hidden!important;max-width:100%!important;min-width:0!important}.academy-board-object-row{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}.academy-submenu,.academy-text-kind-menu{position:relative;margin-left:10px!important;margin-right:10px!important;padding:20px 6px 6px!important;border:1px solid rgba(76,200,255,.42)!important;border-radius:8px!important;background:rgba(76,200,255,.12)!important;box-shadow:0 4px 14px rgba(0,0,0,.16)!important}.academy-text-kind-menu::before{content:"Textart";position:absolute;left:8px;top:4px;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.78;pointer-events:none}.academy-text-kind-menu button{min-height:24px!important;padding:2px 5px!important;font-size:10px!important;background:rgba(3,18,28,.38)!important}.academy-text-kind-menu button:hover{background:rgba(76,200,255,.18)!important}.academy-board-object-layer{inset:0!important;overflow:hidden!important}.academy-room-avatar{pointer-events:none!important}.stage>.avatar,.stage .avatar{pointer-events:none!important}.academy-board-object-text{pointer-events:auto;height:auto!important;min-height:1.15em!important;align-items:flex-start!important;overflow:visible!important;padding:3px 4px!important}.presentation-chalkboard.is-visible .academy-board-object-text{font-family:"Academy KG Sketch"!important;line-height:1.08!important}.presentation-chalkboard .academy-board-object-text.academy-text-heading{font-size:clamp(22px,2.05vw,46px)!important;font-weight:400!important}.presentation-chalkboard .academy-board-object-text.academy-text-normal{font-size:clamp(17px,1.55vw,34px)!important;font-weight:400!important}.presentation-chalkboard .academy-board-object-text.academy-text-small{font-size:clamp(14px,1.2vw,27px)!important;font-weight:400!important}.academy-board-object-text.selected{z-index:50!important;pointer-events:auto}.academy-board-object-text span{pointer-events:auto;display:block;width:100%;min-height:1em}.academy-board-object-text span[contenteditable="true"]{pointer-events:auto;cursor:text;user-select:text;white-space:pre-wrap;outline:none}.academy-board-object-delete{position:absolute;right:-13px;top:-13px;width:24px;height:24px;border:0;border-radius:50%;display:grid;place-items:center;background:#b92f3b;color:#fff;font:700 14px/1 Arial,sans-serif;cursor:pointer;pointer-events:auto;z-index:80;box-shadow:0 2px 7px rgba(0,0,0,.35)}`;
     doc.head?.appendChild(style);
-    doc.fonts?.load?.('24px "KG Second Chances Sketch"')?.then(()=>doc.documentElement.classList.add('academy-chalk-font-ready')).catch(()=>{});
   }
+
+  const syncContextualTextFont=()=>{
+    const boardActive=surface.classList.contains('presentation-chalkboard')&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'&&surface.dataset.medium==='chalkboard';
+    layer.querySelectorAll?.('.academy-board-object-text[data-object-id]')?.forEach?.(node=>{
+      if(boardActive)node.style.setProperty('font-family','"Academy KG Sketch"','important');
+      else node.style.removeProperty('font-family');
+    });
+    return boardActive;
+  };
 
   const syncTextFrameHeight=node=>{
     if(!node?.classList?.contains('academy-board-object-text'))return false;
@@ -42,15 +39,6 @@ function install(doc){
 
   const syncAllTextFrames=()=>{
     layer.querySelectorAll?.('.academy-board-object-text[data-object-id]')?.forEach?.(syncTextFrameHeight);
-  };
-
-  const applyContextualTextFont=()=>{
-    const surface=doc.getElementById?.('presentationSurface');
-    const chalk=!!surface?.classList?.contains('presentation-chalkboard');
-    layer.querySelectorAll?.('.academy-board-object-text[data-object-id]')?.forEach?.(node=>{
-      if(chalk)node.style.setProperty('font-family','"KG Second Chances Sketch"','important');
-      else node.style.removeProperty?.('font-family');
-    });
   };
 
   const restoreActiveSelection=()=>{
@@ -67,7 +55,7 @@ function install(doc){
   };
 
   const decorate=()=>{
-    applyContextualTextFont();
+    syncContextualTextFont();
     syncAllTextFrames();
     const selected=restoreActiveSelection()||layer.querySelector?.('.academy-board-object-text.selected');
     const existing=layer.querySelector?.('.academy-board-object-delete');
@@ -92,6 +80,7 @@ function install(doc){
     if(!node?.dataset?.objectId)return false;
     layer.dataset.activeTextId=node.dataset.objectId;
     layer.querySelectorAll?.('[data-object-id]')?.forEach?.(item=>item.classList.toggle('selected',item===node));
+    syncContextualTextFont();
     syncTextFrameHeight(node);
     decorate();
     return true;
@@ -110,7 +99,7 @@ function install(doc){
     event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();activate(node);
     node.querySelector?.('[data-direct-delete]')?.remove?.();
     root.AcademyPresentationObjectEditor?.beginDirectTextEdit?.(doc,node);
-    setTimeout(()=>syncTextFrameHeight(node),0);
+    setTimeout(()=>{syncContextualTextFont();syncTextFrameHeight(node);},0);
   },true);
 
   layer.addEventListener('input',event=>{
@@ -133,8 +122,8 @@ function install(doc){
 
   const observer=new MutationObserver(()=>setTimeout(decorate,0));
   observer.observe(layer,{childList:true,subtree:true});
-  const surface=doc.getElementById?.('presentationSurface');
-  if(surface)observer.observe(surface,{attributes:true,attributeFilter:['class']});
+  const surfaceObserver=new MutationObserver(()=>setTimeout(decorate,0));
+  surfaceObserver.observe(surface,{attributes:true,attributeFilter:['class','aria-hidden','data-medium']});
   decorate();
   return true;
 }
