@@ -12,28 +12,25 @@ test('direct text editing delegates to the editor model and never clicks the sid
   assert.doesNotMatch(directUx,/row\?\.click/,'direct editing must not simulate a sidebar click');
 });
 
-test('created objects are not repeated as menu rows below the tools',()=>{
-  assert.doesNotMatch(editor.editorMarkup(),/academyBoardObjectList/);
-  assert.doesNotMatch(editor.editorStyles(),/academy-board-object-row/);
+test('created objects are hidden from the tool menu instead of repeated as rows',()=>{
+  assert.match(directUx,/\.academy-board-object-list\{[^}]*display:none!important/);
 });
 
-test('text variants are visually grouped as a subordinate Textart panel',()=>{
-  const html=editor.editorMarkup();
-  const css=editor.editorStyles();
-  assert.match(html,/academy-text-kind-panel/);
-  assert.match(html,/>Textart</);
-  assert.match(css,/academy-text-kind-panel/);
-  assert.match(css,/academy-text-kind-label/);
+test('text variants read as a subordinate Textart panel',()=>{
+  assert.match(directUx,/\.academy-text-kind-menu\{[^}]*position:relative/);
+  assert.match(directUx,/\.academy-text-kind-menu::before\{[^}]*content:"Textart"/);
+  assert.match(directUx,/\.academy-text-kind-menu\{[^}]*margin-left:/);
+  assert.match(directUx,/\.academy-text-kind-menu button\{[^}]*min-height:/);
 });
 
-test('text frames contain the visible text and keep the full frame clickable',()=>{
-  const css=editor.editorStyles();
-  assert.match(css,/\.academy-board-object-text\{[^}]*align-items:flex-start/);
-  assert.match(css,/\.academy-board-object-text\{[^}]*overflow:visible/);
-  assert.match(css,/\.academy-board-object-text span\{[^}]*pointer-events:auto/);
-  assert.match(css,/academy-text-heading[^}]*min-height/);
+test('text frames contain visible text and keep the complete text clickable',()=>{
+  assert.match(directUx,/\.academy-board-object-text\{[^}]*height:auto!important/);
+  assert.match(directUx,/\.academy-board-object-text\{[^}]*align-items:flex-start/);
+  assert.match(directUx,/\.academy-board-object-text span\{[^}]*pointer-events:auto/);
+  assert.match(directUx,/\.academy-board-object-text\.academy-text-heading\{[^}]*min-height:/);
 });
 
-test('obsolete direct-edit helper text is removed',()=>{
-  assert.doesNotMatch(editor.editorMarkup(),/Direkt in der Darstellung bearbeiten/);
+test('obsolete direct-edit helper text stays hidden',()=>{
+  assert.match(directUx,/\.academy-board-editor-head span\{display:none!important\}/);
+  assert.match(editor.editorMarkup(),/Direkt in der Darstellung bearbeiten/,'legacy markup may remain but must not be visible');
 });
