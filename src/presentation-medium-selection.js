@@ -56,7 +56,8 @@
       {id:'whiteboard',label:'Whiteboard'},
       {id:'pinwall',label:'Pinwall'}
     ];
-    if(grid?.style)grid.style.gridTemplateColumns='repeat(3,minmax(0,1fr))';
+    if(grid?.style?.setProperty)grid.style.setProperty('grid-template-columns','repeat(3,minmax(0,1fr))','important');
+    else if(grid?.style)grid.style.gridTemplateColumns='repeat(3,minmax(0,1fr))';
     buttons.forEach((button,index)=>{
       const medium=media[index];
       button.classList?.remove?.('active');
