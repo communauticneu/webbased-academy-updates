@@ -22,9 +22,14 @@ function install(doc){
   const dragThreshold=4;
 
   const buildDrag=(event,node)=>{
-    const rect=layer.getBoundingClientRect();
+    const layerRect=layer.getBoundingClientRect();
+    const rect=node.getBoundingClientRect();
     const isResize=!!event.target.closest?.('[data-resize-handle]');
-    return {node,startX:event.clientX,startY:event.clientY,left:parseFloat(node.style.left)||0,top:parseFloat(node.style.top)||0,width:parseFloat(node.style.width)||20,height:parseFloat(node.style.height)||10,isResize,rect,pointerId:event.pointerId};
+    const leftPct=layerRect.width?(rect.left-layerRect.left)/layerRect.width*100:parseFloat(node.style.left)||0;
+    const topPct=layerRect.height?(rect.top-layerRect.top)/layerRect.height*100:parseFloat(node.style.top)||0;
+    const widthPct=layerRect.width?rect.width/layerRect.width*100:20;
+    const heightPct=layerRect.height?rect.height/layerRect.height*100:10;
+    return {node,startX:event.clientX,startY:event.clientY,left:leftPct,top:topPct,width:widthPct,height:heightPct,isResize,rect:layerRect,pointerId:event.pointerId};
   };
 
   layer.addEventListener('pointerdown',event=>{
