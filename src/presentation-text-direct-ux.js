@@ -44,6 +44,15 @@ function install(doc){
     layer.querySelectorAll?.('.academy-board-object-text[data-object-id]')?.forEach?.(syncTextFrameHeight);
   };
 
+  const applyContextualTextFont=()=>{
+    const surface=doc.getElementById?.('presentationSurface');
+    const chalk=!!surface?.classList?.contains('presentation-chalkboard');
+    layer.querySelectorAll?.('.academy-board-object-text[data-object-id]')?.forEach?.(node=>{
+      if(chalk)node.style.setProperty('font-family','"KG Second Chances Sketch"','important');
+      else node.style.removeProperty?.('font-family');
+    });
+  };
+
   const restoreActiveSelection=()=>{
     const id=layer.dataset.activeTextId;
     if(!id)return null;
@@ -58,6 +67,7 @@ function install(doc){
   };
 
   const decorate=()=>{
+    applyContextualTextFont();
     syncAllTextFrames();
     const selected=restoreActiveSelection()||layer.querySelector?.('.academy-board-object-text.selected');
     const existing=layer.querySelector?.('.academy-board-object-delete');
@@ -123,6 +133,8 @@ function install(doc){
 
   const observer=new MutationObserver(()=>setTimeout(decorate,0));
   observer.observe(layer,{childList:true,subtree:true});
+  const surface=doc.getElementById?.('presentationSurface');
+  if(surface)observer.observe(surface,{attributes:true,attributeFilter:['class']});
   decorate();
   return true;
 }
