@@ -22,8 +22,21 @@ function install(doc){
   const syncContextualTextFont=()=>{
     const boardActive=surface.classList.contains('presentation-chalkboard')&&surface.classList.contains('is-visible')&&surface.getAttribute('aria-hidden')!=='true'&&surface.dataset.medium==='chalkboard';
     layer.querySelectorAll?.('.academy-board-object-text[data-object-id]')?.forEach?.(node=>{
-      if(boardActive)node.style.setProperty('font-family','"Academy KG Sketch"','important');
-      else node.style.removeProperty('font-family');
+      if(boardActive){
+        node.style.setProperty('font-family','"Academy KG Sketch"','important');
+        if(node.classList.contains('academy-text-heading'))node.style.setProperty('font-size','23px','important');
+        else if(node.classList.contains('academy-text-normal'))node.style.setProperty('font-size','17px','important');
+        else if(node.classList.contains('academy-text-small'))node.style.setProperty('font-size','14px','important');
+        node.style.setProperty('font-weight','400','important');
+        node.style.setProperty('text-shadow','none','important');
+        node.style.setProperty('filter','none','important');
+      }else{
+        node.style.removeProperty('font-family');
+        node.style.removeProperty('font-size');
+        node.style.removeProperty('font-weight');
+        node.style.removeProperty('text-shadow');
+        node.style.removeProperty('filter');
+      }
     });
     return boardActive;
   };
