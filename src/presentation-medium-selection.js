@@ -50,10 +50,22 @@
 
   function prepareButtons(doc){
     const buttons=Array.from(doc?.querySelectorAll?.('.v1623-medium-grid button')||[]);
-    const media=['chalkboard','flipchart','whiteboard','custom'];
+    const media=[
+      {id:'chalkboard',label:'Tafel'},
+      {id:'whiteboard',label:'Whiteboard'},
+      {id:'pinwall',label:'Pinwall'}
+    ];
     buttons.forEach((button,index)=>{
-      if(media[index])button.dataset.presentationMedium=media[index];
+      const medium=media[index];
       button.classList?.remove?.('active');
+      if(medium){
+        button.hidden=false;
+        button.textContent=medium.label;
+        button.dataset.presentationMedium=medium.id;
+      }else{
+        button.hidden=true;
+        delete button.dataset.presentationMedium;
+      }
     });
     return buttons.length>0;
   }
