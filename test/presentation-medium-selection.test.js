@@ -15,7 +15,7 @@ function classes(initial=[]){
 
 test('presentation medium choices are Tafel, Whiteboard and Pinwall with no legacy fourth medium',()=>{
   const buttons=Array.from({length:4},()=>({dataset:{},classList:classes(['active']),hidden:false,textContent:'legacy'}));
-  const grid={style:{}};
+  const grid={style:{setProperty(name,value,priority){this[name]=value;this.priority=priority;}}};
   const doc={
     querySelectorAll:selector=>selector==='.v1623-medium-grid button'?buttons:[],
     querySelector:selector=>selector==='.v1623-medium-grid'?grid:null
@@ -26,7 +26,8 @@ test('presentation medium choices are Tafel, Whiteboard and Pinwall with no lega
   assert.equal(buttons[3].hidden,true);
   assert.equal(buttons[3].dataset.presentationMedium,undefined);
   assert.equal(buttons.some(button=>button.classList.contains('active')),false);
-  assert.equal(grid.style.gridTemplateColumns,'repeat(3,minmax(0,1fr))');
+  assert.equal(grid.style['grid-template-columns'],'repeat(3,minmax(0,1fr))');
+  assert.equal(grid.style.priority,'important');
 });
 
 test('Tafel medium selection shows an empty Academy board immediately without dummy legacy content',()=>{
