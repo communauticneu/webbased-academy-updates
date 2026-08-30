@@ -6,7 +6,7 @@ const path=require('node:path');
 const editor=fs.readFileSync(path.join(__dirname,'../src/presentation-object-editor.js'),'utf8');
 
 test('generic Text tool does not force the chalkboard visible',()=>{
-  assert.match(editor,/data-board-object="text">[^<]*Text<\/button>/,'toolbar must expose a generic Text button');
+  assert.match(editor,/data-text-tool[^>]*>[^<]*Text<\/button>/,'toolbar must expose a generic Text button');
   assert.doesNotMatch(editor,/function add\([^)]*\)[\s\S]*?classList\.add\('presentation-chalkboard','is-visible'\)/,'adding an object must not force the chalkboard visible');
 });
 
