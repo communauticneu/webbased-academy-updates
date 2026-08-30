@@ -6,9 +6,9 @@ const editor=require('../src/presentation-object-editor');
 
 test('text and post-it keep direct editable content without expanding sidebar',()=>{
   const html=editor.editorMarkup();
-  assert.match(html,/academy-board-content-field/);
+  assert.doesNotMatch(html,/academy-board-content-field/);
   assert.match(html,/Direkt in der Darstellung bearbeiten/);
-  assert.match(html,/Feinjustierung/);
+  assert.doesNotMatch(html,/Feinjustierung/);
 });
 
 test('post-it styling uses realistic paper treatment rather than a flat rectangle',()=>{
