@@ -28,7 +28,11 @@ test('object updates preserve normalized position size and content',()=>{
 test('normal board toolbar stays compact and exposes only direct tools',()=>{
   const html=editor.editorMarkup();
   assert.match(html,/academyBoardObjectToolbar/);
-  for(const label of ['Text','Post-it','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
+  assert.match(html,/data-board-object="text"[^>]*>✎ Text</);
+  for(const label of ['Post-it','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
+  assert.match(html,/data-text-kind="heading"[^>]*>Überschrift</);
+  assert.match(html,/data-text-kind="normal"[^>]*>Normal</);
+  assert.match(html,/data-text-kind="small"[^>]*>Klein</);
   assert.doesNotMatch(html,/academy-board-object-precision/);
   assert.doesNotMatch(html,/>Feinjustierung</);
   assert.doesNotMatch(html,/data-prop="x"/);
