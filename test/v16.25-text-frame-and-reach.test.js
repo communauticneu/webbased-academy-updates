@@ -16,6 +16,6 @@ test('single-line text frame does not reserve two-line height',()=>{
 });
 
 test('text frame height follows rendered content',()=>{
-  assert.match(ux,/syncTextFrameHeight/);
+  assert.match(ux,/const syncFrame=node=>/);
   assert.match(ux,/scrollHeight/);
 });
