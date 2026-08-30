@@ -24,6 +24,11 @@ contextBridge.exposeInMainWorld('academyDesktop', {
 
 // Renderer-Erweiterungen werden erst nach fertigem DOM geladen.
 window.addEventListener('DOMContentLoaded', () => {
+  const fontStyle = document.createElement('link');
+  fontStyle.rel = 'stylesheet';
+  fontStyle.href = 'academy-fonts.css';
+  document.head.appendChild(fontStyle);
+
   const style = document.createElement('link');
   style.rel = 'stylesheet';
   style.href = 'presentation-stage-v16.17.css';
