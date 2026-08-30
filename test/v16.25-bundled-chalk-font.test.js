@@ -4,20 +4,26 @@ const fs=require('node:fs');
 const path=require('node:path');
 
 const ux=fs.readFileSync(path.join(__dirname,'../src/presentation-text-direct-ux.js'),'utf8');
+const preload=fs.readFileSync(path.join(__dirname,'../src/preload.js'),'utf8');
+const fontsCss=fs.readFileSync(path.join(__dirname,'../src/academy-fonts.css'),'utf8');
 const fontPath=path.join(__dirname,'../src/assets/fonts/KGSecondChancesSketch.ttf');
 
-test('chalkboard typography resolves the bundled KG Second Chances Sketch font from document base URI',()=>{
-  assert.match(ux,/@font-face\{font-family:\"KG Second Chances Sketch\"/);
-  assert.match(ux,/new URL\('assets\/fonts\/KGSecondChancesSketch\.ttf',doc\.baseURI\)\.href/);
-  assert.match(ux,/src:url\(\"\$\{fontUrl\}\"\) format\(\"truetype\"\)/);
-  assert.match(ux,/font-display:block/);
-  assert.match(ux,/doc\.fonts\?\.load/);
+test('bundled chalk font is declared in a static renderer stylesheet',()=>{
+  assert.match(fontsCss,/@font-face/);
+  assert.match(fontsCss,/font-family:\"KG Second Chances Sketch\"/);
+  assert.match(fontsCss,/url\(\"\.\/assets\/fonts\/KGSecondChancesSketch\.ttf\"\)/);
+});
+
+test('font stylesheet loads before presentation scripts',()=>{
+  const fontIndex=preload.indexOf("fontStyle.href = 'academy-fonts.css'");
+  const scriptIndex=preload.indexOf("stageScript.src = 'presentation-stage-v16.17.js'");
+  assert.ok(fontIndex>=0 && scriptIndex>fontIndex);
 });
 
 test('bundled chalk font asset exists in the Creator project',()=>{
   assert.ok(fs.existsSync(fontPath),'KGSecondChancesSketch.ttf must be bundled under src/assets/fonts');
 });
 
-test('chalkboard text uses the bundled family without silently falling back',()=>{
+test('chalkboard text requests KG Second Chances Sketch',()=>{
   assert.match(ux,/\.presentation-chalkboard \.academy-board-object-text\{[^}]*font-family:\"KG Second Chances Sketch\"!important/);
 });
