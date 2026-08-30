@@ -2,12 +2,22 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const editor=require('../src/presentation-object-editor');
 
-test('presentation editor exposes the compact Academy tool set',()=>{
+test('presentation editor exposes Text & Zeichen without graphics or legacy property controls',()=>{
   const html=editor.editorMarkup();
-  for(const label of ['Text','Post-it','Grafik','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
-  assert.doesNotMatch(html,/Kreidetext/);
+  assert.match(html,/Text &amp; Zeichen|Text & Zeichen/);
+  for(const label of ['Text','Post-it','Pfeil','Kreis','Linie']) assert.match(html,new RegExp(label));
+  assert.doesNotMatch(html,/data-board-object="graphic"/);
+  assert.doesNotMatch(html,/academyBoardObjectProperties/);
+  assert.doesNotMatch(html,/Feinjustierung/);
+  assert.doesNotMatch(html,/data-prop="content"/);
   assert.match(html,/academyBoardObjectToolbar/);
   assert.match(html,/academyBoardObjectList/);
+});
+
+test('graphics have their own prepared section instead of being a Text & Zeichen tool',()=>{
+  const html=editor.editorMarkup();
+  assert.match(html,/<strong>Grafiken<\/strong>/);
+  assert.match(html,/data-graphics-open/);
 });
 
 test('text is a neutral reusable presentation object',()=>{
