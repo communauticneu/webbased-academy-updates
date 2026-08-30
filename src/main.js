@@ -27,20 +27,30 @@ function createWindow() {
     setTimeout(async () => {
       if (!win || win.isDestroyed()) return;
       try {
-        const diagnostic = await win.webContents.executeJavaScript(`(() => {
+        const diagnostic = await win.webContents.executeJavaScript(`(async() => {
           const surface=document.getElementById('presentationSurface');
-          const text=document.querySelector('.academy-board-object-text');
           const fontLink=Array.from(document.styleSheets).find(s=>String(s.href||'').includes('academy-fonts.css'));
-          return {
+          const probe=document.createElement('div');
+          probe.className='academy-board-object academy-board-object-text academy-text-heading';
+          const span=document.createElement('span');
+          span.textContent='FONTTEST';
+          probe.appendChild(span);
+          surface?.appendChild(probe);
+          try{await document.fonts.load('46px "KG Second Chances Sketch"','FONTTEST');}catch{}
+          const computed=surface?getComputedStyle(probe):null;
+          const spanComputed=surface?getComputedStyle(span):null;
+          const result={
             href:location.href,
             fontStylesheet:fontLink?.href||null,
-            fontCheck:document.fonts.check('24px "KG Second Chances Sketch"'),
+            fontCheck:document.fonts.check('46px "KG Second Chances Sketch"','FONTTEST'),
             surfaceClass:surface?.className||null,
             surfaceMedium:surface?.dataset?.medium||null,
-            textExists:!!text,
-            textClass:text?.className||null,
-            computedFont:text?getComputedStyle(text).fontFamily:null
+            probeFont:computed?.fontFamily||null,
+            probeSize:computed?.fontSize||null,
+            spanFont:spanComputed?.fontFamily||null
           };
+          probe.remove();
+          return result;
         })()`);
         console.log('ACADEMY FONT DIAG '+JSON.stringify(diagnostic));
       } catch (error) {
