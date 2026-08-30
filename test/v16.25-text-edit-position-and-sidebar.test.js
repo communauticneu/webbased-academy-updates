@@ -23,11 +23,12 @@ test('text variants read as a subordinate Textart panel',()=>{
   assert.match(directUx,/\.academy-text-kind-menu button\{[^}]*min-height:/);
 });
 
-test('text frames contain visible text and keep the complete text clickable',()=>{
+test('text frames contain visible text, stay clickable and adapt their height',()=>{
   assert.match(directUx,/\.academy-board-object-text\{[^}]*height:auto!important/);
   assert.match(directUx,/\.academy-board-object-text\{[^}]*align-items:flex-start/);
   assert.match(directUx,/\.academy-board-object-text span\{[^}]*pointer-events:auto/);
-  assert.match(directUx,/\.academy-board-object-text\.academy-text-heading\{[^}]*min-height:/);
+  assert.doesNotMatch(directUx,/\.academy-board-object-text\.academy-text-heading\{[^}]*min-height:/,'heading must not reserve a fixed multi-line frame height');
+  assert.match(directUx,/syncTextFrameHeight/,'frame height must follow rendered text content');
 });
 
 test('obsolete direct-edit helper text stays hidden',()=>{
