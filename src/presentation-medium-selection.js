@@ -50,11 +50,13 @@
 
   function prepareButtons(doc){
     const buttons=Array.from(doc?.querySelectorAll?.('.v1623-medium-grid button')||[]);
+    const grid=doc?.querySelector?.('.v1623-medium-grid');
     const media=[
       {id:'chalkboard',label:'Tafel'},
       {id:'whiteboard',label:'Whiteboard'},
       {id:'pinwall',label:'Pinwall'}
     ];
+    if(grid?.style)grid.style.gridTemplateColumns='repeat(3,minmax(0,1fr))';
     buttons.forEach((button,index)=>{
       const medium=media[index];
       button.classList?.remove?.('active');
