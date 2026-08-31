@@ -13,3 +13,15 @@
   font-weight:400;
   font-display:block;
 }
+
+.presentation-chalkboard .academy-board-object-text.academy-text-heading,
+.presentation-chalkboard .academy-board-object-text.academy-text-heading span{
+  font-family:"Academy KG Sketch" !important;
+}
+
+.presentation-chalkboard .academy-board-object-text.academy-text-normal,
+.presentation-chalkboard .academy-board-object-text.academy-text-normal span,
+.presentation-chalkboard .academy-board-object-text.academy-text-small,
+.presentation-chalkboard .academy-board-object-text.academy-text-small span{
+  font-family:"Academy DJB Chalk" !important;
+}
