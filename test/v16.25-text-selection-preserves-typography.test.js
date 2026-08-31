@@ -12,3 +12,8 @@ test('selecting an existing text object does not reapply or replace its typograp
   assert.doesNotMatch(body,/syncFrame\s*\(/);
   assert.doesNotMatch(body,/decorate\s*\(/);
 });
+
+test('selection-only DOM mutations do not trigger typography decoration',()=>{
+  assert.match(src,/const isSelectionOnlyMutation=/);
+  assert.match(src,/if\(records\.every\(isSelectionOnlyMutation\)\)return;/);
+});
