@@ -26,7 +26,7 @@ function startPresentationExtensions(){
   appendScript('presentation-stage-v16.17.js',()=>{
     appendScript('obsolete-background-controls.js');
     appendScript('presentation-medium-selection.js');
-    appendScript('presentation-content-shell.js');
+    appendScript('presentation-text-system.js',()=>appendScript('presentation-content-shell.js'));
     appendScript('media-library-scene-picker.js',()=>appendScript('responsive-height-v16.23.js'));
   });
 }
