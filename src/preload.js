@@ -24,30 +24,12 @@ contextBridge.exposeInMainWorld('academyDesktop', {
 
 function reportChalkFontRuntime(){
   const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · KG FONT: (?:OK|FEHLER)$/,'');
-  const report=()=>{
-    const loaded=document.fonts.check('24px "KG Second Chances Sketch"');
-    document.title=`${baseTitle} · KG FONT: ${loaded?'OK':'FEHLER'}`;
-    document.documentElement.dataset.kgFontRuntime=loaded?'ok':'error';
-  };
-  document.fonts.ready.then(report).catch(()=>{
-    document.title=`${baseTitle} · KG FONT: FEHLER`;
-    document.documentElement.dataset.kgFontRuntime='error';
-  });
+  const loaded=document.fonts.check('24px "Academy KG Sketch"')&&document.fonts.check('24px "Academy DJB Chalk"');
+  document.title=`${baseTitle} · KG FONT: ${loaded?'OK':'FEHLER'}`;
+  document.documentElement.dataset.kgFontRuntime=loaded?'ok':'error';
 }
 
-// Renderer-Erweiterungen werden erst nach fertigem DOM geladen.
-window.addEventListener('DOMContentLoaded', () => {
-  const fontStyle = document.createElement('link');
-  fontStyle.rel = 'stylesheet';
-  fontStyle.href = 'academy-fonts.css';
-  fontStyle.addEventListener('load',reportChalkFontRuntime,{once:true});
-  fontStyle.addEventListener('error',()=>{
-    const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · KG FONT: (?:OK|FEHLER)$/,'');
-    document.title=`${baseTitle} · KG FONT: FEHLER`;
-    document.documentElement.dataset.kgFontRuntime='error';
-  },{once:true});
-  document.head.appendChild(fontStyle);
-
+function startPresentationExtensions(){
   const style = document.createElement('link');
   style.rel = 'stylesheet';
   style.href = 'presentation-stage-v16.17.css';
@@ -106,4 +88,28 @@ window.addEventListener('DOMContentLoaded', () => {
     document.documentElement.appendChild(mediaPickerScript);
   };
   document.documentElement.appendChild(stageScript);
+}
+
+// Renderer-Erweiterungen starten erst, wenn beide gebündelten Tafelschriften wirklich geladen sind.
+window.addEventListener('DOMContentLoaded', () => {
+  const fontStyle = document.createElement('link');
+  fontStyle.rel = 'stylesheet';
+  fontStyle.href = 'academy-fonts.css';
+  fontStyle.addEventListener('load',()=>{
+    Promise.all([
+      document.fonts.load('24px "Academy KG Sketch"'),
+      document.fonts.load('24px "Academy DJB Chalk"')
+    ]).then(()=>{
+      reportChalkFontRuntime();
+      startPresentationExtensions();
+    }).catch(()=>{
+      reportChalkFontRuntime();
+      startPresentationExtensions();
+    });
+  },{once:true});
+  fontStyle.addEventListener('error',()=>{
+    reportChalkFontRuntime();
+    startPresentationExtensions();
+  },{once:true});
+  document.head.appendChild(fontStyle);
 });
