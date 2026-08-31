@@ -74,12 +74,139 @@
   });
  }
 
+ function createEngine(){
+  const objects=[];
+  let selectedId=null;
+  let editingId=null;
+  let medium='none';
+
+  function getObject(id){
+   return objects.find(object=>object.id===id)||null;
+  }
+
+  function getObjects(){
+   return objects.map(object=>({...object}));
+  }
+
+  function getState(){
+   return {selectedId,editingId,medium};
+  }
+
+  function addText(kind,overrides={}){
+   const object=createTextObject(kind,overrides);
+   objects.push(object);
+   selectedId=object.id;
+   editingId=null;
+   return {...object};
+  }
+
+  function select(id){
+   if(id===null){selectedId=null;editingId=null;return true;}
+   if(!getObject(id))return false;
+   selectedId=id;
+   if(editingId&&editingId!==id)editingId=null;
+   return true;
+  }
+
+  function beginEdit(id=selectedId){
+   if(!id||!getObject(id))return false;
+   selectedId=id;
+   editingId=id;
+   return true;
+  }
+
+  function endEdit(){
+   if(!editingId)return false;
+   editingId=null;
+   return true;
+  }
+
+  function updateContent(content){
+   const object=getObject(editingId);
+   if(!object||typeof content!=='string')return false;
+   object.content=content;
+   return true;
+  }
+
+  function deleteSelected(){
+   if(!selectedId||editingId)return false;
+   const index=objects.findIndex(object=>object.id===selectedId);
+   if(index<0)return false;
+   objects.splice(index,1);
+   selectedId=null;
+   return true;
+  }
+
+  function moveSelected(dx,dy){
+   const object=getObject(selectedId);
+   if(!object||editingId)return false;
+   object.x=Math.max(0,object.x+normalizeNumber(dx,0));
+   object.y=Math.max(0,object.y+normalizeNumber(dy,0));
+   return true;
+  }
+
+  function setAlignment(align){
+   const object=getObject(selectedId);
+   if(!object||!['left','center','right'].includes(align))return false;
+   object.align=align;
+   return true;
+  }
+
+  function setCustomColor(color){
+   const object=getObject(selectedId);
+   if(!object)return false;
+   object.customColor=typeof color==='string'&&color?color:null;
+   return true;
+  }
+
+  function duplicateSelected(){
+   const object=getObject(selectedId);
+   if(!object)return null;
+   const copy=duplicateTextObject(object);
+   objects.push(copy);
+   selectedId=copy.id;
+   editingId=null;
+   return {...copy};
+  }
+
+  function setMedium(nextMedium){
+   assertMedium(nextMedium);
+   if(medium===nextMedium)return false;
+   medium=nextMedium;
+   return true;
+  }
+
+  function getResolvedStyle(id){
+   const object=getObject(id);
+   return object?resolveStyle(object,medium):null;
+  }
+
+  return Object.freeze({
+   addText,
+   select,
+   beginEdit,
+   endEdit,
+   updateContent,
+   deleteSelected,
+   moveSelected,
+   setAlignment,
+   setCustomColor,
+   duplicateSelected,
+   setMedium,
+   getObject:id=>{const object=getObject(id);return object?{...object}:null;},
+   getObjects,
+   getState,
+   getResolvedStyle
+  });
+ }
+
  return Object.freeze({
   TEXT_KINDS,
   DEFAULT_CONTENT,
   MEDIUM_PROFILES,
   createTextObject,
   resolveStyle,
-  duplicateTextObject
+  duplicateTextObject,
+  createEngine
  });
 });
