@@ -10,7 +10,10 @@ test('debug: normal and small chalk text retain historical chalk rendering treat
   assert.match(ux,/academy-text-normal[\s\S]*letter-spacing:\.01em!important/);
 });
 
-test('debug: normal and small use the historical direct DJB family before fallbacks',()=>{
-  assert.match(ux,/font-family:\"DJB Chalk It Up\",\"Segoe Print\",\"Comic Sans MS\",cursive!important/);
-  assert.match(ux,/const family=heading\?'\\\"Academy KG Sketch\\\"':'\\\"DJB Chalk It Up\\\",\\\"Segoe Print\\\",\\\"Comic Sans MS\\\",cursive'/);
+test('debug: chalk font ownership is CSS-only and uses bundled aliases',()=>{
+  assert.match(ux,/academy-text-heading[\s\S]*font-family:\"Academy KG Sketch\"!important/);
+  assert.match(ux,/academy-text-normal[\s\S]*font-family:\"Academy DJB Chalk\"!important/);
+  assert.match(ux,/academy-text-small[\s\S]*font-family:\"Academy DJB Chalk\"!important/);
+  assert.doesNotMatch(ux,/style\.setProperty\('font-family'/);
+  assert.doesNotMatch(ux,/\"Segoe Print\",\"Comic Sans MS\",cursive/);
 });
