@@ -71,3 +71,70 @@ test('rejects unsupported text kinds and presentation media',()=>{
  const text=TextSystem.createTextObject('normal');
  assert.throws(()=>TextSystem.resolveStyle(text,'whiteboard'),/Unsupported presentation medium/);
 });
+
+test('engine adds selects and edits one text object without changing its identity',()=>{
+ const engine=TextSystem.createEngine();
+ const text=engine.addText('normal');
+ assert.equal(engine.getState().selectedId,text.id);
+ assert.equal(engine.beginEdit(text.id),true);
+ assert.equal(engine.getState().editingId,text.id);
+ assert.equal(engine.updateContent('Geänderter Text'),true);
+ assert.equal(engine.getObject(text.id).content,'Geänderter Text');
+ assert.equal(engine.getObject(text.id).id,text.id);
+ assert.equal(engine.endEdit(),true);
+ assert.equal(engine.getState().editingId,null);
+});
+
+test('delete removes selected object only outside active text editing',()=>{
+ const engine=TextSystem.createEngine();
+ const text=engine.addText('heading');
+ engine.beginEdit(text.id);
+ assert.equal(engine.deleteSelected(),false);
+ assert.equal(engine.getObjects().length,1);
+ engine.endEdit();
+ assert.equal(engine.deleteSelected(),true);
+ assert.equal(engine.getObjects().length,0);
+ assert.equal(engine.getState().selectedId,null);
+});
+
+test('moving selected text changes only position and clamps to non-negative coordinates',()=>{
+ const engine=TextSystem.createEngine();
+ const text=engine.addText('small',{content:'Position',x:40,y:50});
+ const before={...engine.getObject(text.id)};
+ assert.equal(engine.moveSelected(-100,35),true);
+ const moved=engine.getObject(text.id);
+ assert.equal(moved.x,0);
+ assert.equal(moved.y,85);
+ assert.equal(moved.content,before.content);
+ assert.equal(moved.kind,before.kind);
+ assert.equal(moved.align,before.align);
+ assert.equal(moved.customColor,before.customColor);
+});
+
+test('alignment color and duplication are applied through the selected object',()=>{
+ const engine=TextSystem.createEngine();
+ const original=engine.addText('normal',{content:'Werkzeug',x:20,y:30});
+ assert.equal(engine.setAlignment('center'),true);
+ assert.equal(engine.setCustomColor('#00aaff'),true);
+ const copy=engine.duplicateSelected();
+ assert.equal(engine.getObject(original.id).align,'center');
+ assert.equal(engine.getObject(original.id).customColor,'#00aaff');
+ assert.equal(copy.align,'center');
+ assert.equal(copy.customColor,'#00aaff');
+ assert.equal(copy.x,38);
+ assert.equal(copy.y,48);
+ assert.equal(engine.getState().selectedId,copy.id);
+});
+
+test('medium switch preserves every text property and changes resolved style only',()=>{
+ const engine=TextSystem.createEngine();
+ const text=engine.addText('heading',{content:'Medium',x:111,y:222,align:'right'});
+ const before={...engine.getObject(text.id)};
+ assert.equal(engine.setMedium('board'),true);
+ assert.deepEqual(engine.getObject(text.id),before);
+ assert.equal(engine.getState().medium,'board');
+ assert.equal(engine.getResolvedStyle(text.id).fontFamily,'KG Second Chances Sketch');
+ assert.equal(engine.setMedium('none'),true);
+ assert.deepEqual(engine.getObject(text.id),before);
+ assert.equal(engine.getResolvedStyle(text.id).fontFamily,'Arial');
+});
