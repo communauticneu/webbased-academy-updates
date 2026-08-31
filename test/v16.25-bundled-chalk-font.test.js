@@ -18,10 +18,12 @@ test('both approved chalk fonts are bundled behind Academy aliases',()=>{
 test('presentation extensions start independently from chalk font loading',()=>{
  const dom=preload.indexOf("window.addEventListener('DOMContentLoaded'");
  const start=preload.indexOf('startPresentationExtensions();',dom);
- const load=preload.indexOf("document.fonts.load('24px \"Academy KG Sketch\"')",dom);
+ const load=preload.indexOf('loadAcademyFonts();',dom);
  assert.ok(dom>=0&&start>dom&&load>start);
  const fontBlock=preload.slice(load);
  assert.doesNotMatch(fontBlock,/startPresentationExtensions\(\)/);
+ assert.match(preload,/new FontFace\('Academy KG Sketch'/);
+ assert.match(preload,/new FontFace\('Academy DJB Chalk'/);
 });
 
 test('chalk font activation follows the real visible chalkboard state',()=>{
