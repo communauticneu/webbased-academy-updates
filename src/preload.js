@@ -117,8 +117,10 @@ function startPresentationExtensions(){
   document.documentElement.appendChild(stageScript);
 }
 
-// Renderer-Erweiterungen starten erst, wenn beide gebündelten Tafelschriften wirklich geladen sind.
+// Präsentationsoberfläche startet unabhängig von der Schriftprüfung.
 window.addEventListener('DOMContentLoaded', () => {
+  startPresentationExtensions();
+
   const fontStyle = document.createElement('link');
   fontStyle.rel = 'stylesheet';
   fontStyle.href = 'academy-fonts.css';
@@ -128,15 +130,12 @@ window.addEventListener('DOMContentLoaded', () => {
       document.fonts.load('24px "Academy DJB Chalk"')
     ]).then(()=>{
       reportChalkFontRuntime();
-      startPresentationExtensions();
     }).catch(()=>{
       reportChalkFontRuntime();
-      startPresentationExtensions();
     });
   },{once:true});
   fontStyle.addEventListener('error',()=>{
     reportChalkFontRuntime();
-    startPresentationExtensions();
   },{once:true});
   document.head.appendChild(fontStyle);
 });
