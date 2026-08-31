@@ -23,10 +23,36 @@ contextBridge.exposeInMainWorld('academyDesktop', {
 });
 
 function reportChalkFontRuntime(){
-  const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · KG FONT: (?:OK|FEHLER)$/,'');
+  const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · FONT:[^·]+(?: · TEXT:[^·]+)?$/,'');
   const loaded=document.fonts.check('24px "Academy KG Sketch"')&&document.fonts.check('24px "Academy DJB Chalk"');
-  document.title=`${baseTitle} · KG FONT: ${loaded?'OK':'FEHLER'}`;
+  document.title=`${baseTitle} · FONT:${loaded?'OK':'FEHLER'}`;
   document.documentElement.dataset.kgFontRuntime=loaded?'ok':'error';
+}
+
+function reportTextRuntime(){
+  const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · FONT:[^·]+(?: · TEXT:[^·]+)?$/,'');
+  const loaded=document.fonts.check('24px "Academy KG Sketch"')&&document.fonts.check('24px "Academy DJB Chalk"');
+  const node=document.querySelector('.academy-board-object-text.academy-text-normal');
+  const span=node?.querySelector('span');
+  if(!node||!span){
+    document.title=`${baseTitle} · FONT:${loaded?'OK':'FEHLER'} · TEXT:WARTET`;
+    return;
+  }
+  const cs=getComputedStyle(span);
+  const rect=span.getBoundingClientRect();
+  const lineHeight=parseFloat(cs.lineHeight)||0;
+  const lines=lineHeight?Math.max(1,Math.round(rect.height/lineHeight)):0;
+  const family=String(cs.fontFamily||'').replace(/["']/g,'').split(',')[0].trim();
+  document.title=`${baseTitle} · FONT:${loaded?'OK':'FEHLER'} · TEXT:${family}|${cs.fontSize}|${lines}Z`;
+}
+
+function startTextRuntimeProbe(){
+  let count=0;
+  const timer=setInterval(()=>{
+    reportTextRuntime();
+    count+=1;
+    if(count>=120)clearInterval(timer);
+  },500);
 }
 
 function startPresentationExtensions(){
@@ -58,6 +84,7 @@ function startPresentationExtensions(){
           const directTextUxScript = document.createElement('script');
           directTextUxScript.src = 'presentation-text-direct-ux.js';
           directTextUxScript.onload = () => {
+            startTextRuntimeProbe();
             const stageInteractionScript = document.createElement('script');
             stageInteractionScript.src = 'presentation-object-stage-interaction.js';
             document.documentElement.appendChild(stageInteractionScript);
