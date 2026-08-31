@@ -58,3 +58,11 @@ test('delete controls route through the editing-safe engine deletion path',()=>{
  assert.ok(text.includes("engine.deleteSelected()"));
  assert.ok(text.includes("academy-text-content[contenteditable=\"true\"]"));
 });
+
+test('text layer is hosted by the always-visible stage, not the presentation medium surface',()=>{
+ const text=src('presentation-text-system.js');
+ assert.ok(text.includes("const stage=doc.querySelector?.('.stage')"));
+ assert.ok(text.includes('stage.appendChild(layer)'));
+ assert.ok(text.includes('stage.appendChild(context)'));
+ assert.equal(text.includes("const surface=doc.getElementById?.('presentationSurface');if(!surface)return false"),false);
+});
