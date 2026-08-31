@@ -119,6 +119,8 @@ test('alignment color and duplication are applied through the selected object',(
  const copy=engine.duplicateSelected();
  assert.equal(engine.getObject(original.id).align,'center');
  assert.equal(engine.getObject(original.id).customColor,'#00aaff');
+ assert.equal(copy.content,'Werkzeug');
+ assert.equal(copy.kind,'normal');
  assert.equal(copy.align,'center');
  assert.equal(copy.customColor,'#00aaff');
  assert.equal(copy.x,38);
@@ -137,4 +139,33 @@ test('medium switch preserves every text property and changes resolved style onl
  assert.equal(engine.setMedium('none'),true);
  assert.deepEqual(engine.getObject(text.id),before);
  assert.equal(engine.getResolvedStyle(text.id).fontFamily,'Arial');
+});
+
+test('selection editing and movement never change the resolved font',()=>{
+ const engine=TextSystem.createEngine();
+ const text=engine.addText('normal',{x:60,y:70});
+ engine.setMedium('board');
+ const expected=engine.getResolvedStyle(text.id).fontFamily;
+ assert.equal(expected,'DJB Chalk It Up');
+ engine.select(text.id);
+ assert.equal(engine.getResolvedStyle(text.id).fontFamily,expected);
+ engine.beginEdit(text.id);
+ assert.equal(engine.getResolvedStyle(text.id).fontFamily,expected);
+ engine.endEdit();
+ engine.moveSelected(25,30);
+ assert.equal(engine.getResolvedStyle(text.id).fontFamily,expected);
+ assert.equal(engine.getObject(text.id).x,85);
+ assert.equal(engine.getObject(text.id).y,100);
+});
+
+test('custom color and position survive both medium directions',()=>{
+ const engine=TextSystem.createEngine();
+ const text=engine.addText('small',{x:91,y:143,customColor:'#18c37e'});
+ const expected={...engine.getObject(text.id)};
+ engine.setMedium('board');
+ assert.deepEqual(engine.getObject(text.id),expected);
+ assert.equal(engine.getResolvedStyle(text.id).color,'#18c37e');
+ engine.setMedium('none');
+ assert.deepEqual(engine.getObject(text.id),expected);
+ assert.equal(engine.getResolvedStyle(text.id).color,'#18c37e');
 });
