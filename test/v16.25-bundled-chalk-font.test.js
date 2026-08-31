@@ -4,6 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const ux=fs.readFileSync(path.join(__dirname,'../src/presentation-text-direct-ux.js'),'utf8');
 const preload=fs.readFileSync(path.join(__dirname,'../src/preload.js'),'utf8');
+const main=fs.readFileSync(path.join(__dirname,'../src/main.js'),'utf8');
 const fonts=fs.readFileSync(path.join(__dirname,'../src/academy-fonts.css'),'utf8');
 
 test('both approved chalk fonts are bundled behind Academy aliases',()=>{
@@ -30,4 +31,13 @@ test('chalk font activation follows the real visible chalkboard state',()=>{
  assert.match(ux,/const boardActive=.*presentation-chalkboard.*is-visible/s);
  assert.doesNotMatch(ux,/surface\.dataset\.medium===['"]chalkboard['"]/);
  assert.match(ux,/removeProperty\('font-family'\)/);
+});
+
+test('desktop runtime diagnostic reports all three chalk text kinds and both Academy aliases',()=>{
+ assert.match(main,/academy-text-heading/);
+ assert.match(main,/academy-text-normal/);
+ assert.match(main,/academy-text-small/);
+ assert.match(main,/Academy KG Sketch/);
+ assert.match(main,/Academy DJB Chalk/);
+ assert.match(main,/ACADEMY FONT RUNTIME/);
 });
