@@ -5,9 +5,10 @@ const path=require('node:path');
 const src=fs.readFileSync(path.join(__dirname,'..','src','presentation-text-direct-ux.js'),'utf8');
 
 test('selecting an existing text object does not reapply or replace its typography',()=>{
-  const match=src.match(/const activate=node=>\{([\s\S]*?)\};\n layer\.addEventListener\('pointerdown'/);
-  assert.ok(match,'local text activation handler must exist');
-  const body=match[1];
+  const start=src.indexOf('const activate=node=>{');
+  const end=src.indexOf("layer.addEventListener('pointerdown'",start);
+  assert.ok(start>=0&&end>start,'local text activation handler must exist');
+  const body=src.slice(start,end);
   assert.doesNotMatch(body,/syncFont\s*\(/);
   assert.doesNotMatch(body,/syncFrame\s*\(/);
   assert.doesNotMatch(body,/decorate\s*\(/);
