@@ -62,7 +62,7 @@
   const style=doc.createElement('style');style.id='academyTextSystemStyle';style.textContent=`
 @font-face{font-family:'KG Second Chances Sketch';src:url('./assets/fonts/KGSecondChancesSketch.ttf') format('truetype');font-display:swap}
 @font-face{font-family:'DJB Chalk It Up';src:url('./assets/fonts/DJB Chalk It Up.ttf') format('truetype');font-display:swap}
-#presentationSurface{position:relative!important}
+#stage{position:relative!important}
 #academyTextObjectLayer{position:absolute;inset:0;z-index:35;overflow:hidden;pointer-events:none}
 .academy-text-object{position:absolute;display:inline-flex;align-items:flex-start;max-width:92%;min-width:56px;box-sizing:border-box;border:1px solid transparent;border-radius:5px;padding:4px 28px 4px 6px;cursor:move;pointer-events:auto;user-select:none}
 .academy-text-object.is-selected{border-color:rgba(76,200,255,.7);background:rgba(5,18,27,.08)}
@@ -97,10 +97,11 @@
 
  function install(doc){
   if(!doc)return false;if(runtime?.doc===doc)return true;
-  const surface=doc.getElementById?.('presentationSurface');if(!surface)return false;
+  const stage=doc.querySelector?.('.stage');if(!stage)return false;
+  const surface=stage;
   ensureStyle(doc);
-  let layer=doc.getElementById('academyTextObjectLayer');if(!layer){layer=doc.createElement('div');layer.id='academyTextObjectLayer';surface.appendChild(layer);}
-  let context=doc.getElementById('academyTextContext');if(!context){context=doc.createElement('div');context.id='academyTextContext';context.className='academy-text-context';context.hidden=true;context.innerHTML='<button type="button" data-align="left" title="Linksbündig">≡</button><button type="button" data-align="center" title="Zentriert">≣</button><button type="button" data-align="right" title="Rechtsbündig">≡</button><input type="color" data-text-color title="Schriftfarbe" value="#ffffff"><button type="button" data-duplicate title="Duplizieren">⧉</button>';surface.appendChild(context);}
+  let layer=doc.getElementById('academyTextObjectLayer');if(!layer){layer=doc.createElement('div');layer.id='academyTextObjectLayer';stage.appendChild(layer);}
+  let context=doc.getElementById('academyTextContext');if(!context){context=doc.createElement('div');context.id='academyTextContext';context.className='academy-text-context';context.hidden=true;context.innerHTML='<button type="button" data-align="left" title="Linksbündig">≡</button><button type="button" data-align="center" title="Zentriert">≣</button><button type="button" data-align="right" title="Rechtsbündig">≡</button><input type="color" data-text-color title="Schriftfarbe" value="#ffffff"><button type="button" data-duplicate title="Duplizieren">⧉</button>';stage.appendChild(context);}
   const engine=createEngine();runtime={doc,surface,layer,context,engine};
 
   layer.addEventListener('click',event=>{
