@@ -24,36 +24,57 @@ function createWindow() {
   });
   win.maximize();
   win.webContents.once('did-finish-load', () => {
-    setTimeout(async () => {
+    let lastFontRuntime='';
+    let probes=0;
+    const probe=async()=>{
       if (!win || win.isDestroyed()) return;
       try {
-        const diagnostic = await win.webContents.executeJavaScript(`(async() => {
-          const family='KG Second Chances Sketch';
-          const sample='Neue Überschrift ABCDEFG 12345';
-          try{await document.fonts.load('46px "'+family+'"',sample);}catch{}
-          const canvas=document.createElement('canvas');
-          const ctx=canvas.getContext('2d');
-          ctx.font='46px "'+family+'"';
-          const kgWidth=ctx.measureText(sample).width;
-          ctx.font='46px Arial';
-          const arialWidth=ctx.measureText(sample).width;
-          const real=document.querySelector('.academy-board-object-text');
+        const diagnostic = await win.webContents.executeJavaScript(`(() => {
+          const read=(kind)=>{
+            const node=document.querySelector('.academy-board-object-text.academy-text-'+kind);
+            const span=node?.querySelector('span');
+            if(!node||!span)return null;
+            const nodeStyle=getComputedStyle(node);
+            const spanStyle=getComputedStyle(span);
+            return {
+              nodeFamily:nodeStyle.fontFamily,
+              spanFamily:spanStyle.fontFamily,
+              nodeSize:nodeStyle.fontSize,
+              spanSize:spanStyle.fontSize,
+              nodeWeight:nodeStyle.fontWeight,
+              spanWeight:spanStyle.fontWeight,
+              inlineNodeFamily:node.style.getPropertyValue('font-family'),
+              inlineSpanFamily:span.style.getPropertyValue('font-family')
+            };
+          };
           return {
-            fontCheck:document.fonts.check('46px "'+family+'"',sample),
-            kgWidth:Number(kgWidth.toFixed(2)),
-            arialWidth:Number(arialWidth.toFixed(2)),
-            glyphsDiffer:Math.abs(kgWidth-arialWidth)>1,
-            realTextExists:!!real,
-            realTextFont:real?getComputedStyle(real).fontFamily:null,
-            readyClass:document.documentElement.classList.contains('academy-chalk-font-ready')
+            kgAliasCheck:document.fonts.check('39px "Academy KG Sketch"','Neue Überschrift'),
+            djbAliasCheck:document.fonts.check('25px "Academy DJB Chalk"','Neuer Text'),
+            fontsStatus:document.fonts.status,
+            surfaceClass:document.getElementById('presentationSurface')?.className||'',
+            layerClass:document.getElementById('academyBoardObjectLayer')?.className||'',
+            heading:read('heading'),
+            normal:read('normal'),
+            small:read('small')
           };
         })()`);
-        console.log('ACADEMY FONT GLYPH '+JSON.stringify(diagnostic));
+        const signature=JSON.stringify(diagnostic);
+        if(signature!==lastFontRuntime){
+          lastFontRuntime=signature;
+          console.log('ACADEMY FONT RUNTIME '+signature);
+        }
       } catch (error) {
-        console.log('ACADEMY FONT GLYPH ERROR '+String(error?.message||error));
+        console.log('ACADEMY FONT RUNTIME ERROR '+String(error?.message||error));
       }
+      probes+=1;
+      if(probes>=240)clearInterval(timer);
+    };
+    const timer=setInterval(probe,500);
+    setTimeout(async()=>{
+      await probe();
+      if (!win || win.isDestroyed()) return;
       win.show();
-    }, 1200);
+    },1200);
   });
   win.loadFile(path.join(__dirname, 'index.html'));
 }
