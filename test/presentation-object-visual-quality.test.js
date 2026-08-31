@@ -19,11 +19,13 @@ test('post-it styling uses realistic paper treatment rather than a flat rectangl
   assert.match(css,/::after/);
 });
 
-test('chalkboard context prioritizes DJB Chalk It Up with safe fallbacks and readable stage size',()=>{
-  const css=editor.editorStyles();
+test('chalkboard context uses approved Academy aliases while preserving readable stage size',()=>{
+  const ux=fs.readFileSync(path.join(__dirname,'../src/presentation-text-direct-ux.js'),'utf8');
+  const fonts=fs.readFileSync(path.join(__dirname,'../src/academy-fonts.css'),'utf8');
   const stage=fs.readFileSync(path.join(__dirname,'../src/presentation-stage-v16.17.css'),'utf8');
-  assert.match(css,/DJB Chalk It Up/);
-  assert.match(css,/Segoe Print/);
+  assert.match(fonts,/Academy DJB Chalk[\s\S]*DJB Chalk It Up\.ttf/);
+  assert.match(ux,/academy-text-normal[\s\S]*Academy DJB Chalk/);
+  assert.match(ux,/academy-text-small[\s\S]*Academy DJB Chalk/);
   assert.match(stage,/\.stage \.academy-board-object-text\{[^}]*font-size:clamp\(24px,2\.4vw,54px\)!important/);
 });
 
