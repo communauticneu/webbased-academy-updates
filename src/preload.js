@@ -22,20 +22,20 @@ contextBridge.exposeInMainWorld('academyDesktop', {
   onUpdate: callback => ipcRenderer.on('academy-update', (_event, data) => callback(data))
 });
 
+let academyFontsLoaded=false;
+
 function reportChalkFontRuntime(){
   const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · FONT:[^·]+(?: · TEXT:[^·]+)?$/,'');
-  const loaded=document.fonts.check('24px "Academy KG Sketch"')&&document.fonts.check('24px "Academy DJB Chalk"');
-  document.title=`${baseTitle} · FONT:${loaded?'OK':'FEHLER'}`;
-  document.documentElement.dataset.kgFontRuntime=loaded?'ok':'error';
+  document.title=`${baseTitle} · FONT:${academyFontsLoaded?'OK':'FEHLER'}`;
+  document.documentElement.dataset.kgFontRuntime=academyFontsLoaded?'ok':'error';
 }
 
 function reportTextRuntime(){
   const baseTitle=String(document.title||'Webbased Academy Creator').replace(/ · FONT:[^·]+(?: · TEXT:[^·]+)?$/,'');
-  const loaded=document.fonts.check('24px "Academy KG Sketch"')&&document.fonts.check('24px "Academy DJB Chalk"');
   const node=document.querySelector('.academy-board-object-text.academy-text-normal');
   const span=node?.querySelector('span');
   if(!node||!span){
-    document.title=`${baseTitle} · FONT:${loaded?'OK':'FEHLER'} · TEXT:WARTET`;
+    document.title=`${baseTitle} · FONT:${academyFontsLoaded?'OK':'FEHLER'} · TEXT:WARTET`;
     return;
   }
   const cs=getComputedStyle(span);
@@ -43,7 +43,7 @@ function reportTextRuntime(){
   const lineHeight=parseFloat(cs.lineHeight)||0;
   const lines=lineHeight?Math.max(1,Math.round(rect.height/lineHeight)):0;
   const family=String(cs.fontFamily||'').replace(/["']/g,'').split(',')[0].trim();
-  document.title=`${baseTitle} · FONT:${loaded?'OK':'FEHLER'} · TEXT:${family}|${cs.fontSize}|${lines}Z`;
+  document.title=`${baseTitle} · FONT:${academyFontsLoaded?'OK':'FEHLER'} · TEXT:${family}|${cs.fontSize}|${lines}Z`;
 }
 
 function startTextRuntimeProbe(){
@@ -53,6 +53,24 @@ function startTextRuntimeProbe(){
     count+=1;
     if(count>=120)clearInterval(timer);
   },500);
+}
+
+async function loadAcademyFonts(){
+  try{
+    const kgUrl=new URL('assets/fonts/KGSecondChancesSketch.ttf',document.baseURI).href;
+    const djbUrl=new URL('assets/fonts/DJB Chalk It Up.ttf',document.baseURI).href;
+    const kgFace=new FontFace('Academy KG Sketch',`url("${kgUrl}")`,{style:'normal',weight:'400'});
+    const djbFace=new FontFace('Academy DJB Chalk',`url("${djbUrl}")`,{style:'normal',weight:'400'});
+    const [kgLoaded,djbLoaded]=await Promise.all([kgFace.load(),djbFace.load()]);
+    document.fonts.add(kgLoaded);
+    document.fonts.add(djbLoaded);
+    academyFontsLoaded=kgLoaded.status==='loaded'&&djbLoaded.status==='loaded';
+  }catch(error){
+    academyFontsLoaded=false;
+    console.error('Academy font runtime load failed',error);
+  }
+  reportChalkFontRuntime();
+  document.dispatchEvent(new CustomEvent('academy-fonts-runtime-ready',{detail:{loaded:academyFontsLoaded}}));
 }
 
 function startPresentationExtensions(){
@@ -124,18 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const fontStyle = document.createElement('link');
   fontStyle.rel = 'stylesheet';
   fontStyle.href = 'academy-fonts.css';
-  fontStyle.addEventListener('load',()=>{
-    Promise.all([
-      document.fonts.load('24px "Academy KG Sketch"'),
-      document.fonts.load('24px "Academy DJB Chalk"')
-    ]).then(()=>{
-      reportChalkFontRuntime();
-    }).catch(()=>{
-      reportChalkFontRuntime();
-    });
-  },{once:true});
-  fontStyle.addEventListener('error',()=>{
-    reportChalkFontRuntime();
-  },{once:true});
   document.head.appendChild(fontStyle);
+
+  loadAcademyFonts();
 });
