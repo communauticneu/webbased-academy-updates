@@ -25,8 +25,8 @@ test('content shell delegates the three text kinds to the text system',()=>{
 test('medium selector publishes board and none without owning font logic',()=>{
  const medium=src('presentation-medium-selection.js');
  assert.ok(medium.includes('academy-presentation-medium-change'));
- assert.ok(medium.includes("medium:'board'"));
- assert.ok(medium.includes("medium:'none'"));
+ assert.ok(medium.includes("publishMedium(doc,'board')"));
+ assert.ok(medium.includes("publishMedium(doc,'none')"));
  for(const forbidden of ['KG Second Chances Sketch','DJB Chalk It Up','fontFamily','font-family'])assert.equal(medium.includes(forbidden),false,`medium selector owns font logic: ${forbidden}`);
 });
 
