@@ -13,3 +13,15 @@
   font-weight:400;
   font-display:block;
 }
+
+.academy-medium-chalkboard .academy-board-object-text.academy-text-heading,
+.academy-medium-chalkboard .academy-board-object-text.academy-text-heading span{
+  font-family:"Academy KG Sketch" !important;
+}
+
+.academy-medium-chalkboard .academy-board-object-text.academy-text-normal,
+.academy-medium-chalkboard .academy-board-object-text.academy-text-normal span,
+.academy-medium-chalkboard .academy-board-object-text.academy-text-small,
+.academy-medium-chalkboard .academy-board-object-text.academy-text-small span{
+  font-family:"Academy DJB Chalk" !important;
+}
