@@ -34,9 +34,9 @@ test('chalk font activation follows the real visible chalkboard state',()=>{
 });
 
 test('desktop runtime diagnostic reports all three chalk text kinds and both Academy aliases',()=>{
- assert.match(main,/academy-text-heading/);
- assert.match(main,/academy-text-normal/);
- assert.match(main,/academy-text-small/);
+ assert.match(main,/read\('heading'\)/);
+ assert.match(main,/read\('normal'\)/);
+ assert.match(main,/read\('small'\)/);
  assert.match(main,/Academy KG Sketch/);
  assert.match(main,/Academy DJB Chalk/);
  assert.match(main,/ACADEMY FONT RUNTIME/);
