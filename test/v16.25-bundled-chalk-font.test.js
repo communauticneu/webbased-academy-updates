@@ -15,10 +15,13 @@ test('both approved chalk fonts are bundled behind Academy aliases',()=>{
  assert.ok(fs.existsSync(path.join(__dirname,'../src/assets/fonts/DJB Chalk It Up.ttf')));
 });
 
-test('font stylesheet loads before presentation scripts',()=>{
- const fi=preload.indexOf("fontStyle.href = 'academy-fonts.css'");
- const si=preload.indexOf("stageScript.src = 'presentation-stage-v16.17.js'");
- assert.ok(fi>=0&&si>fi);
+test('presentation extensions start independently from chalk font loading',()=>{
+ const dom=preload.indexOf("window.addEventListener('DOMContentLoaded'");
+ const start=preload.indexOf('startPresentationExtensions();',dom);
+ const load=preload.indexOf("document.fonts.load('24px \"Academy KG Sketch\"')",dom);
+ assert.ok(dom>=0&&start>dom&&load>start);
+ const fontBlock=preload.slice(load);
+ assert.doesNotMatch(fontBlock,/startPresentationExtensions\(\)/);
 });
 
 test('chalk font activation follows the real visible chalkboard state',()=>{
