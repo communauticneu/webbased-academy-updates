@@ -4,8 +4,9 @@ const fs=require('node:fs');
 const path=require('node:path');
 const TextSystem=require(path.join(__dirname,'..','src','presentation-text-system.js'));
 
-const free=fs.readFileSync(path.join(__dirname,'..','src','free-presentation.js'),'utf8');
 const text=fs.readFileSync(path.join(__dirname,'..','src','presentation-text-system.js'),'utf8');
+const guard=fs.readFileSync(path.join(__dirname,'..','src','presentation-text-editor-guard.js'),'utf8');
+const preload=fs.readFileSync(path.join(__dirname,'..','src','preload.js'),'utf8');
 
 test('text editor starts empty and selection works immediately after creation',()=>{
  const engine=TextSystem.createEngine();
@@ -18,10 +19,13 @@ test('text editor starts empty and selection works immediately after creation',(
  assert.equal(engine.getState().previewing,false);
 });
 
-test('scene machinery must not load or preview editor text while text tool is being completed',()=>{
- assert.match(free,/const EDITOR_TEXT_SCENE_SYNC=false;/);
- assert.match(free,/function loadEditorText\(scene\)\{\s*if\(!EDITOR_TEXT_SCENE_SYNC\)return false;/);
- assert.match(free,/function beginSceneTextPreview\(scene\)\{\s*if\(!EDITOR_TEXT_SCENE_SYNC\)return false;/);
+test('scene bridge cannot replace or preview the standalone editor',()=>{
+ assert.match(guard,/SCENE_TEXT_SYNC_ENABLED=false/);
+ assert.match(guard,/replaceObjects:\(\)=>false/);
+ assert.match(guard,/beginPreview:\(\)=>false/);
+ assert.match(guard,/endPreview:\(\)=>false/);
+ assert.ok(preload.indexOf('presentation-text-editor-guard.js')>preload.indexOf('presentation-text-system.js'));
+ assert.ok(preload.indexOf('presentation-content-shell.js')>preload.indexOf('presentation-text-editor-guard.js'));
 });
 
 test('visible text remains clickable and avatar remains pointer-transparent',()=>{
