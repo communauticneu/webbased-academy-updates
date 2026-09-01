@@ -73,10 +73,12 @@ test('text layer is hosted by the always-visible stage, not the presentation med
  assert.equal(text.includes("const surface=doc.getElementById?.('presentationSurface');if(!surface)return false"),false);
 });
 
-test('double-click editing preserves native word selection',()=>{
+test('double-click editing preserves native word selection across focus',()=>{
  const text=src('presentation-text-system.js');
  assert.ok(text.includes("const isEditing=state.editingId===object.id"));
  assert.ok(text.includes("if(!isEditing&&content.textContent!==object.content)content.textContent=object.content"));
- assert.equal(text.includes('selection.removeAllRanges()'),false);
+ assert.ok(text.includes('doc.getSelection?.()'));
+ assert.ok(text.includes('cloneRange()'));
+ assert.ok(text.includes('selection.addRange(savedRange)'));
  assert.equal(text.includes('range.collapse(false)'),false);
 });
