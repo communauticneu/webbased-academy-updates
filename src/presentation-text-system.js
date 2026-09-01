@@ -13,8 +13,8 @@
  const TEXT_KINDS=Object.freeze(['heading','normal','small']);
  const DEFAULT_CONTENT=Object.freeze({heading:'Neue Überschrift',normal:'Neuer Text',small:'Neuer Text'});
  const MEDIUM_PROFILES=Object.freeze({
-  none:Object.freeze({fonts:Object.freeze({heading:'Arial',normal:'Arial',small:'Arial'}),weights:Object.freeze({heading:700,normal:400,small:400}),sizes:Object.freeze({heading:36,normal:28,small:20}),defaultColor:'#ffffff'}),
-  board:Object.freeze({fonts:Object.freeze({heading:'KG Second Chances Sketch',normal:'DJB Chalk It Up',small:'DJB Chalk It Up'}),weights:Object.freeze({heading:400,normal:400,small:400}),sizes:Object.freeze({heading:39,normal:28,small:20}),defaultColor:'#ffffff'})
+  none:Object.freeze({fonts:Object.freeze({heading:'Arial',normal:'Arial',small:'Arial'}),weights:Object.freeze({heading:700,normal:400,small:400}),sizes:Object.freeze({heading:42,normal:33,small:25}),defaultColor:'#ffffff'}),
+  board:Object.freeze({fonts:Object.freeze({heading:'KG Second Chances Sketch',normal:'DJB Chalk It Up',small:'DJB Chalk It Up'}),weights:Object.freeze({heading:400,normal:400,small:400}),sizes:Object.freeze({heading:39,normal:34,small:28}),defaultColor:'#ffffff'})
  });
  let nextId=1;
  let runtime=null;
