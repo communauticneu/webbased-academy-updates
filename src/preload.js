@@ -20,7 +20,6 @@ contextBridge.exposeInMainWorld('academyDesktop', {
 });
 
 function appendScript(src,onload){const script=document.createElement('script');script.src=src;if(onload)script.onload=onload;document.documentElement.appendChild(script);}
-
 function startPresentationExtensions(){
   appendScript('presentation-text-startup-reset.js',()=>{
     const style=document.createElement('link');style.rel='stylesheet';style.href='presentation-stage-v16.17.css';document.head.appendChild(style);
@@ -28,6 +27,7 @@ function startPresentationExtensions(){
       appendScript('obsolete-background-controls.js');
       appendScript('presentation-medium-selection.js');
       appendScript('presentation-text-system.js',()=>{
+        appendScript('presentation-text-layout-sync.js');
         appendScript('presentation-text-miniature.js');
         appendScript('presentation-content-shell.js');
       });
@@ -35,5 +35,4 @@ function startPresentationExtensions(){
     });
   });
 }
-
 window.addEventListener('DOMContentLoaded',startPresentationExtensions);
