@@ -4,9 +4,7 @@
   "private": true,
   "description": "Webbased Academy Creator Desktop",
   "main": "src/main.js",
-  "scripts": {
-    "start":"electron .","test":"node --test","visual:check":"electron src/visual-check.js","dist":"electron-builder --win nsis","publish":"electron-builder --win nsis --publish always"
-  },
+  "scripts": {"start":"electron .","test":"node --test","visual:check":"electron src/visual-check.js","dist":"electron-builder --win nsis","publish":"electron-builder --win nsis --publish always"},
   "dependencies":{"electron-updater":"^6.6.2"},
   "devDependencies":{"electron":"^38.0.0","electron-builder":"^26.0.12"},
   "build":{"appId":"at.webbased.academy.creator","productName":"Webbased Academy Creator","directories":{"output":"releases"},"files":["src/**/*","package.json"],"win":{"target":["nsis"]},"nsis":{"oneClick":false,"allowToChangeInstallationDirectory":true,"createDesktopShortcut":true,"createStartMenuShortcut":true},"publish":{"provider":"github","owner":"communauticneu","repo":"webbased-academy-updates","releaseType":"release"},"artifactName":"Webbased-Academy-Creator-Setup-${version}.${ext}"}
