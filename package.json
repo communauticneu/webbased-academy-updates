@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "electron": "^38.0.0",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "electron-updater": "^6.6.2"
   },
   "build": {
     "appId": "at.webbased.academy.creator",
