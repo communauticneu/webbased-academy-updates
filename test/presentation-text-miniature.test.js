@@ -4,25 +4,24 @@ const fs=require('node:fs');
 const path=require('node:path');
 const src=name=>fs.readFileSync(path.join(__dirname,'..','src',name),'utf8');
 
-test('board miniature is a read-only projection of the existing Academy text engine',()=>{
-  const text=src('presentation-text-system.js');
-  assert.ok(text.includes("doc.getElementById('boardPreview')"),'miniature must target the existing boardPreview');
-  assert.ok(text.includes("academyTextMiniatureLayer"),'miniature must have a dedicated read-only projection layer');
-  assert.ok(text.includes('engine.getObjects()'),'miniature must read the existing engine objects');
-  assert.ok(text.includes('engine.getResolvedStyle(object.id)'),'miniature must reuse centrally resolved font/color/size');
-  assert.ok(text.includes('syncMiniaturePreview'),'main text render must synchronize the miniature');
+test('small-format projection reads the existing text engine without owning editor behavior',()=>{
+  const mini=src('presentation-text-miniature.js');
+  assert.ok(mini.includes("doc.getElementById('boardPreview')"));
+  assert.ok(mini.includes('AcademyTextSystem'));
+  assert.ok(mini.includes('engine.getObjects()'));
+  assert.ok(mini.includes('engine.getResolvedStyle(object.id)'));
+  assert.ok(mini.includes('pointer-events:none'));
+  assert.equal(mini.includes('contentEditable'),false);
+  assert.equal(mini.includes('deleteSelected'),false);
+  assert.equal(mini.includes('moveSelected'),false);
 });
 
-test('miniature must not become a second editable text system',()=>{
+test('main text runtime remains the single owner of fonts and editing',()=>{
   const text=src('presentation-text-system.js');
-  assert.ok(text.includes('#academyTextMiniatureLayer{'));
-  assert.ok(text.includes('pointer-events:none'));
-  assert.equal(text.includes('academy-miniature-delete'),false);
-  assert.equal(text.includes('academy-miniature-contenteditable'),false);
-});
-
-test('legacy board thumbnail text is only a fallback when no new text objects exist',()=>{
-  const text=src('presentation-text-system.js');
-  assert.ok(text.includes("preview.classList.toggle('academy-has-text-objects',objects.length>0)"));
-  assert.ok(text.includes("#boardPreview.academy-has-text-objects>.chalk-title"));
+  const mini=src('presentation-text-miniature.js');
+  assert.ok(text.includes('KGSecondChancesSketch.ttf'));
+  assert.ok(text.includes('DJB Chalk It Up.ttf'));
+  assert.equal(mini.includes('KGSecondChancesSketch.ttf'),false);
+  assert.equal(mini.includes('DJB Chalk It Up.ttf'),false);
+  assert.equal(mini.includes('@font-face'),false);
 });
