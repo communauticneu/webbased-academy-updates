@@ -30,8 +30,7 @@ test('V0.16.23 protects the global creator navigation while restructuring Vortra
   const html=read('src/index.html');
   const preload=read('src/preload.js');
   for(const label of ['Intro / Outro','Vortrag','Skripten','Cartoons','Coaching','Feedback','Podcast']) assert.match(html,new RegExp(label.replace(' / ',' \/ ')),`${label} must remain in the global navigation`);
-  assert.match(preload,/\/\/ V0\.16\.23 · Hauptmenü sichtbar halten/);
-  assert.match(preload,/\.app\{display:grid!important;grid-template-columns:230px minmax\(0,1fr\)!important/);
+  assert.match(preload,/webFrame\.insertCSS\('\.app\{display:grid!important;grid-template-columns:230px minmax\(0,1fr\)!important/);
   assert.match(preload,/\.app > \.sidebar\{display:block!important;visibility:visible!important;width:230px!important;min-width:230px!important/);
 });
 

@@ -25,7 +25,7 @@ test('V0.16.23 removes decorative glyph spans from the right editor tabs',()=>{
 });
 
 test('V0.16.23 loads media library styling before responsive sizing so final large-workspace tile sizes win deterministically',()=>{
-  assert.match(preload,/stageScript\.onload\s*=\s*\(\)\s*=>\s*\{[\s\S]*?mediaPickerScript\.src\s*=\s*'media-library-scene-picker\.js'[\s\S]*?mediaPickerScript\.onload\s*=\s*\(\)\s*=>\s*\{[\s\S]*?responsiveHeightScript\.src\s*=\s*'responsive-height-v16\.23\.js'/);
+  assert.match(preload,/appendScript\('presentation-stage-v16\.17\.js',\(\)=>\{[\s\S]*?appendScript\('media-library-scene-picker\.js',\(\)=>appendScript\('responsive-height-v16\.23\.js'\)\)/);
 });
 
 test('V0.16.23 keeps all seven media actions in one visible row without a horizontal scrollbar',()=>{

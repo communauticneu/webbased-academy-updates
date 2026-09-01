@@ -18,9 +18,8 @@ test('V0.16.23 measures the real remaining viewport height and updates it after 
 });
 
 test('V0.16.23 loads responsive sizing only after the production workspace script finished',()=>{
-  assert.match(preload,/stageScript\.onload\s*=\s*\(\)\s*=>\s*\{/);
-  assert.match(preload,/stageScript\.onload[\s\S]*?responsiveHeightScript\.src\s*=\s*'responsive-height-v16\.23\.js'/);
-  assert.match(preload,/stageScript\.onload[\s\S]*?document\.documentElement\.appendChild\(responsiveHeightScript\)/);
+  assert.match(preload,/appendScript\('presentation-stage-v16\.17\.js',\(\)=>\{/);
+  assert.match(preload,/appendScript\('presentation-stage-v16\.17\.js'[\s\S]*?appendScript\('media-library-scene-picker\.js',\(\)=>appendScript\('responsive-height-v16\.23\.js'\)\)/);
 });
 
 test('V0.16.23 reserves the complete lower Creator UI before fitting the 16:9 stage',()=>{
