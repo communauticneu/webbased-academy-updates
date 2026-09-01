@@ -22,12 +22,17 @@ contextBridge.exposeInMainWorld('academyDesktop', {
 function appendScript(src,onload){const script=document.createElement('script');script.src=src;if(onload)script.onload=onload;document.documentElement.appendChild(script);}
 
 function startPresentationExtensions(){
-  const style=document.createElement('link');style.rel='stylesheet';style.href='presentation-stage-v16.17.css';document.head.appendChild(style);
-  appendScript('presentation-stage-v16.17.js',()=>{
-    appendScript('obsolete-background-controls.js');
-    appendScript('presentation-medium-selection.js');
-    appendScript('presentation-text-system.js',()=>appendScript('presentation-content-shell.js'));
-    appendScript('media-library-scene-picker.js',()=>appendScript('responsive-height-v16.23.js'));
+  appendScript('presentation-text-startup-reset.js',()=>{
+    const style=document.createElement('link');style.rel='stylesheet';style.href='presentation-stage-v16.17.css';document.head.appendChild(style);
+    appendScript('presentation-stage-v16.17.js',()=>{
+      appendScript('obsolete-background-controls.js');
+      appendScript('presentation-medium-selection.js');
+      appendScript('presentation-text-system.js',()=>{
+        appendScript('presentation-text-miniature.js');
+        appendScript('presentation-content-shell.js');
+      });
+      appendScript('media-library-scene-picker.js',()=>appendScript('responsive-height-v16.23.js'));
+    });
   });
 }
 
