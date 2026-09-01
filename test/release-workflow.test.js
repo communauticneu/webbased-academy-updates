@@ -55,8 +55,8 @@ test('Windows release is built once and all updater assets are uploaded determin
   assert.match(workflow, /gh release create "\$env:RELEASE_TAG"/);
   assert.match(workflow, /gh release upload "\$env:RELEASE_TAG"/);
   assert.ok(workflow.includes('Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe'));
-  assert.ok(workflow.includes('Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe.blockmap'));
-  assert.ok(workflow.includes('latest.yml'));
+  assert.ok(workflow.includes('$blockmap = "$exe.blockmap"'));
+  assert.ok(workflow.includes('$latest = "releases/latest.yml"'));
   assert.match(workflow, /gh release view "\$env:RELEASE_TAG" --json assets/);
   assert.equal(workflow.includes('--publish always'), false);
 });
