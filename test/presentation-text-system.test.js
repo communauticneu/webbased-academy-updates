@@ -34,6 +34,18 @@ test('uses one exact medium profile mapping for fonts and default colors',()=>{
  assert.equal(TextSystem.MEDIUM_PROFILES.board.weights.heading,400);
 });
 
+test('resolves requested working text sizes per presentation medium',()=>{
+ const heading=TextSystem.createTextObject('heading');
+ const normal=TextSystem.createTextObject('normal');
+ const small=TextSystem.createTextObject('small');
+ assert.equal(TextSystem.resolveStyle(heading,'board').fontSize,39);
+ assert.equal(TextSystem.resolveStyle(normal,'board').fontSize,20);
+ assert.equal(TextSystem.resolveStyle(small,'board').fontSize,15);
+ assert.equal(TextSystem.resolveStyle(heading,'none').fontSize,24);
+ assert.equal(TextSystem.resolveStyle(normal,'none').fontSize,20);
+ assert.equal(TextSystem.resolveStyle(small,'none').fontSize,15);
+});
+
 test('resolves medium style without mutating text data',()=>{
  const text=TextSystem.createTextObject('heading',{content:'Titel',x:123,y:77,align:'center'});
  const before=structuredClone(text);
