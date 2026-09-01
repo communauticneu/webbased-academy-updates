@@ -3,6 +3,10 @@ name: Build and Release Windows
 on:
   workflow_dispatch:
   push:
+    branches:
+      - dev-stage-composition
+    paths:
+      - 'package.json'
     tags:
       - 'v*.*.*'
 
@@ -16,14 +20,83 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
+
+      - name: Validate release context
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = node -p "require('./package.json').version"
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            Write-Error "package.json version '$version' is not strict x.y.z semver"
+            exit 1
+          }
+
+          $tag = "v$version"
+          "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+          if ($env:GITHUB_EVENT_NAME -eq 'push' -and $env:GITHUB_REF_TYPE -eq 'branch') {
+            if ($env:GITHUB_REF_NAME -ne 'dev-stage-composition') {
+              Write-Error "automatic release is only allowed from dev-stage-composition"
+              exit 1
+            }
+
+            git show-ref --verify --quiet "refs/tags/$tag"
+            if ($LASTEXITCODE -eq 0) {
+              Write-Error "release tag $tag already exists"
+              exit 1
+            }
+
+            "AUTO_RELEASE=true" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            exit 0
+          }
+
+          if ($env:GITHUB_EVENT_NAME -eq 'push' -and $env:GITHUB_REF_TYPE -eq 'tag') {
+            if ($env:GITHUB_REF_NAME -ne $tag) {
+              Write-Error "incoming tag $env:GITHUB_REF_NAME does not match package version $tag"
+              exit 1
+            }
+            "AUTO_RELEASE=false" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            exit 0
+          }
+
+          if ($env:GITHUB_EVENT_NAME -eq 'workflow_dispatch') {
+            if ($env:GITHUB_REF_TYPE -ne 'tag') {
+              Write-Error "workflow_dispatch recovery must be started from the matching release tag"
+              exit 1
+            }
+            if ($env:GITHUB_REF_NAME -ne $tag) {
+              Write-Error "dispatch tag $env:GITHUB_REF_NAME does not match package version $tag"
+              exit 1
+            }
+            "AUTO_RELEASE=false" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            exit 0
+          }
+
+          Write-Error "unsupported release event"
+          exit 1
+
       - name: Install dependencies
         run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Create release tag
+        if: env.AUTO_RELEASE == 'true'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$env:RELEASE_TAG" "$env:GITHUB_SHA"
+          git push origin "$env:RELEASE_TAG"
 
       - name: Build and publish Windows release
         run: npx electron-builder --win nsis --publish always
