@@ -43,14 +43,20 @@ test('manual recovery is allowed only from the matching release tag', () => {
 test('tests run before automatic tag creation, and tag creation runs before publish', () => {
   const tests = indexOfOrFail('npm test');
   const tagCreate = indexOfOrFail('git tag "$env:RELEASE_TAG" "$env:GITHUB_SHA"');
-  const publish = indexOfOrFail('npx electron-builder --win nsis --publish always');
+  const publish = indexOfOrFail('gh release upload "$env:RELEASE_TAG"');
   assert.ok(tests < tagCreate, 'tests must run before tag creation');
   assert.ok(tagCreate < publish, 'tag creation must run before publish');
 });
 
-test('existing Windows publishing contract is preserved', () => {
+test('Windows release is built once and all updater assets are uploaded deterministically', () => {
   assert.match(workflow, /runs-on: windows-latest/);
   assert.match(workflow, /node-version: 20/);
-  assert.match(workflow, /npx electron-builder --win nsis --publish always/);
-  assert.match(workflow, /GH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/);
+  assert.match(workflow, /npx electron-builder --win nsis --publish never/);
+  assert.match(workflow, /gh release create "\$env:RELEASE_TAG"/);
+  assert.match(workflow, /gh release upload "\$env:RELEASE_TAG"/);
+  assert.ok(workflow.includes('Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe'));
+  assert.ok(workflow.includes('Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe.blockmap'));
+  assert.ok(workflow.includes('latest.yml'));
+  assert.match(workflow, /gh release view "\$env:RELEASE_TAG" --json assets/);
+  assert.equal(workflow.includes('--publish always'), false);
 });
