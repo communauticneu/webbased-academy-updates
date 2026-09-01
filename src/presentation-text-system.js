@@ -63,7 +63,7 @@
 @font-face{font-family:'DJB Chalk It Up';src:url('./assets/fonts/DJB Chalk It Up.ttf') format('truetype');font-display:swap}
 #stage{position:relative!important}
 #academyTextObjectLayer{position:absolute;inset:0;z-index:5;overflow:hidden;pointer-events:none}
-.stage>.avatar{z-index:10}
+.stage>.avatar{z-index:10;pointer-events:none}
 .academy-text-object{position:absolute;display:inline-flex;align-items:flex-start;max-width:92%;min-width:56px;box-sizing:border-box;border:1px solid transparent;border-radius:5px;padding:4px 28px 4px 6px;cursor:move;pointer-events:auto;user-select:none}
 .academy-text-object.is-selected{border-color:rgba(76,200,255,.7);background:rgba(5,18,27,.08)}
 .academy-text-content{display:block;min-width:1ch;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.12;outline:none;user-select:text}
