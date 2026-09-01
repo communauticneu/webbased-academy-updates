@@ -112,8 +112,12 @@
   });
   layer.addEventListener('dblclick',event=>{
    const node=event.target.closest?.('.academy-text-object');if(!node)return;
-   engine.beginEdit(node.dataset.textId);render();
-   const content=node.querySelector('.academy-text-content');content?.focus?.();
+   const content=node.querySelector('.academy-text-content');
+   const selection=doc.getSelection?.();
+   const range=selection&&selection.rangeCount?selection.getRangeAt(0):null;
+   const savedRange=range&&content?.contains?.(range.commonAncestorContainer)?range.cloneRange():null;
+   engine.beginEdit(node.dataset.textId);render();content?.focus?.();
+   if(savedRange&&selection){selection.removeAllRanges();selection.addRange(savedRange);}
   });
   layer.addEventListener('input',event=>{const content=event.target.closest?.('.academy-text-content');if(content&&runtime.engine.getState().editingId)runtime.engine.updateContent(content.textContent||'');});
   layer.addEventListener('focusout',event=>{if(event.target.closest?.('.academy-text-content')&&engine.getState().editingId){engine.endEdit();render();}});
