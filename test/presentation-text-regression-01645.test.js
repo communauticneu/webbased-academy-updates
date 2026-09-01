@@ -9,21 +9,22 @@ test('responsive display must never mutate editor text coordinates',()=>{
  assert.equal(text.includes('reprojectPositions'),false);
  assert.equal(text.includes('reconcileSurfaceGeometry'),false);
  assert.equal(text.includes('setObjectPosition'),false);
- assert.ok(text.includes(".academy-text-object{position:absolute;display:inline-flex"));
+ assert.ok(text.includes('.academy-text-object{position:absolute;display:inline-flex'));
  assert.ok(text.includes('pointer-events:auto'));
 });
 
-test('small-format text projection is read-only and uses actual source object dimensions',()=>{
- const text=src('presentation-text-system.js');
- assert.ok(text.includes('syncMiniaturePreview'));
- assert.ok(text.includes("layer.querySelector(`[data-text-id=\\\"${object.id}\\\"]`)"));
- assert.ok(text.includes('sourceNode.getBoundingClientRect'));
- assert.ok(text.includes('scaledWidth'));
- assert.ok(text.includes('Math.min(target.width-scaledWidth'));
- assert.equal(text.includes('engine.reprojectPositions'),false);
+test('small-format renderer is a read-only projection of the existing editor',()=>{
+ const mini=src('presentation-text-miniature.js');
+ assert.ok(mini.includes('AcademyTextSystem'));
+ assert.ok(mini.includes('getEngine'));
+ assert.ok(mini.includes("getElementById('academyTextObjectLayer')"));
+ assert.ok(mini.includes('sourceNode.getBoundingClientRect'));
+ assert.ok(mini.includes('scaledWidth'));
+ assert.ok(mini.includes('Math.min(target.width-scaledWidth'));
+ for(const forbidden of ['moveSelected(','setObjectPosition(','reprojectPositions(','replaceObjects(','addText(','beginEdit(','MutationObserver','FontFace'])assert.equal(mini.includes(forbidden),false,forbidden);
 });
 
-test('first 0.16.45 start removes only autosaved faulty test text once',()=>{
+test('first 0.16.45 start removes only autosaved faulty text once',()=>{
  const index=src('index.html');
  assert.ok(index.includes("wac_text_reset_01645"));
  assert.ok(index.includes('scene.textObjects=[]'));
