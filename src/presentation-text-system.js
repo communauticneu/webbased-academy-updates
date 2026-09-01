@@ -89,7 +89,7 @@
    }
    const content=node.querySelector('.academy-text-content'),style=engine.getResolvedStyle(object.id);
    node.classList.toggle('is-selected',state.selectedId===object.id);node.style.left=`${object.x}px`;node.style.top=`${object.y}px`;
-   content.textContent=object.content;content.contentEditable=state.editingId===object.id?'true':'false';content.style.fontFamily=`'${style.fontFamily}', sans-serif`;content.style.fontWeight=String(style.fontWeight);content.style.fontSize=`${style.fontSize}px`;content.style.color=style.color;content.style.textAlign=object.align;
+   const isEditing=state.editingId===object.id;content.contentEditable=isEditing?'true':'false';if(!isEditing&&content.textContent!==object.content)content.textContent=object.content;content.style.fontFamily=`'${style.fontFamily}', sans-serif`;content.style.fontWeight=String(style.fontWeight);content.style.fontSize=`${style.fontSize}px`;content.style.color=style.color;content.style.textAlign=object.align;
   });
   if(!state.selectedId)context.hidden=true;
   return true;
@@ -114,7 +114,6 @@
    const node=event.target.closest?.('.academy-text-object');if(!node)return;
    engine.beginEdit(node.dataset.textId);render();
    const content=node.querySelector('.academy-text-content');content?.focus?.();
-   const selection=doc.defaultView?.getSelection?.();if(selection&&content){const range=doc.createRange?.();if(range){range.selectNodeContents(content);range.collapse(false);selection.removeAllRanges();selection.addRange(range);}}
   });
   layer.addEventListener('input',event=>{const content=event.target.closest?.('.academy-text-content');if(content&&runtime.engine.getState().editingId)runtime.engine.updateContent(content.textContent||'');});
   layer.addEventListener('focusout',event=>{if(event.target.closest?.('.academy-text-content')&&engine.getState().editingId){engine.endEdit();render();}});
