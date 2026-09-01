@@ -22,6 +22,12 @@ test('content shell delegates the three text kinds to the text system',()=>{
  assert.ok(shell.includes('addText'));
 });
 
+test('text kind controls use the light blue Academy accent',()=>{
+ const shell=src('presentation-content-shell.js');
+ assert.ok(shell.includes(".academy-text-kind-menu button{background:rgba(76,200,255,.18);border-color:rgba(76,200,255,.42)}"));
+ assert.ok(shell.includes(".academy-text-kind-menu button:hover{border-color:#4cc8ff;background:rgba(76,200,255,.28)}"));
+});
+
 test('medium selector publishes board and none without owning font logic',()=>{
  const medium=src('presentation-medium-selection.js');
  assert.ok(medium.includes('academy-presentation-medium-change'));
