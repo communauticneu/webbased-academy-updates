@@ -73,10 +73,10 @@ test('text layer is hosted by the always-visible stage, not the presentation med
  assert.equal(text.includes("const surface=doc.getElementById?.('presentationSurface');if(!surface)return false"),false);
 });
 
-test('text and character layer stays behind the avatar',()=>{
+test('text and character layer stays behind the avatar while avatar does not block text pointer access',()=>{
  const text=src('presentation-text-system.js');
  assert.ok(text.includes('#academyTextObjectLayer{position:absolute;inset:0;z-index:5;'));
- assert.ok(text.includes('.stage>.avatar{z-index:10}'));
+ assert.ok(text.includes('.stage>.avatar{z-index:10;pointer-events:none}'));
 });
 
 test('double-click editing preserves native word selection across focus',()=>{
