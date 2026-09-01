@@ -83,7 +83,8 @@ test('text and character layer stays behind the avatar while avatar does not blo
 
 test('double-click editing preserves native word selection across focus',()=>{
  const text=src('presentation-text-system.js');
- assert.ok(text.includes("const isEditing=state.editingId===object.id"));
+ assert.ok(text.includes("state.editingId===object.id"));
+ assert.ok(text.includes("!state.previewing"));
  assert.ok(text.includes("if(!isEditing&&content.textContent!==object.content)content.textContent=object.content"));
  assert.ok(text.includes('doc.getSelection?.()'));
  assert.ok(text.includes('cloneRange()'));
