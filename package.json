@@ -1,7 +1,7 @@
 {
   "name": "webbased-academy-creator",
   "version": "0.16.43",
-  "private":true,
+  "private": true,
   "description": "Webbased Academy Creator Desktop",
   "main": "src/main.js",
   "scripts": {
