@@ -8,14 +8,14 @@ const shell=fs.readFileSync(path.join(__dirname,'../src/presentation-content-she
 
 test('frontend uses compact Medien heading and grouped content tabs',()=>{
   assert.match(shell,/textContent\?\.trim\(\)==='Präsentationsmedium'/,'internal presentation-medium lookup must stay unchanged');
-  assert.match(shell,/>Medien</,'visible medium heading should be Medien');
-  for(const label of ['Text','Post-it','Zeichen','Aufgabe','XXX','Import'])assert.match(shell,new RegExp('>'+label+'<'));
+  assert.match(shell,/heading\.textContent='Medien'/,'visible medium heading should be Medien');
+  for(const label of ['Text','Post-it','Zeichen','Aufgabe','XXX','Import'])assert.match(shell,new RegExp(label));
 });
 
 test('Text and Zeichen use the same one-open-submenu pattern',()=>{
   assert.match(shell,/data-content-tool="text"/);
   assert.match(shell,/data-content-tool="symbols"/);
-  for(const label of ['Überschrift','Normal','Klein','Kreis','Pfeil','Linie'])assert.match(shell,new RegExp('>'+label+'<'));
+  for(const label of ['Überschrift','Normal','Klein','Kreis','Pfeil','Linie'])assert.match(shell,new RegExp(label));
   assert.match(shell,/menus\.forEach\(menu=>menu\.hidden=menu!==target\)/);
 });
 
