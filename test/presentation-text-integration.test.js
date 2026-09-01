@@ -22,10 +22,10 @@ test('content shell delegates the three text kinds to the text system',()=>{
  assert.ok(shell.includes('addText'));
 });
 
-test('text kind controls use the light blue Academy accent',()=>{
+test('text kind controls are visibly light blue and protected from later editor CSS',()=>{
  const shell=src('presentation-content-shell.js');
- assert.ok(shell.includes(".academy-text-kind-menu button{background:rgba(76,200,255,.18);border-color:rgba(76,200,255,.42)}"));
- assert.ok(shell.includes(".academy-text-kind-menu button:hover{border-color:#4cc8ff;background:rgba(76,200,255,.28)}"));
+ assert.ok(shell.includes(".academy-text-kind-menu button{background:#bfe8ff!important;color:#062033!important;border-color:#70cfff!important}"));
+ assert.ok(shell.includes(".academy-text-kind-menu button:hover{background:#d7f2ff!important;border-color:#4cc8ff!important}"));
 });
 
 test('medium selector publishes board and none without owning font logic',()=>{
