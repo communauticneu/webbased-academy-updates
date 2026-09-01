@@ -98,7 +98,46 @@ jobs:
           git tag "$env:RELEASE_TAG" "$env:GITHUB_SHA"
           git push origin "$env:RELEASE_TAG"
 
-      - name: Build and publish Windows release
-        run: npx electron-builder --win nsis --publish always
+      - name: Build Windows release assets
+        run: npx electron-builder --win nsis --publish never
+
+      - name: Publish Windows release assets
+        shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = "releases/Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe"
+          $blockmap = "$exe.blockmap"
+          $latest = "releases/latest.yml"
+
+          foreach ($asset in @($exe, $blockmap, $latest)) {
+            if (-not (Test-Path $asset)) {
+              Write-Error "required release asset missing after build: $asset"
+              exit 1
+            }
+          }
+
+          gh release view "$env:RELEASE_TAG" *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create "$env:RELEASE_TAG" --title "$env:RELEASE_VERSION" --target "$env:GITHUB_SHA"
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+          gh release upload "$env:RELEASE_TAG" "$exe" "$blockmap" "$latest" --clobber
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $assetsJson = gh release view "$env:RELEASE_TAG" --json assets
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $assets = ($assetsJson | ConvertFrom-Json).assets.name
+          $required = @(
+            "Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe",
+            "Webbased-Academy-Creator-Setup-$env:RELEASE_VERSION.exe.blockmap",
+            "latest.yml"
+          )
+          foreach ($name in $required) {
+            if ($assets -notcontains $name) {
+              Write-Error "release verification failed; missing asset: $name"
+              exit 1
+            }
+          }
