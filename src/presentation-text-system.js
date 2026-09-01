@@ -92,12 +92,50 @@
 .academy-text-object.is-selected .academy-text-delete{display:block}
 #academyTextObjectLayer.is-preview .academy-text-delete{display:none!important}
 .academy-text-context{position:absolute;z-index:60;display:flex;gap:4px;align-items:center;padding:5px;border:1px solid rgba(76,200,255,.45);border-radius:7px;background:rgba(5,18,27,.94);box-shadow:0 6px 18px rgba(0,0,0,.3);pointer-events:auto}
-.academy-text-context[hidden]{display:none!important}.academy-text-context button{width:30px;height:28px;border:1px solid rgba(255,255,255,.14);border-radius:5px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer}.academy-text-context input[type='color']{width:30px;height:28px;border:0;background:transparent;padding:0;cursor:pointer}`;doc.head?.appendChild(style);
+.academy-text-context[hidden]{display:none!important}.academy-text-context button{width:30px;height:28px;border:1px solid rgba(255,255,255,.14);border-radius:5px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer}.academy-text-context input[type='color']{width:30px;height:28px;border:0;background:transparent;padding:0;cursor:pointer}
+#boardPreview{position:relative!important}
+#academyTextMiniatureLayer{position:absolute;inset:0;z-index:5;overflow:hidden;pointer-events:none}
+.academy-text-miniature-object{position:absolute;display:block;box-sizing:border-box;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.12;pointer-events:none}
+#boardPreview.academy-has-text-objects>.chalk-title{visibility:hidden!important}
+#boardPreview.academy-has-text-objects>.chalk-chart{visibility:hidden!important}
+#boardPreview.academy-has-text-objects>div:not(#academyTextMiniatureLayer):not(.chalk-title):not(.chalk-chart){visibility:hidden!important}`;doc.head?.appendChild(style);
+ }
+
+ function syncMiniaturePreview(doc,engine,surface){
+  const preview=doc.getElementById('boardPreview');if(!preview||!engine)return false;
+  const objects=engine.getObjects();
+  preview.classList.toggle('academy-has-text-objects',objects.length>0);
+  let miniature=doc.getElementById('academyTextMiniatureLayer');
+  if(!miniature){miniature=doc.createElement('div');miniature.id='academyTextMiniatureLayer';preview.appendChild(miniature);}
+  const sourceRect=surface?.getBoundingClientRect?.()||{};
+  const targetRect=preview.getBoundingClientRect?.()||{};
+  const sourceWidth=Math.max(1,sourceRect.width||surface?.clientWidth||960);
+  const sourceHeight=Math.max(1,sourceRect.height||surface?.clientHeight||540);
+  const targetWidth=Math.max(1,targetRect.width||preview.clientWidth||260);
+  const targetHeight=Math.max(1,targetRect.height||preview.clientHeight||146);
+  const fontScale=Math.min(targetWidth/sourceWidth,targetHeight/sourceHeight);
+  const live=new Set(objects.map(object=>object.id));
+  Array.from(miniature.querySelectorAll('.academy-text-miniature-object')).forEach(node=>{if(!live.has(node.dataset.textId))node.remove();});
+  objects.forEach(object=>{
+   let node=miniature.querySelector(`[data-text-id="${object.id}"]`);
+   if(!node){node=doc.createElement('div');node.className='academy-text-miniature-object';node.dataset.textId=object.id;miniature.appendChild(node);}
+   const style=engine.getResolvedStyle(object.id);
+   if(node.textContent!==object.content)node.textContent=object.content;
+   node.style.left=`${Math.max(0,Math.min(100,(object.x/sourceWidth)*100))}%`;
+   node.style.top=`${Math.max(0,Math.min(100,(object.y/sourceHeight)*100))}%`;
+   node.style.maxWidth=`${Math.max(1,100-Math.max(0,Math.min(99,(object.x/sourceWidth)*100)))}%`;
+   node.style.fontFamily=`'${style.fontFamily}', sans-serif`;
+   node.style.fontWeight=String(style.fontWeight);
+   node.style.fontSize=`${Math.max(6,style.fontSize*fontScale)}px`;
+   node.style.color=style.color;
+   node.style.textAlign=object.align;
+  });
+  return true;
  }
 
  function render(){
   if(!runtime)return false;
-  const {doc,engine,layer,context}=runtime,state=engine.getState(),objects=engine.getObjects();
+  const {doc,engine,layer,context,surface}=runtime,state=engine.getState(),objects=engine.getObjects();
   layer.classList.toggle('is-preview',state.previewing);
   const live=new Set(objects.map(object=>object.id));
   Array.from(layer.querySelectorAll('.academy-text-object')).forEach(node=>{if(!live.has(node.dataset.textId))node.remove();});
@@ -114,6 +152,7 @@
    const isEditing=!state.previewing&&state.editingId===object.id;content.contentEditable=isEditing?'true':'false';if(!isEditing&&content.textContent!==object.content)content.textContent=object.content;content.style.fontFamily=`'${style.fontFamily}', sans-serif`;content.style.fontWeight=String(style.fontWeight);content.style.fontSize=`${style.fontSize}px`;content.style.color=style.color;content.style.textAlign=object.align;
   });
   if(state.previewing||!state.selectedId)context.hidden=true;
+  syncMiniaturePreview(doc,engine,surface);
   return true;
  }
 
@@ -143,7 +182,7 @@
    engine.beginEdit(node.dataset.textId);render();content?.focus?.();
    if(savedRange&&selection){selection.removeAllRanges();selection.addRange(savedRange);}
   });
-  layer.addEventListener('input',event=>{const content=event.target.closest?.('.academy-text-content');if(content&&runtime.engine.getState().editingId)runtime.engine.updateContent(content.textContent||'');});
+  layer.addEventListener('input',event=>{const content=event.target.closest?.('.academy-text-content');if(content&&runtime.engine.getState().editingId){runtime.engine.updateContent(content.textContent||'');syncMiniaturePreview(doc,engine,surface);}});
   layer.addEventListener('focusout',event=>{if(event.target.closest?.('.academy-text-content')&&engine.getState().editingId){engine.endEdit();render();}});
   layer.addEventListener('contextmenu',event=>{
    if(engine.getState().previewing)return;
@@ -172,6 +211,7 @@
   doc.addEventListener('keydown',event=>{if(event.key!=='Delete'&&event.key!=='Del')return;const active=doc.activeElement;if(active?.closest?.('.academy-text-content[contenteditable="true"]'))return;if(engine.deleteSelected()){event.preventDefault();context.hidden=true;render();}});
   doc.addEventListener('click',event=>{if(engine.getState().previewing)return;if(!event.target.closest?.('.academy-text-object,.academy-text-context,[data-text-kind]')){engine.select(null);context.hidden=true;render();}});
   doc.addEventListener('academy-presentation-medium-change',event=>{const medium=event.detail?.medium;if(medium==='none'||medium==='board'){engine.setMedium(medium);context.hidden=true;render();}});
+  doc.defaultView?.addEventListener?.('resize',()=>syncMiniaturePreview(doc,engine,surface));
   render();return true;
  }
 
