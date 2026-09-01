@@ -22,10 +22,12 @@ test('content shell delegates the three text kinds to the text system',()=>{
  assert.ok(shell.includes('addText'));
 });
 
-test('text kind controls are visibly light blue and protected from later editor CSS',()=>{
+test('text kind controls use the Creator primary-button visual language',()=>{
  const shell=src('presentation-content-shell.js');
- assert.ok(shell.includes(".academy-text-kind-menu button{background:#bfe8ff!important;color:#062033!important;border-color:#70cfff!important}"));
- assert.ok(shell.includes(".academy-text-kind-menu button:hover{background:#d7f2ff!important;border-color:#4cc8ff!important}"));
+ assert.ok(shell.includes('.academy-text-kind-menu button{background:#155075;color:#eef6fb;border-color:#2a7ca8;border-radius:10px}'));
+ assert.ok(shell.includes('.academy-text-kind-menu button:hover{background:#1d618b}'));
+ assert.equal(shell.includes('#bfe8ff'),false);
+ assert.equal(shell.includes('#d7f2ff'),false);
 });
 
 test('medium selector publishes board and none without owning font logic',()=>{
