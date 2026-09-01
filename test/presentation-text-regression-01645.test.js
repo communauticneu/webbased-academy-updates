@@ -24,9 +24,11 @@ test('small-format renderer is a read-only projection of the existing editor',()
  for(const forbidden of ['moveSelected(','setObjectPosition(','reprojectPositions(','replaceObjects(','addText(','beginEdit(','MutationObserver','FontFace'])assert.equal(mini.includes(forbidden),false,forbidden);
 });
 
-test('first 0.16.45 start removes only autosaved faulty text once',()=>{
- const index=src('index.html');
- assert.ok(index.includes("wac_text_reset_01645"));
- assert.ok(index.includes('scene.textObjects=[]'));
- assert.ok(index.includes("localStorage.setItem('wac_text_reset_01645','1')"));
+test('first 0.16.45 start removes only autosaved faulty text once before restore',()=>{
+ const reset=src('presentation-text-startup-reset.js');
+ const preload=src('preload.js');
+ assert.ok(reset.includes("wac_text_reset_01645"));
+ assert.ok(reset.includes('scene.textObjects=[]'));
+ assert.ok(reset.includes("localStorage.setItem(RESET_KEY,'1')"));
+ assert.ok(preload.indexOf("appendScript('presentation-text-startup-reset.js'")<preload.indexOf("appendScript('presentation-text-system.js'"));
 });
