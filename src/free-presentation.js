@@ -13,12 +13,58 @@
   const VALID_MEDIA_POSITIONS=new Set(['left','center','right']);
   const VALID_MEDIA_SIZES=new Set(['small','medium','large']);
   const VALID_MEDIA_EFFECTS=new Set(['cut','fade','slide-left','slide-right','slide-top','slide-bottom']);
+  const VALID_TEXT_KINDS=new Set(['heading','normal','small']);
   let idCounter=0;
 
   const finite=(v,f)=>Number.isFinite(Number(v))?Number(v):f;
   const text=(v,f='')=>typeof v==='string'?v:f;
   const nextId=()=>`scene-${Date.now().toString(36)}-${(++idCounter).toString(36)}`;
   const activeDocument=()=>typeof document!=='undefined'?document:null;
+  const activeTextSystem=()=>typeof globalThis!=='undefined'?globalThis.AcademyTextSystem:null;
+  const activeTextEngine=()=>activeTextSystem()?.getEngine?.()||null;
+  const textMediumForScene=scene=>scene?.kind==='board'?'board':'none';
+
+  function normalizeTextObjects(input){
+    if(!Array.isArray(input))return [];
+    return input.filter(item=>item&&VALID_TEXT_KINDS.has(item.kind)).map((item,index)=>({
+      id:typeof item.id==='string'&&item.id?item.id:`scene-text-${index+1}`,
+      content:typeof item.content==='string'?item.content:'',
+      kind:item.kind,
+      x:Number.isFinite(item.x)?item.x:48,
+      y:Number.isFinite(item.y)?item.y:48,
+      align:['left','center','right'].includes(item.align)?item.align:'left',
+      customColor:typeof item.customColor==='string'&&item.customColor?item.customColor:null
+    }));
+  }
+  const cloneTextObjects=objects=>normalizeTextObjects(objects).map(object=>({...object}));
+  const cloneScene=scene=>({...scene,textObjects:cloneTextObjects(scene.textObjects),state:scene.state?{...scene.state}:null});
+
+  function captureEditorText(scenes,index){
+    const engine=activeTextEngine();
+    if(!engine||engine.getState?.().previewing||!scenes[index])return false;
+    scenes[index].textObjects=cloneTextObjects(engine.getObjects?.()||[]);
+    return true;
+  }
+  function loadEditorText(scene){
+    const system=activeTextSystem();const engine=activeTextEngine();
+    if(!engine||engine.getState?.().previewing)return false;
+    const objects=cloneTextObjects(scene?.textObjects||[]),medium=textMediumForScene(scene);
+    if(typeof system?.replaceObjects==='function')return system.replaceObjects(objects,medium);
+    engine.replaceObjects?.(objects);engine.setMedium?.(medium);return true;
+  }
+  function beginSceneTextPreview(scene){
+    const system=activeTextSystem();const engine=activeTextEngine();
+    if(!engine)return false;
+    const objects=cloneTextObjects(scene?.textObjects||[]),medium=textMediumForScene(scene);
+    if(typeof system?.beginPreview==='function')return system.beginPreview(objects,medium);
+    return engine.beginPreview?.(objects,medium)||false;
+  }
+  function endSceneTextPreview(){
+    const system=activeTextSystem();const engine=activeTextEngine();
+    if(!engine)return false;
+    if(typeof system?.endPreview==='function')return system.endPreview();
+    return engine.endPreview?.()||false;
+  }
 
   function normalizeScene(input,index=0){
     const s=input&&typeof input==='object'?input:{};
@@ -37,6 +83,7 @@
       speechText:text(s.speechText,s.transcript||state.transcript||''),
       gesture:VALID_GESTURES.has(s.gesture)?s.gesture:(s.avatarPoint||state.avatarPoint?'point':'front'),
       boardText:text(s.boardText,state.boardText||''),
+      textObjects:normalizeTextObjects(s.textObjects||state.textObjects),
       mediumId:text(s.mediumId,''),
       mediumUrl:text(s.mediumUrl,state.object?.url||''),
       transition:VALID_TRANSITIONS.has(s.transition)?s.transition:'cut',
@@ -54,51 +101,51 @@
   function createPresentationModel(initialScenes){
     let scenes=(Array.isArray(initialScenes)?initialScenes:[]).map(normalizeScene);
     if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];
+    let activeSceneIndex=0;
     const api={
-      getScenes:()=>scenes.map(s=>({...s,state:s.state?{...s.state}:null})),
+      getScenes(){captureEditorText(scenes,activeSceneIndex);return scenes.map(cloneScene);},
       get(i){
         if(!scenes[i])return null;
-        const result={...scenes[i],state:scenes[i].state?{...scenes[i].state}:null};
+        captureEditorText(scenes,activeSceneIndex);activeSceneIndex=i;
+        const result=cloneScene(scenes[i]);loadEditorText(result);
         const doc=activeDocument();
         if(doc){ensurePresentationUi(doc);writePresentationControls(result,doc);applyPresentationSurface(result,doc);}
         return result;
       },
       add(scene,index=scenes.length){
+        captureEditorText(scenes,activeSceneIndex);
         const item=normalizeScene(scene,scenes.length);
         const at=Math.max(0,Math.min(scenes.length,finite(index,scenes.length)));
-        scenes.splice(at,0,item);
-        return {...item};
+        scenes.splice(at,0,item);if(at<=activeSceneIndex)activeSceneIndex+=1;
+        return cloneScene(item);
       },
       duplicate(index){
-        if(!scenes[index])return null;
-        const copy=normalizeScene({...scenes[index],id:nextId(),name:`${scenes[index].name} · Kopie`},index+1);
-        scenes.splice(index+1,0,copy);
-        return {...copy};
+        if(!scenes[index])return null;captureEditorText(scenes,activeSceneIndex);
+        const copy=normalizeScene({...scenes[index],textObjects:cloneTextObjects(scenes[index].textObjects),id:nextId(),name:`${scenes[index].name} · Kopie`},index+1);
+        scenes.splice(index+1,0,copy);if(index+1<=activeSceneIndex)activeSceneIndex+=1;
+        return cloneScene(copy);
       },
       remove(index){
-        if(scenes.length<=1||!scenes[index])return false;
-        scenes.splice(index,1);
-        return true;
+        if(scenes.length<=1||!scenes[index])return false;captureEditorText(scenes,activeSceneIndex);
+        const activeId=scenes[activeSceneIndex]?.id;scenes.splice(index,1);activeSceneIndex=Math.max(0,scenes.findIndex(scene=>scene.id===activeId));if(activeSceneIndex<0)activeSceneIndex=0;loadEditorText(scenes[activeSceneIndex]);return true;
       },
       move(index,delta){
         const target=index+delta;
-        if(index<0||index>=scenes.length||target<0||target>=scenes.length)return false;
-        const [item]=scenes.splice(index,1);
-        scenes.splice(target,0,item);
-        return true;
+        if(index<0||index>=scenes.length||target<0||target>=scenes.length)return false;captureEditorText(scenes,activeSceneIndex);
+        const activeId=scenes[activeSceneIndex]?.id;const [item]=scenes.splice(index,1);scenes.splice(target,0,item);activeSceneIndex=scenes.findIndex(scene=>scene.id===activeId);return true;
       },
       update(index,patch){
-        if(!scenes[index])return null;
+        if(!scenes[index])return null;captureEditorText(scenes,activeSceneIndex);
         const doc=activeDocument();
         const presentationPatch=doc&&doc.getElementById('v1617PresentationControls')?readPresentationControls(doc):{};
         scenes[index]=normalizeScene({...scenes[index],...patch,...presentationPatch,id:scenes[index].id},index);
+        if(index===activeSceneIndex)loadEditorText(scenes[index]);
         if(doc)applyPresentationSurface(scenes[index],doc);
-        return {...scenes[index]};
+        return cloneScene(scenes[index]);
       },
       replace(next){
-        scenes=(Array.isArray(next)?next:[]).map(normalizeScene);
-        if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];
-        return api.getScenes();
+        endSceneTextPreview();scenes=(Array.isArray(next)?next:[]).map(normalizeScene);
+        if(!scenes.length)scenes=[normalizeScene({name:'Szene 1',duration:8})];activeSceneIndex=0;loadEditorText(scenes[0]);return scenes.map(cloneScene);
       },
       totalDuration:()=>scenes.reduce((sum,s)=>sum+s.duration,0)
     };
@@ -112,7 +159,7 @@
     function enter(){
       if(sceneIndex<scenes.length&&entered!==sceneIndex){
         entered=sceneIndex;
-        const current={...scenes[sceneIndex]};
+        const current=cloneScene(scenes[sceneIndex]);beginSceneTextPreview(current);
         const doc=activeDocument();
         if(doc)applyPresentationSurface(current,doc);
         handlers.onSceneEnter?.(current,sceneIndex);
@@ -124,7 +171,7 @@
         running,paused,stopped,sceneIndex,sceneTime,totalTime,
         totalDuration:totalDuration(),
         progress:totalDuration()?Math.min(1,totalTime/totalDuration()):0,
-        scene:scenes[sceneIndex]?{...scenes[sceneIndex]}:null
+        scene:scenes[sceneIndex]?cloneScene(scenes[sceneIndex]):null
       };
     }
     function start(){
@@ -136,12 +183,12 @@
     function stop(){
       const doc=activeDocument();
       if(doc&&scenes[sceneIndex])hidePresentationSurface(scenes[sceneIndex],doc);
-      running=false;paused=false;stopped=true;handlers.onStop?.(state());notify();return state();
+      running=false;paused=false;stopped=true;endSceneTextPreview();handlers.onStop?.(state());notify();return state();
     }
     function reset(){
       const doc=activeDocument();
       if(doc&&scenes[sceneIndex])hidePresentationSurface(scenes[sceneIndex],doc);
-      running=false;paused=false;stopped=false;sceneIndex=0;sceneTime=0;totalTime=0;entered=-1;handlers.onReset?.();notify();return state();
+      running=false;paused=false;stopped=false;sceneIndex=0;sceneTime=0;totalTime=0;entered=-1;endSceneTextPreview();handlers.onReset?.();notify();return state();
     }
     function advance(seconds){
       if(!running||seconds<=0||sceneIndex>=scenes.length)return state();
@@ -154,10 +201,10 @@
         if(sceneTime>=scenes[sceneIndex].duration-1e-9){
           const doc=activeDocument();
           if(doc)hidePresentationSurface(scenes[sceneIndex],doc);
-          handlers.onSceneComplete?.({...scenes[sceneIndex]},sceneIndex);
+          handlers.onSceneComplete?.(cloneScene(scenes[sceneIndex]),sceneIndex);
           sceneIndex+=1;sceneTime=0;
           if(sceneIndex<scenes.length)enter();
-          else{running=false;stopped=true;handlers.onComplete?.(state());break;}
+          else{running=false;stopped=true;endSceneTextPreview();handlers.onComplete?.(state());break;}
         }
       }
       notify();return state();
@@ -173,6 +220,7 @@
       state:item?.state||{},
       camera:item?.state?.camera,
       boardText:item?.state?.boardText,
+      textObjects:item?.state?.textObjects,
       speechText:item?.state?.transcript,
       avatarPoint:item?.state?.avatarPoint
     },i));
@@ -203,7 +251,7 @@
       '<label>Medium<select id="ftPresentationMedium"><option value="chalkboard">Schultafel</option><option value="flipchart">Flipchart</option><option value="whiteboard">Whiteboard</option><option value="custom">Benutzerdefiniert</option></select></label>'+
       '<div class="v1617-grid"><label>Position<select id="ftMediumPosition"><option value="left">Links</option><option value="center">Mitte</option><option value="right">Rechts</option></select></label><label>Größe<select id="ftMediumSize"><option value="small">Klein</option><option value="medium">Mittel</option><option value="large">Groß</option></select></label></div>'+
       '<label class="v1617-check"><input id="ftPresentationVisible" type="checkbox" checked> Medium sichtbar</label>'+
-      '<div class="v1617-grid"><label>Einblend-Effekt<select id="ftMediumEnter"><option value="cut">Direkt</option><option value="fade">Einblenden</option><option value="slide-left">Hineinfahren von links</option><option value="slide-right">Hineinfahren von rechts</option><option value="slide-top">Hineinfahren von oben</option><option value="slide-bottom">Hineinfahren von unten</option></select></label><label>Ausblend-Effekt<select id="ftMediumExit"><option value="cut">Direkt</option><option value="fade">Ausblenden</option><option value="slide-left">Herausfahren nach links</option><option value="slide-right">Herausfahren nach rechts</option><option value="slide-top">Herausfahren nach oben</option><option value="slide-bottom">Herausfahren nach unten</option></select></label></div>'+
+      '<div class="v1617-grid"><label>Einblend-Effekt<select id="ftMediumEnter"><option value="cut">Direkt</option><option value="fade">Einblenden</option><option value="slide-left">Hineinfahren von links</option><option value="slide-right">Hineinfahren von rechts</option><option value="slide-top">Hineinfahren von oben</option><option value="slide-bottom">Hineinfahren von unten</option></select></label><label>Ausblend-Effekt<select id="ftMediumExit"><option value="cut">Direkt</option><option value="fade">Einblenden</option><option value="slide-left">Herausfahren nach links</option><option value="slide-right">Herausfahren nach rechts</option><option value="slide-top">Herausfahren nach oben</option><option value="slide-bottom">Herausfahren nach unten</option></select></label></div>'+
       '<label>Effektdauer (Sek.)<input id="ftEffectDuration" type="number" min="0" max="2" step="0.1" value="0.6"></label>'+
       '<div class="v1617-hint">Rahmenlose Academy-Fläche; Tafel, Flipchart, Whiteboard oder eigenes Medium pro Szene austauschbar.</div>'+
       '</div>';
@@ -288,7 +336,7 @@
     surface.dataset.exit=s.mediumExit;
     surface.style.transitionDuration=`${s.effectDuration}s`;
     const txt=surface.querySelector('.presentation-board-text');
-    if(txt)txt.textContent=s.boardText||'';
+    if(txt)txt.textContent=s.textObjects.length?'':(s.boardText||'');
     const graphic=surface.querySelector('.presentation-board-graphic');
     if(graphic){
       if(s.mediumUrl)graphic.src=s.mediumUrl;else graphic.removeAttribute('src');
