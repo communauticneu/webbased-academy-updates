@@ -28,7 +28,6 @@ function startPresentationExtensions(){
       appendScript('presentation-medium-selection.js');
       appendScript('presentation-text-system.js',()=>{
         appendScript('presentation-text-editor-guard.js',()=>{
-          appendScript('presentation-text-layout-sync.js');
           appendScript('presentation-text-miniature.js');
           appendScript('presentation-content-shell.js');
         });
