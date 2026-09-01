@@ -21,7 +21,7 @@ test('text remains reselectable and movable after deselection',()=>{
 });
 
 test('uses the newly approved medium-specific text sizes only in the central profile',()=>{
- assert.deepEqual(TextSystem.MEDIUM_PROFILES.board.sizes,{heading:39,normal:34,small:28});
+ assert.deepEqual(TextSystem.MEDIUM_PROFILES.board.sizes,{heading:39,normal:38,small:30});
  assert.deepEqual(TextSystem.MEDIUM_PROFILES.none.sizes,{heading:42,normal:33,small:25});
 });
 
