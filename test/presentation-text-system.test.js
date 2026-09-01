@@ -39,11 +39,24 @@ test('resolves requested working text sizes per presentation medium',()=>{
  const normal=TextSystem.createTextObject('normal');
  const small=TextSystem.createTextObject('small');
  assert.equal(TextSystem.resolveStyle(heading,'board').fontSize,39);
- assert.equal(TextSystem.resolveStyle(normal,'board').fontSize,34);
- assert.equal(TextSystem.resolveStyle(small,'board').fontSize,28);
+ assert.equal(TextSystem.resolveStyle(normal,'board').fontSize,38);
+ assert.equal(TextSystem.resolveStyle(small,'board').fontSize,30);
  assert.equal(TextSystem.resolveStyle(heading,'none').fontSize,42);
  assert.equal(TextSystem.resolveStyle(normal,'none').fontSize,33);
  assert.equal(TextSystem.resolveStyle(small,'none').fontSize,25);
+});
+
+test('provides staggered insertion positions for all three text kinds',()=>{
+ const size={width:934,height:525};
+ const heading=TextSystem.getInsertionPosition('heading',size);
+ const normal=TextSystem.getInsertionPosition('normal',size);
+ const small=TextSystem.getInsertionPosition('small',size);
+ assert.equal(heading.x,48);
+ assert.ok(normal.x>heading.x);
+ assert.ok(small.x>=normal.x);
+ assert.ok(normal.y>heading.y);
+ assert.ok(small.y>normal.y);
+ assert.ok(small.y<size.height);
 });
 
 test('resolves medium style without mutating text data',()=>{
