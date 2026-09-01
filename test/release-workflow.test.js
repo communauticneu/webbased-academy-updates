@@ -28,10 +28,16 @@ test('package version is the single source of the release tag and semver is vali
 });
 
 test('duplicate tags and tag-version mismatch are explicit hard failures', () => {
-  assert.match(workflow, /git rev-parse .*refs\/tags\/\$tag/);
+  assert.match(workflow, /git show-ref --verify --quiet ["']refs\/tags\/\$tag["']/);
   assert.match(workflow, /already exists/i);
   assert.match(workflow, /does not match package version/i);
   assert.match(workflow, /exit 1/);
+});
+
+test('manual recovery is allowed only from the matching release tag', () => {
+  assert.match(workflow, /GITHUB_EVENT_NAME -eq 'workflow_dispatch'/);
+  assert.match(workflow, /GITHUB_REF_TYPE -ne 'tag'/);
+  assert.match(workflow, /dispatch tag .* does not match package version/i);
 });
 
 test('tests run before automatic tag creation, and tag creation runs before publish', () => {
