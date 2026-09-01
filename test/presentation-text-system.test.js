@@ -39,11 +39,11 @@ test('resolves requested working text sizes per presentation medium',()=>{
  const normal=TextSystem.createTextObject('normal');
  const small=TextSystem.createTextObject('small');
  assert.equal(TextSystem.resolveStyle(heading,'board').fontSize,39);
- assert.equal(TextSystem.resolveStyle(normal,'board').fontSize,20);
- assert.equal(TextSystem.resolveStyle(small,'board').fontSize,15);
- assert.equal(TextSystem.resolveStyle(heading,'none').fontSize,24);
- assert.equal(TextSystem.resolveStyle(normal,'none').fontSize,20);
- assert.equal(TextSystem.resolveStyle(small,'none').fontSize,15);
+ assert.equal(TextSystem.resolveStyle(normal,'board').fontSize,28);
+ assert.equal(TextSystem.resolveStyle(small,'board').fontSize,20);
+ assert.equal(TextSystem.resolveStyle(heading,'none').fontSize,36);
+ assert.equal(TextSystem.resolveStyle(normal,'none').fontSize,28);
+ assert.equal(TextSystem.resolveStyle(small,'none').fontSize,20);
 });
 
 test('resolves medium style without mutating text data',()=>{
