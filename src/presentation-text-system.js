@@ -13,10 +13,9 @@
  const TEXT_KINDS=Object.freeze(['heading','normal','small']);
  const DEFAULT_CONTENT=Object.freeze({heading:'Neue Überschrift',normal:'Neuer Text',small:'Neuer Text'});
  const MEDIUM_PROFILES=Object.freeze({
-  none:Object.freeze({fonts:Object.freeze({heading:'Arial',normal:'Arial',small:'Arial'}),weights:Object.freeze({heading:700,normal:400,small:400}),defaultColor:'#ffffff'}),
-  board:Object.freeze({fonts:Object.freeze({heading:'KG Second Chances Sketch',normal:'DJB Chalk It Up',small:'DJB Chalk It Up'}),weights:Object.freeze({heading:400,normal:400,small:400}),defaultColor:'#ffffff'})
+  none:Object.freeze({fonts:Object.freeze({heading:'Arial',normal:'Arial',small:'Arial'}),weights:Object.freeze({heading:700,normal:400,small:400}),sizes:Object.freeze({heading:24,normal:20,small:15}),defaultColor:'#ffffff'}),
+  board:Object.freeze({fonts:Object.freeze({heading:'KG Second Chances Sketch',normal:'DJB Chalk It Up',small:'DJB Chalk It Up'}),weights:Object.freeze({heading:400,normal:400,small:400}),sizes:Object.freeze({heading:39,normal:20,small:15}),defaultColor:'#ffffff'})
  });
- const TEXT_SIZES=Object.freeze({heading:54,normal:34,small:24});
  let nextId=1;
  let runtime=null;
 
@@ -32,7 +31,7 @@
  function resolveStyle(textObject,medium='none'){
   assertKind(textObject?.kind);assertMedium(medium);
   const profile=MEDIUM_PROFILES[medium];
-  return {fontFamily:profile.fonts[textObject.kind],fontWeight:profile.weights[textObject.kind],color:textObject.customColor||profile.defaultColor,fontSize:TEXT_SIZES[textObject.kind]};
+  return {fontFamily:profile.fonts[textObject.kind],fontWeight:profile.weights[textObject.kind],color:textObject.customColor||profile.defaultColor,fontSize:profile.sizes[textObject.kind]};
  }
 
  function duplicateTextObject(textObject){
@@ -63,7 +62,8 @@
 @font-face{font-family:'KG Second Chances Sketch';src:url('./assets/fonts/KGSecondChancesSketch.ttf') format('truetype');font-display:swap}
 @font-face{font-family:'DJB Chalk It Up';src:url('./assets/fonts/DJB Chalk It Up.ttf') format('truetype');font-display:swap}
 #stage{position:relative!important}
-#academyTextObjectLayer{position:absolute;inset:0;z-index:35;overflow:hidden;pointer-events:none}
+#academyTextObjectLayer{position:absolute;inset:0;z-index:5;overflow:hidden;pointer-events:none}
+.stage>.avatar{z-index:10}
 .academy-text-object{position:absolute;display:inline-flex;align-items:flex-start;max-width:92%;min-width:56px;box-sizing:border-box;border:1px solid transparent;border-radius:5px;padding:4px 28px 4px 6px;cursor:move;pointer-events:auto;user-select:none}
 .academy-text-object.is-selected{border-color:rgba(76,200,255,.7);background:rgba(5,18,27,.08)}
 .academy-text-content{display:block;min-width:1ch;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.12;outline:none;user-select:text}
@@ -153,5 +153,5 @@
  function addText(kind){if(!runtime)return null;const object=runtime.engine.addText(kind);render();return object;}
  function getEngine(){return runtime?.engine||null;}
 
- return Object.freeze({TEXT_KINDS,DEFAULT_CONTENT,MEDIUM_PROFILES,TEXT_SIZES,createTextObject,resolveStyle,duplicateTextObject,createEngine,install,addText,getEngine});
+ return Object.freeze({TEXT_KINDS,DEFAULT_CONTENT,MEDIUM_PROFILES,createTextObject,resolveStyle,duplicateTextObject,createEngine,install,addText,getEngine});
 });
