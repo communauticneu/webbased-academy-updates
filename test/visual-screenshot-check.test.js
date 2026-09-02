@@ -35,7 +35,7 @@ test('visual guard renders the approved Post-it control arrangement',()=>{
   const s=read('src/visual-check.js');
   assert.match(s,/Post-it-Funktionsleiste entspricht nicht dem Textrahmen-Design/);
   assert.match(s,/toolbarRect\.top>=paperRect\.bottom/);
-  assert.match(s,/swatches\.length===6/);
+  assert.match(s,/swatches\.length===5/);
   assert.match(s,/deleteStyle\.width==='22px'&&resizeStyle\.width==='22px'/);
 });
 
