@@ -39,3 +39,25 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
  assert.doesNotMatch(source,/academyPostItLayer\.replaceChildren\(\)/);
  assert.match(source,/querySelector\(`\[data-postit-id="\$\{item\.id\}"\]`\)/);
 });
+
+test('approved immersive paper uses separate production assets with real transparent curls',()=>{
+ const names=['postit-paper-texture-4k.png','postit-curl-left-4k.png','postit-curl-right-bottom-4k.png','postit-edge-right-top-4k.png'];
+ for(const name of names){
+  const png=fs.readFileSync(path.join(__dirname,'../src/assets',name));
+  assert.deepEqual(Array.from(png.subarray(1,4)),[80,78,71]);
+  assert.ok(png.readUInt32BE(16)>=1200&&png.readUInt32BE(20)>=1000,name+' must retain production resolution');
+ }
+ for(const name of names.slice(1)){
+  const png=fs.readFileSync(path.join(__dirname,'../src/assets',name));
+  assert.equal(png[25],6,name+' must contain an alpha channel');
+ }
+});
+
+test('approved curls and upper-right edge ignore every Post-it size change',()=>{
+ for(const className of ['academy-postit-curl-left','academy-postit-curl-right','academy-postit-edge-right']){
+  assert.match(source,new RegExp('\\.'+className+'\\{[^}]*width:\\d+px;height:\\d+px'));
+ }
+ assert.match(source,/academy-postit-surface\{[^}]*background-image:url\('\.\/assets\/postit-paper-texture-4k\.png'\)/);
+ assert.match(source,/paper\.append\(surface,leftCurl,text,rightEdge,rightCurl\)/);
+ assert.doesNotMatch(source,/postit-paper-photoreal\.png/);
+});
