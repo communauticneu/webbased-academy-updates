@@ -31,6 +31,14 @@ test('visual guard rejects Post-it text that grows beyond the stage',()=>{
   assert.match(s,/paperRect\.right<=stageRect\.right/);
 });
 
+test('visual guard renders the approved Post-it control arrangement',()=>{
+  const s=read('src/visual-check.js');
+  assert.match(s,/Post-it-Funktionsleiste entspricht nicht dem Textrahmen-Design/);
+  assert.match(s,/toolbarRect\.top>=paperRect\.bottom/);
+  assert.match(s,/swatches\.length===6/);
+  assert.match(s,/deleteStyle\.width==='22px'&&resizeStyle\.width==='22px'/);
+});
+
 test('test launcher runs unit tests then visual screenshot guard before normal Creator start',()=>{
   const pkg=JSON.parse(read('package.json'));
   assert.equal(pkg.scripts['visual:check'],'electron src/visual-check.js');
