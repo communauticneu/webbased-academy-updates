@@ -39,3 +39,16 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
  assert.doesNotMatch(source,/academyPostItLayer\.replaceChildren\(\)/);
  assert.match(source,/querySelector\(`\[data-postit-id="\$\{item\.id\}"\]`\)/);
 });
+
+test('paper medium owns immersive fibres, lifted corners and contact depth',()=>{
+ assert.match(source,/\.academy-postit-paper:has\(\.academy-postit-text\[style\*="font-family: Kalam"\]\)\{/);
+ assert.match(source,/font-family: Kalam.*::after\{/);
+ assert.match(source,/font-family: Kalam.*\.academy-postit-fold\{/);
+ assert.match(source,/repeating-linear-gradient/);
+ assert.match(source,/radial-gradient/);
+ assert.match(source,/drop-shadow/);
+});
+
+test('immersive paper treatment stays off the chalkboard surface',()=>{
+ assert.doesNotMatch(source,/font-family: KG Second Chances Sketch.*repeating-linear-gradient/);
+});
