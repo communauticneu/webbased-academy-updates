@@ -90,7 +90,7 @@ async function checkPostItControls(win){
     const paper=document.querySelector('.academy-postit-paper'),toolbar=document.querySelector('.academy-postit-toolbar'),del=document.querySelector('.academy-postit-delete'),resize=document.querySelector('.academy-postit-resize'),swatches=document.querySelectorAll('.academy-postit-color');
     if(!paper||!toolbar||!del||!resize)return false;
     const paperRect=paper.getBoundingClientRect(),toolbarRect=toolbar.getBoundingClientRect(),deleteStyle=getComputedStyle(del),resizeStyle=getComputedStyle(resize),toolbarStyle=getComputedStyle(toolbar);
-    return toolbarRect.top>=paperRect.bottom&&swatches.length===6&&deleteStyle.width==='22px'&&resizeStyle.width==='22px'&&toolbarStyle.backgroundColor==='rgba(5, 18, 27, 0.94)';
+    return toolbarRect.top>=paperRect.bottom&&swatches.length===5&&deleteStyle.width==='22px'&&resizeStyle.width==='22px'&&toolbarStyle.backgroundColor==='rgba(5, 18, 27, 0.94)';
   })()`,true);
 }
 
