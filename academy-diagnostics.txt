@@ -1,5 +1,142 @@
 Webbased Academy Creator - Diagnose
-Zeitpunkt: 29.08.2026 21:05:54,12
-Teststatus: GREEN
-Version: 0.16.24
-Commit: 55c03e2
+Zeitpunkt: 02.09.2026 11:06:28,19
+Teststatus: ERROR
+Version: 0.16.53
+Commit: f615394
+Fehlerdetails Tests:
+ƒo" selection editing and movement never change the resolved font (0.2147ms)
+ƒo" custom color and position survive both medium directions (0.1781ms)
+ƒo" maps every production boundary to the requested 40-second phase (2.1762ms)
+ƒo" formats the production clock without exceeding 40 seconds (0.3631ms)
+ƒo" keeps the full elapsed wall-clock time after a delayed animation frame (0.304ms)
+ƒo" starts one German speech segment for each entered phase using the selected voice (0.8263ms)
+ƒo" does not restart speech inside the same phase and stops it on pause or reset (0.4817ms)
+ƒo" runs, pauses and resets the production timeline without losing its position (5.0118ms)
+ƒo" automatic release is limited to package version pushes on dev-stage-composition (2.0111ms)
+ƒo" package version is the single source of the release tag and semver is validated (0.3644ms)
+ƒo" duplicate tags and tag-version mismatch are explicit hard failures (0.3543ms)
+ƒo" manual recovery is allowed only from the matching release tag (0.3102ms)
+ƒo" tests run before automatic tag creation, and tag creation runs before publish (0.4374ms)
+ƒo" Windows release is built once and all updater assets are uploaded deterministically (0.3597ms)
+ƒo" Academy stage uses temporary room 3 (3.0887ms)
+ƒo" Academy chalk surface uses the supplied 4K texture without enlargement and reaches behind avatar (1.7874ms)
+ƒo" visible Academy board uses approved responsive navel avatar composition on the right (2.5594ms)
+ƒo" legacy brown board stays forbidden in the composed Academy stage (0.6582ms)
+ƒo" chalkboard remains flat without reintroducing perspective geometry (1.6308ms)
+ƒo" board surface uses the supplied 4K original with a soft right edge (0.5435ms)
+ƒo" preload starts no legacy text runtime (1.5029ms)
+ƒo" content shell preserves controls but generates no text objects (0.4561ms)
+ƒo" legacy text implementation files are removed (1.1605ms)
+ƒo" V0.16.13 uses a dark hidden BrowserWindow until Academy renderer restore settles (3.0083ms)
+ƒo" V0.16.13 behavior remains available in later package versions (0.7917ms)
+ƒo" local avatar movement module exposes deterministic motion controller (2.3791ms)
+ƒo" lip movement starts only while speaking and stops afterwards (0.6376ms)
+ƒo" head body and blink motion are deterministic (1.3638ms)
+ƒo" front and point gestures are represented distinctly (0.352ms)
+ƒo" HTML keeps full medium and hidden avatar modes and adds local motion hooks (2.147ms)
+ƒo" 40-second production boundaries are unchanged (2.2141ms)
+ƒo" HeyGen remains click-triggered and has no automatic generation call (3.2736ms)
+ƒo" 3440 layout readability safeguards remain present (3.7025ms)
+ƒo" V0.16.14 free-presentation behavior remains available in later versions (2.9502ms)
+ƒo" free presentation model supports add duplicate delete and move (7.0166ms)
+ƒo" scene duration determines automatic total duration (1.3023ms)
+ƒo" scene normalization supplies older projects with safe defaults (0.8302ms)
+ƒo" presentation runner advances scenes and exposes scene/total clocks (1.7001ms)
+ƒo" presentation runner pause continue stop and reset are reliable (1.39ms)
+ƒo" scene fields support avatar board graphic background speech gesture and transition (1.2155ms)
+ƒo" project migration preserves existing data and adds presentation scenes (1.4056ms)
+ƒo" HTML exposes free presentation editor and preview without automatic HeyGen (2.8781ms)
+ƒo" free preview starts the scene speech and local avatar state without HeyGen (4.3734ms)
+ƒo" scene display kind drives board graphic and background on the Academy stage (1.8699ms)
+ƒo" new presentation scenes are included in project, workspace, backup and local persistence (1.9697ms)
+ƒo" free presentation UI reuses the fixed production panel instead of adding a tall permanent sidebar (2.765ms)
+ƒo" 40-second production mode remains exactly unchanged (1.736ms)
+ƒo" hardware-friendly implementation uses timers, DOM and speech synthesis only (2.1956ms)
+ƒo" 3440 readability/layout safeguards remain intact (2.8385ms)
+ƒo" V0.16.15 media persistence remains available in later versions (2.2178ms)
+ƒo" media picker module replaces manual medium id/path entry with library selection (0.751ms)
+ƒo" imported image media is converted to durable data URL instead of blob URL (0.5841ms)
+ƒo" selected medium writes its durable source before existing scene save handler runs (1.7653ms)
+ƒo" saved scene media is restored as a selectable saved-library entry after restart (0.6ms)
+ƒo" preload loads the media picker after renderer DOM is ready (0.4188ms)
+ƒo" existing free presentation persistence remains unchanged (2.6162ms)
+ƒo" custom presentation medium uses selected image as the surface only (4.0307ms)
+ƒo" normal chalkboard still permits text plus selected graphic (0.6915ms)
+ƒo" presentation-media feature is present in V0.16.17 or later (2.4209ms)
+ƒo" V0.16.17 scene model supports interchangeable presentation media (3.9659ms)
+ƒo" older scenes receive safe presentation-medium defaults (0.7879ms)
+ƒo" presentation media values are validated for predictable hardware-friendly effects (1.6704ms)
+ƒo" stage keeps a snapshot of the last visible presentation medium (2.937ms)
+ƒo" outgoing presentation medium gets a temporary exit clone (0.5469ms)
+ƒo" exit clone is removed after its lightweight CSS transition (1.7881ms)
+ƒo" mutation history detects a visible-to-next-scene transition even if final surface is visible (0.7228ms)
+ƒo" stage remains in presentation composition while an exit clone is animating (0.6139ms)
+ƒo" Schultafel button routes visibility to the Academy presentation surface and removes covering full graphic (5.1684ms)
+ƒo" legacy board button is routed to presentationSurface instead of boardOverlay (2.5415ms)
+ƒo" legacy brown board can never render on stage (0.4598ms)
+ƒo" approved Academy board remains direct supplied flat chalkboard surface (2.2149ms)
+ƒo" fixed 40-second production keeps Room 3 and suppresses legacy background layers (1.1089ms)
+ƒo" medium Academy avatar uses the real 600x577 asset ratio and scales with the stage (0.6547ms)
+ƒo" approved Bis Nabel avatar keeps one crop and defaults to the right (0.4425ms)
+ƒo" fixed Academy startup reapplies its clean stage after legacy local restore (0.4858ms)
+ƒo" preload hides stage before DOMContentLoaded and delayed reset is the only startup release (0.7381ms)
+ƒo" desktop window is not shown on ready-to-show before delayed scene restore settles (0.5682ms)
+ƒo" V0.16.23 editor controls may shrink inside the fixed editor column without horizontal scrolling (2.445ms)
+ƒo" V0.16.23 uses dark Creator styling for presentation and background tabs instead of native white buttons (0.4463ms)
+ƒo" V0.16.23 removes decorative glyph spans from the right editor tabs (0.2477ms)
+ƒo" V0.16.23 loads media library styling before responsive sizing so final large-workspace tile sizes win deterministically (0.5123ms)
+ƒo" V0.16.23 keeps all seven media actions in one visible row without a horizontal scrollbar (0.5675ms)
+ƒo" V0.16.23 keeps large-workspace media tiles at a fixed proportional width instead of stretching across the row (1.3514ms)
+ƒo" V0.16.23 keeps the compact short-height editor without introducing media clipping (0.7237ms)
+ƒo" V0.16.23 keeps medium-width media tiles in one scrollable row instead of clipping a second row (1.8005ms)
+ƒo" V0.16.23 measures the real remaining viewport height and updates it after resize settles (1.938ms)
+ƒo" V0.16.23 loads responsive sizing only after the production workspace script finished (0.4288ms)
+ƒo" V0.16.23 reserves the complete lower Creator UI before fitting the 16:9 stage (0.4519ms)
+ƒo" V0.16.23 keeps the existing scene controls and gives the scene column a clear production layout (3.442ms)
+ƒo" V0.16.23 implements the approved four-area production workspace (1.317ms)
+ƒo" V0.16.23 protects the global creator navigation while restructuring Vortrag (1.6357ms)
+ƒo" V0.16.23 media library follows the approved visual tile reference (0.4833ms)
+ƒo" V0.16.23 uses one coherent responsive layout instead of fixed widths that push the editor off-screen (0.5633ms)
+ƒo" V0.16.23 detaches its production columns from legacy workspace layout classes (0.7685ms)
+ƒo" V0.16.23 uses the available ultrawide width instead of a narrow centered 2000px block (0.6916ms)
+ƒo" V0.16.23 reserves the real viewport height so the media library bottom edge stays visible (0.5869ms)
+ƒo" V0.16.23 media tiles remain visual and readable at narrower widths (0.5256ms)
+ƒo" V0.16.23 keeps legacy test controls hidden across responsive layouts (1.5417ms)
+ƒo" V0.16.23 does not remove the protected Academy production hooks (1.6678ms)
+ƒo" V0.16.23 fits the complete 16:9 composition into the visible monitor slot (1.45ms)
+ƒo" V0.16.23 reserves the full media content instead of forcing a clipped short-height media row (0.3165ms)
+ƒo" V0.16.23 keeps the room composition itself unchanged while only scaling the stage box (0.2956ms)
+ƒo" V0.16.23 remains the final stage-sizing authority after legacy delayed fitters (0.2502ms)
+ƒo" visual guard captures a real Creator screenshot and checks approved Academy composition (1.447ms)
+ƒo" test launcher runs unit tests then visual screenshot guard before normal Creator start (0.8101ms)
+ƒo" generated screenshot is excluded from Git history (0.4668ms)
+ƒ"û tests 203
+ƒ"û suites 0
+ƒ"û pass 203
+ƒ"û fail 0
+ƒ"û cancelled 0
+ƒ"û skipped 0
+ƒ"û todo 0
+ƒ"û duration_ms 1548.0066
+npm notice
+npm notice New major version of npm available! 11.17.0 -> 12.0.2
+npm notice Changelog: <URL>
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+Fehlerdetails Visual:
+
+> webbased-academy-creator@0.16.53 visual:check
+> electron src/visual-check.js
+
+
+Error occurred in handler for 'academy-app-version': Error: No handler registered for 'academy-app-version'
+    at Session.<anonymous> (node:electron/js2c/browser_init:2:107400)
+    at Session.emit (node:events:519:28)
+Error occurred in handler for 'heygen-key-state': Error: No handler registered for 'heygen-key-state'
+    at Session.<anonymous> (node:electron/js2c/browser_init:2:107400)
+    at Session.emit (node:events:519:28)
+Visueller Screenshot: <PROJECT>\academy-visual-latest.png
+VISUAL CHECK FEHLER:
+ - Tafel-Editor ist nicht sichtbar.
+
