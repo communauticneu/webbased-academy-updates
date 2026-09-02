@@ -38,7 +38,31 @@ async function inspectCreator(win){
   })()`,true);
 }
 
-function validate(s){
+async function checkPostItDoubleClick(win){
+  const point=await win.webContents.executeJavaScript(`(()=>{
+    if(!globalThis.AcademyPostItSystem?.addPostIt)return null;
+    globalThis.AcademyPostItSystem.addPostIt({content:'Doppelklick-Test',x:110,y:110});
+    const text=document.querySelector('.academy-postit-text');
+    if(!text)return null;
+    const r=text.getBoundingClientRect();
+    return {x:Math.round(r.left+r.width/2),y:Math.round(r.top+r.height/2)};
+  })()`,true);
+  if(!point)return false;
+  const click=clickCount=>{
+    win.webContents.sendInputEvent({type:'mouseDown',x:point.x,y:point.y,button:'left',clickCount});
+    win.webContents.sendInputEvent({type:'mouseUp',x:point.x,y:point.y,button:'left',clickCount});
+  };
+  click(1);
+  await sleep(80);
+  click(2);
+  await sleep(120);
+  return win.webContents.executeJavaScript(`(()=>{
+    const text=document.querySelector('.academy-postit-text');
+    return !!text&&text.contentEditable==='true'&&document.activeElement===text;
+  })()`,true);
+}
+
+function validate(s,postItEditing){
   const errors=[];
   const visible=r=>!!r&&r.display!=='none'&&r.visibility!=='hidden'&&r.opacity>0&&r.width>0&&r.height>0;
   if(!visible(s.stage))errors.push('Buehne ist nicht sichtbar.');
@@ -55,6 +79,7 @@ function validate(s){
   if(s.editor&&s.editor.right>s.viewport.width+2)errors.push('Tafel-Editor ragt rechts aus dem sichtbaren Bereich.');
   if(s.media&&s.media.bottom>s.viewport.height+8)errors.push('Medienbibliothek ragt unten aus dem sichtbaren Bereich.');
   if(s.viewport.scrollWidth>s.viewport.width+4)errors.push('Unerwartetes horizontales Scrollen erkannt.');
+  if(!postItEditing)errors.push('Post-it-Text wird durch einen echten Doppelklick nicht bearbeitbar.');
   return errors;
 }
 
@@ -74,10 +99,11 @@ app.whenReady().then(async()=>{
     });
     await win.loadFile(path.join(__dirname,'index.html'));
     await sleep(WAIT_MS);
+    const postItEditing=await checkPostItDoubleClick(win);
     const state=await inspectCreator(win);
     const image=await win.webContents.capturePage();
     fs.writeFileSync(SCREENSHOT,image.toPNG());
-    const errors=validate(state);
+    const errors=validate(state,postItEditing);
     console.log(`Visueller Screenshot: ${SCREENSHOT}`);
     if(errors.length){
       console.error('VISUAL CHECK FEHLER:');
