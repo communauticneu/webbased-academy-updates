@@ -43,11 +43,17 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
 test('paper medium owns immersive fibres, lifted corners and contact depth',()=>{
  assert.match(source,/\.academy-postit-paper:has\(\.academy-postit-text\[style\*="font-family: Kalam"\]\)\{/);
  assert.match(source,/postit-paper-photoreal\.png/);
- assert.match(source,/background-size:100% 100%/);
+ assert.match(source,/border-image-source:url\('\.\/assets\/postit-paper-photoreal\.png'\)/);
  assert.match(source,/font-family: Kalam.*background:transparent/);
  assert.match(source,/font-family: Kalam.*\.academy-postit-fold\{opacity:0/);
  const material=fs.readFileSync(path.join(__dirname,'../src/assets/postit-paper-photoreal.png'));
  assert.deepEqual(Array.from(material.subarray(1,4)),[80,78,71]);
+});
+
+test('photographic paper keeps its corner geometry fixed while only its centre stretches',()=>{
+ assert.match(source,/border-image-slice:\d+ \d+ \d+ \d+ fill/);
+ assert.match(source,/border-image-width:\d+px \d+px \d+px \d+px/);
+ assert.doesNotMatch(source,/postit-paper-photoreal\.png'\);background-position:center;background-size:100% 100%/);
 });
 
 test('immersive paper treatment stays off the chalkboard surface',()=>{
