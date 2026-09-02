@@ -80,7 +80,21 @@ async function checkPostItGrowth(win){
   })()`,true);
 }
 
-function validate(s,postItEditing,postItGrowth){
+async function checkPostItControls(win){
+  await win.webContents.executeJavaScript(`(()=>{
+    const text=document.querySelector('.academy-postit-text');
+    text?.dispatchEvent(new FocusEvent('focusout',{bubbles:true}));
+  })()`,true);
+  await sleep(80);
+  return win.webContents.executeJavaScript(`(()=>{
+    const paper=document.querySelector('.academy-postit-paper'),toolbar=document.querySelector('.academy-postit-toolbar'),del=document.querySelector('.academy-postit-delete'),resize=document.querySelector('.academy-postit-resize'),swatches=document.querySelectorAll('.academy-postit-color');
+    if(!paper||!toolbar||!del||!resize)return false;
+    const paperRect=paper.getBoundingClientRect(),toolbarRect=toolbar.getBoundingClientRect(),deleteStyle=getComputedStyle(del),resizeStyle=getComputedStyle(resize),toolbarStyle=getComputedStyle(toolbar);
+    return toolbarRect.top>=paperRect.bottom&&swatches.length===6&&deleteStyle.width==='22px'&&resizeStyle.width==='22px'&&toolbarStyle.backgroundColor==='rgba(5, 18, 27, 0.94)';
+  })()`,true);
+}
+
+function validate(s,postItEditing,postItGrowth,postItControls){
   const errors=[];
   const visible=r=>!!r&&r.display!=='none'&&r.visibility!=='hidden'&&r.opacity>0&&r.width>0&&r.height>0;
   if(!visible(s.stage))errors.push('Buehne ist nicht sichtbar.');
@@ -99,6 +113,7 @@ function validate(s,postItEditing,postItGrowth){
   if(s.viewport.scrollWidth>s.viewport.width+4)errors.push('Unerwartetes horizontales Scrollen erkannt.');
   if(!postItEditing)errors.push('Post-it-Text wird durch einen echten Doppelklick nicht bearbeitbar.');
   if(!postItGrowth)errors.push('Post-it-Text laeuft ueber den Buehnenrand.');
+  if(!postItControls)errors.push('Post-it-Funktionsleiste entspricht nicht dem Textrahmen-Design.');
   return errors;
 }
 
@@ -120,10 +135,11 @@ app.whenReady().then(async()=>{
     await sleep(WAIT_MS);
     const postItEditing=await checkPostItDoubleClick(win);
     const postItGrowth=await checkPostItGrowth(win);
+    const postItControls=await checkPostItControls(win);
     const state=await inspectCreator(win);
     const image=await win.webContents.capturePage();
     fs.writeFileSync(SCREENSHOT,image.toPNG());
-    const errors=validate(state,postItEditing,postItGrowth);
+    const errors=validate(state,postItEditing,postItGrowth,postItControls);
     console.log(`Visueller Screenshot: ${SCREENSHOT}`);
     if(errors.length){
       console.error('VISUAL CHECK FEHLER:');
