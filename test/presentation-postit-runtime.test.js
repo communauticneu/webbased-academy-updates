@@ -50,13 +50,9 @@ test('paper medium owns immersive fibres, lifted corners and contact depth',()=>
  assert.deepEqual(Array.from(material.subarray(1,4)),[80,78,71]);
 });
 
-test('photographic paper keeps its corner geometry fixed and tiles its centre without stretching',()=>{
- assert.match(source,/border-image-slice:\d+ \d+ \d+ \d+;/);
+test('photographic paper keeps its corner geometry fixed while only its centre stretches',()=>{
+ assert.match(source,/border-image-slice:\d+ \d+ \d+ \d+ fill/);
  assert.match(source,/border-image-width:\d+px \d+px \d+px \d+px/);
- assert.match(source,/font-family: Kalam.*::after\{content:''.*background-size:\d+px \d+px/);
- assert.match(source,/font-family: Kalam.*::after\{content:''.*background-repeat:repeat/);
- assert.match(source,/font-family: Kalam.*::after\{content:''.*clip-path:polygon/);
- assert.doesNotMatch(source,/border-image-slice:\d+ \d+ \d+ \d+ fill/);
  assert.doesNotMatch(source,/postit-paper-photoreal\.png'\);background-position:center;background-size:100% 100%/);
 });
 
