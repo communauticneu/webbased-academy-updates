@@ -42,13 +42,18 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
 
 test('paper medium owns immersive fibres, lifted corners and contact depth',()=>{
  assert.match(source,/\.academy-postit-paper:has\(\.academy-postit-text\[style\*="font-family: Kalam"\]\)\{/);
- assert.match(source,/font-family: Kalam.*::after\{/);
- assert.match(source,/font-family: Kalam.*\.academy-postit-fold\{/);
- assert.match(source,/repeating-linear-gradient/);
- assert.match(source,/radial-gradient/);
- assert.match(source,/drop-shadow/);
+ assert.match(source,/postit-paper-photoreal\.png/);
+ assert.match(source,/background-size:100% 100%/);
+ assert.match(source,/font-family: Kalam.*background:transparent/);
+ assert.match(source,/font-family: Kalam.*\.academy-postit-fold\{opacity:0/);
+ const material=fs.readFileSync(path.join(__dirname,'../src/assets/postit-paper-photoreal.png'));
+ assert.deepEqual(Array.from(material.subarray(1,4)),[80,78,71]);
 });
 
 test('immersive paper treatment stays off the chalkboard surface',()=>{
- assert.doesNotMatch(source,/font-family: KG Second Chances Sketch.*repeating-linear-gradient/);
+ assert.doesNotMatch(source,/font-family: KG Second Chances Sketch.*postit-paper-photoreal/);
+});
+
+test('all five visible paper colors reuse the same photographic material',()=>{
+ for(const color of ['#c99a00','#4f9b57','#c9b88a','#a83d36','#4f9fb4'])assert.match(source,new RegExp(color.replace('#','\\#')+'.*filter:'));
 });
