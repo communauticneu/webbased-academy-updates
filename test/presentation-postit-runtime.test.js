@@ -5,6 +5,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const source=fs.readFileSync(path.join(__dirname,'../src/presentation-postit-system.js'),'utf8');
 const shell=fs.readFileSync(path.join(__dirname,'../src/presentation-content-shell.js'),'utf8');
+const postit=require('../src/presentation-postit-system.js');
 
 test('post-it runtime owns one stage layer and photorealistic scalable paper renderer',()=>{
  assert.match(source,/academyPostItLayer/);
@@ -32,4 +33,11 @@ test('visible post-it supports direct editing and pointer interaction',()=>{
  assert.match(source,/pointerdown/);
  assert.match(source,/pointermove/);
  assert.match(source,/pointerup/);
+});
+
+test('the second click is recognized as editing even after the first click rerenders the Post-it',()=>{
+ const paper={dataset:{postitId:'academy-postit-1'}};
+ const target={closest:selector=>selector==='.academy-postit-paper'?paper:null};
+ assert.equal(postit.getEditingPaper({detail:1,target}),null);
+ assert.equal(postit.getEditingPaper({detail:2,target}),paper);
 });
