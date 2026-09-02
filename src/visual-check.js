@@ -62,7 +62,25 @@ async function checkPostItDoubleClick(win){
   })()`,true);
 }
 
-function validate(s,postItEditing){
+async function checkPostItGrowth(win){
+  const entered=await win.webContents.executeJavaScript(`(()=>{
+    const text=document.querySelector('.academy-postit-text');
+    if(!text||text.contentEditable!=='true')return false;
+    text.textContent='SehrLangerPostItText'.repeat(80);
+    text.dispatchEvent(new Event('input',{bubbles:true}));
+    return true;
+  })()`,true);
+  if(!entered)return false;
+  await sleep(120);
+  return win.webContents.executeJavaScript(`(()=>{
+    const stage=document.querySelector('.stage'),paper=document.querySelector('.academy-postit-paper'),text=document.querySelector('.academy-postit-text');
+    if(!stage||!paper||!text)return false;
+    const stageRect=stage.getBoundingClientRect(),paperRect=paper.getBoundingClientRect();
+    return paperRect.right<=stageRect.right+1&&text.scrollWidth<=text.clientWidth+1&&paperRect.height>58;
+  })()`,true);
+}
+
+function validate(s,postItEditing,postItGrowth){
   const errors=[];
   const visible=r=>!!r&&r.display!=='none'&&r.visibility!=='hidden'&&r.opacity>0&&r.width>0&&r.height>0;
   if(!visible(s.stage))errors.push('Buehne ist nicht sichtbar.');
@@ -80,6 +98,7 @@ function validate(s,postItEditing){
   if(s.media&&s.media.bottom>s.viewport.height+8)errors.push('Medienbibliothek ragt unten aus dem sichtbaren Bereich.');
   if(s.viewport.scrollWidth>s.viewport.width+4)errors.push('Unerwartetes horizontales Scrollen erkannt.');
   if(!postItEditing)errors.push('Post-it-Text wird durch einen echten Doppelklick nicht bearbeitbar.');
+  if(!postItGrowth)errors.push('Post-it-Text laeuft ueber den Buehnenrand.');
   return errors;
 }
 
@@ -100,10 +119,11 @@ app.whenReady().then(async()=>{
     await win.loadFile(path.join(__dirname,'index.html'));
     await sleep(WAIT_MS);
     const postItEditing=await checkPostItDoubleClick(win);
+    const postItGrowth=await checkPostItGrowth(win);
     const state=await inspectCreator(win);
     const image=await win.webContents.capturePage();
     fs.writeFileSync(SCREENSHOT,image.toPNG());
-    const errors=validate(state,postItEditing);
+    const errors=validate(state,postItEditing,postItGrowth);
     console.log(`Visueller Screenshot: ${SCREENSHOT}`);
     if(errors.length){
       console.error('VISUAL CHECK FEHLER:');
