@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const source=fs.readFileSync(path.join(__dirname,'../src/presentation-postit-system.js'),'utf8');
+const postit=require('../src/presentation-postit-system.js');
 
 test('selected post-it exposes compact alignment color duplicate and delete controls',()=>{
  assert.match(source,/academy-postit-toolbar/);
@@ -37,5 +38,9 @@ test('delete and resize use matching dark corner buttons while fixed colors rema
  assert.match(source,/dataset\.postitResize='true'/);
  assert.match(source,/title='Größe ändern'/);
  assert.match(source,/textContent='↘'/);
- assert.match(source,/Object\.entries\(POSTIT_PALETTE\)/);
+});
+
+test('toolbar omits gray without removing its compatibility color value',()=>{
+ assert.deepEqual(postit.POSTIT_TOOLBAR_COLORS,['darkYellow','green','beige','red','cyan']);
+ assert.equal(postit.POSTIT_PALETTE.lightGray,'#b8b8b2');
 });
