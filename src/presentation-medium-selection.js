@@ -15,6 +15,7 @@
     const EventCtor=doc.defaultView?.CustomEvent||globalThis.CustomEvent;
     if(typeof EventCtor!=='function')return false;
     doc.dispatchEvent(new EventCtor('academy-presentation-medium-change',{detail:{medium}}));
+    if(doc.defaultView?.dispatchEvent)doc.defaultView.dispatchEvent(new EventCtor('academy-presentation-medium-change',{detail:{medium}}));
     return true;
   }
 
