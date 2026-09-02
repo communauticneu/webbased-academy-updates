@@ -9,12 +9,10 @@ function install(doc){
  const style=doc.createElement('style');style.id='academyContentShellStyle';style.textContent='.academy-board-object-editor{display:grid;gap:7px;padding:0;border:0;background:transparent}.academy-board-editor-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.academy-board-object-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.academy-board-object-toolbar button,.academy-content-submenu button,.academy-board-graphics-open{min-height:29px;border:1px solid rgba(255,255,255,.14);border-radius:7px;background:rgba(255,255,255,.06);color:inherit;cursor:pointer;padding:4px 6px}.academy-content-submenu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:5px;border:1px solid rgba(76,200,255,.25);border-radius:8px;background:rgba(5,18,27,.72)}.academy-content-submenu[hidden]{display:none!important}.academy-content-submenu button{height:36px}.academy-text-kind-menu button{background:#155075;color:#eef6fb;border-color:#2a7ca8;border-radius:10px}.academy-text-kind-menu button:hover{background:#1d618b}.academy-symbol-kind-menu button{background:#155075;color:#eef6fb;border-color:#2a7ca8;border-radius:10px}.academy-symbol-kind-menu button:hover{background:#1d618b}.academy-board-graphics-open{width:100%;text-align:left;margin-top:5px}';doc.head?.appendChild(style);
  const tools=Array.from(host.querySelectorAll('[data-content-tool]')),menus=Array.from(host.querySelectorAll('[data-content-menu]'));
  tools.forEach(tool=>tool.addEventListener('click',()=>{
+   if(tool.dataset.contentTool==='postit'){menus.forEach(menu=>menu.hidden=true);tools.forEach(item=>item.setAttribute('aria-expanded','false'));root.AcademyPostItSystem?.addPostIt?.();return;}
    const target=host.querySelector('[data-content-menu="'+tool.dataset.contentTool+'"]');
    if(!target){menus.forEach(menu=>menu.hidden=true);tools.forEach(item=>item.setAttribute('aria-expanded','false'));return;}
-   const open=target.hidden;
-   menus.forEach(menu=>menu.hidden=menu!==target);
-   target.hidden=!open;
-   tools.forEach(item=>item.setAttribute('aria-expanded',item===tool&&open?'true':'false'));
+   const open=target.hidden;menus.forEach(menu=>menu.hidden=menu!==target);target.hidden=!open;tools.forEach(item=>item.setAttribute('aria-expanded',item===tool&&open?'true':'false'));
  }));
  const textMenu=host.querySelector('[data-text-kind-menu]'),textTool=host.querySelector('[data-content-tool="text"]');
  textMenu?.addEventListener('click',event=>{const button=event.target.closest?.('[data-text-kind]');if(!button)return;root.AcademyTextSystem?.addText?.(button.dataset.textKind);textMenu.hidden=true;textTool?.setAttribute('aria-expanded','false');});
