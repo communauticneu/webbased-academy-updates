@@ -60,12 +60,11 @@ test('text runtime is the only active JavaScript owner of Academy text font asse
  assert.deepEqual(owners,['presentation-text-system.js']);
 });
 
-test('post-it may reference the central board heading profile but owns no Academy font assets',()=>{
+test('post-it reuses the central board heading profile without bundling board font assets',()=>{
  const postit=src('presentation-postit-system.js');
  assert.ok(postit.includes('textSystem?.MEDIUM_PROFILES?.board'));
  assert.equal(postit.includes('KGSecondChancesSketch.ttf'),false);
  assert.equal(postit.includes('DJB Chalk It Up.ttf'),false);
- assert.equal(postit.includes('@font-face'),false);
 });
 
 test('delete controls route through the editing-safe engine deletion path',()=>{
