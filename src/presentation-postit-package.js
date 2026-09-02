@@ -19,4 +19,5 @@ function install(onReady){
 }
 
 root.AcademyPostItPackage=Object.freeze({enabled,install});
+install();
 })(window);
