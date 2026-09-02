@@ -49,15 +49,23 @@ test('new text runtime owns font faces, object layer and direct editing behavior
  assert.equal(text.includes('FontFace'),false);
 });
 
-test('text runtime is the only active JavaScript owner of Academy text fonts',()=>{
+test('text runtime is the only active JavaScript owner of Academy text font assets',()=>{
  const srcDir=path.join(__dirname,'..','src');
- const fontMarkers=['KG Second Chances Sketch','DJB Chalk It Up'];
+ const assetMarkers=['KGSecondChancesSketch.ttf','DJB Chalk It Up.ttf'];
  const owners=[];
  for(const name of fs.readdirSync(srcDir).filter(name=>name.endsWith('.js'))){
   const content=fs.readFileSync(path.join(srcDir,name),'utf8');
-  if(fontMarkers.some(marker=>content.includes(marker)))owners.push(name);
+  if(assetMarkers.some(marker=>content.includes(marker)))owners.push(name);
  }
  assert.deepEqual(owners,['presentation-text-system.js']);
+});
+
+test('post-it may reference the central board heading profile but owns no Academy font assets',()=>{
+ const postit=src('presentation-postit-system.js');
+ assert.ok(postit.includes('textSystem?.MEDIUM_PROFILES?.board'));
+ assert.equal(postit.includes('KGSecondChancesSketch.ttf'),false);
+ assert.equal(postit.includes('DJB Chalk It Up.ttf'),false);
+ assert.equal(postit.includes('@font-face'),false);
 });
 
 test('delete controls route through the editing-safe engine deletion path',()=>{
