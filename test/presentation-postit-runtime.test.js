@@ -35,9 +35,7 @@ test('visible post-it supports direct editing and pointer interaction',()=>{
  assert.match(source,/pointerup/);
 });
 
-test('the second click is recognized as editing even after the first click rerenders the Post-it',()=>{
- const paper={dataset:{postitId:'academy-postit-1'}};
- const target={closest:selector=>selector==='.academy-postit-paper'?paper:null};
- assert.equal(postit.getEditingPaper({detail:1,target}),null);
- assert.equal(postit.getEditingPaper({detail:2,target}),paper);
+test('rendering preserves the Post-it DOM node so a double-click can finish on the same target',()=>{
+ assert.doesNotMatch(source,/academyPostItLayer\.replaceChildren\(\)/);
+ assert.match(source,/querySelector\(`\[data-postit-id="\$\{item\.id\}"\]`\)/);
 });
