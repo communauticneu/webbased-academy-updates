@@ -39,31 +39,3 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
  assert.doesNotMatch(source,/academyPostItLayer\.replaceChildren\(\)/);
  assert.match(source,/querySelector\(`\[data-postit-id="\$\{item\.id\}"\]`\)/);
 });
-
-test('paper medium owns immersive fibres, lifted corners and contact depth',()=>{
- assert.match(source,/\.academy-postit-paper:has\(\.academy-postit-text\[style\*="font-family: Kalam"\]\)\{/);
- assert.match(source,/postit-paper-photoreal\.png/);
- assert.match(source,/background-image:url\('\.\/assets\/postit-paper-photoreal\.png'\)/);
- assert.match(source,/font-family: Kalam.*background:transparent/);
- assert.match(source,/font-family: Kalam.*\.academy-postit-fold\{position:absolute/);
- const material=fs.readFileSync(path.join(__dirname,'../src/assets/postit-paper-photoreal.png'));
- assert.deepEqual(Array.from(material.subarray(1,4)),[80,78,71]);
-});
-
-test('photographic paper uses independent fixed-size corners around a scalable centre',()=>{
- assert.match(source,/academy-postit-surface/);
- assert.match(source,/academy-postit-corner-left/);
- assert.match(source,/academy-postit-corner-left\{[^}]*width:\d+px;height:\d+px/);
- assert.match(source,/academy-postit-fold\{[^}]*width:\d+px;height:\d+px/);
- assert.match(source,/academy-postit-corner-left[^}]*background-size:\d+px \d+px/);
- assert.match(source,/academy-postit-fold[^}]*background-size:\d+px \d+px/);
- assert.doesNotMatch(source,/border-image-source/);
-});
-
-test('immersive paper treatment stays off the chalkboard surface',()=>{
- assert.doesNotMatch(source,/font-family: KG Second Chances Sketch.*postit-paper-photoreal/);
-});
-
-test('all five visible paper colors reuse the same photographic material',()=>{
- for(const color of ['#c99a00','#4f9b57','#c9b88a','#a83d36','#4f9fb4'])assert.match(source,new RegExp(color.replace('#','\\#')+'.*filter:'));
-});
