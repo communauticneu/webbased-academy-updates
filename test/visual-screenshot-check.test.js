@@ -16,6 +16,14 @@ test('visual guard captures a real Creator screenshot and checks approved Academ
   assert.match(s,/process\.exitCode\s*=\s*1/);
 });
 
+test('visual guard exercises Post-it editing with a real Chromium double-click',()=>{
+  const s=read('src/visual-check.js');
+  assert.match(s,/AcademyPostItSystem\.addPostIt/);
+  assert.match(s,/sendInputEvent\(/);
+  assert.match(s,/click\(2\)/);
+  assert.match(s,/contentEditable==='true'/);
+});
+
 test('test launcher runs unit tests then visual screenshot guard before normal Creator start',()=>{
   const pkg=JSON.parse(read('package.json'));
   assert.equal(pkg.scripts['visual:check'],'electron src/visual-check.js');
