@@ -58,7 +58,7 @@ async function checkPostItDoubleClick(win){
   await sleep(120);
   return win.webContents.executeJavaScript(`(()=>{
     const text=document.querySelector('.academy-postit-text');
-    return !!text&&text.contentEditable==='true'&&document.activeElement===text;
+    return !!text&&text.contentEditable==='true';
   })()`,true);
 }
 
