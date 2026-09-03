@@ -1,6 +1,7 @@
 const {app,BrowserWindow}=require('electron');
 const fs=require('node:fs');
 const path=require('node:path');
+const {keepsFixedFrameTracks}=require('./postit-frame-check.js');
 
 const ROOT=path.join(__dirname,'..');
 const SCREENSHOT=path.join(ROOT,'academy-visual-latest.png');
@@ -95,16 +96,18 @@ async function checkPostItControls(win){
 }
 
 async function checkPostItFrameScaling(win){
-  return win.webContents.executeJavaScript(`(()=>{
+  const tracks=await win.webContents.executeJavaScript(`(()=>{
     const paper=document.querySelector('.academy-postit-paper'),frame=document.querySelector('.academy-postit-frame');
-    if(!paper||!frame)return false;
+    if(!paper||!frame)return null;
     const oldWidth=paper.style.width,oldHeight=paper.style.height;
     const before=getComputedStyle(frame),columns=before.gridTemplateColumns,rows=before.gridTemplateRows;
     paper.style.width='760px';paper.style.height='420px';
-    const after=getComputedStyle(frame),unchanged=after.gridTemplateColumns===columns&&after.gridTemplateRows===rows;
+    const after=getComputedStyle(frame);
+    const result={beforeColumns:columns,beforeRows:rows,afterColumns:after.gridTemplateColumns,afterRows:after.gridTemplateRows};
     paper.style.width=oldWidth;paper.style.height=oldHeight;
-    return columns.startsWith('30px ')&&columns.endsWith(' 42px')&&rows.startsWith('28px ')&&rows.endsWith(' 30px')&&unchanged;
+    return result;
   })()`,true);
+  return !!tracks&&keepsFixedFrameTracks(tracks.beforeColumns,tracks.beforeRows,tracks.afterColumns,tracks.afterRows);
 }
 
 function validate(s,postItEditing,postItGrowth,postItControls,postItFrameScaling){
