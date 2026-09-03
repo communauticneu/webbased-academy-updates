@@ -40,14 +40,22 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
  assert.match(source,/querySelector\(`\[data-postit-id="\$\{item\.id\}"\]`\)/);
 });
 
-test('approved paper is one coherent transparent production frame',()=>{
- const png=fs.readFileSync(path.join(__dirname,'../src/assets/postit-frame-9slice.png'));
+test('approved paper uses one coherent transparent production overlay',()=>{
+ const png=fs.readFileSync(path.join(__dirname,'../src/assets/postit-fold-overlay-4k.png'));
  assert.deepEqual(Array.from(png.subarray(1,4)),[80,78,71]);
  assert.ok(png.readUInt32BE(16)>=2000,'frame must retain production resolution');
  assert.equal(png[25],6,'frame must contain a real alpha channel');
  assert.match(source,/academy-postit-nine-tl/);
- assert.match(source,/url\('\.\/assets\/postit-frame-9slice\.png'\)/);
+ assert.match(source,/url\('\.\/assets\/postit-fold-overlay-4k\.png'\)/);
  assert.doesNotMatch(source,/postit-curl-left-4k|postit-curl-right-bottom-4k|postit-edge-right-top-4k/);
+});
+
+test('frame uses a fold-only alpha overlay without a flat rectangular paper body',()=>{
+ assert.match(source,/postit-fold-overlay-4k\.png/);
+ assert.doesNotMatch(source,/academy-postit-nine-(?:tl|tr|bl|br)\{[^}]*clip-path/);
+ const png=fs.readFileSync(path.join(__dirname,'../src/assets/postit-fold-overlay-4k.png'));
+ assert.deepEqual(Array.from(png.subarray(1,4)),[80,78,71]);
+ assert.equal(png[25],6,'fold overlay must contain a real alpha channel');
 });
 
 test('nine independent grid areas keep fixed corners while only centre rows and columns grow',()=>{
@@ -65,10 +73,4 @@ test('short Post-it strips use one smaller fixed frame while normal Post-its kee
  assert.equal(postit.resolvePostItFrameScale(330,89),0.62);
  assert.equal(postit.resolvePostItFrameScale(330,90),1);
  assert.equal(postit.resolvePostItFrameScale(330,520),1);
-});
-
-test('corner artwork is masked to paper folds and edges instead of opaque rectangles',()=>{
- for(const corner of ['tl','tr','bl','br']){
-  assert.match(source,new RegExp(`academy-postit-nine-${corner}\\{[^}]*clip-path:polygon`));
- }
 });
