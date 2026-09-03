@@ -40,24 +40,19 @@ test('rendering preserves the Post-it DOM node so a double-click can finish on t
  assert.match(source,/querySelector\(`\[data-postit-id="\$\{item\.id\}"\]`\)/);
 });
 
-test('approved immersive paper uses separate production assets with real transparent curls',()=>{
- const names=['postit-paper-texture-4k.png','postit-curl-left-4k.png','postit-curl-right-bottom-4k.png','postit-edge-right-top-4k.png'];
- for(const name of names){
-  const png=fs.readFileSync(path.join(__dirname,'../src/assets',name));
-  assert.deepEqual(Array.from(png.subarray(1,4)),[80,78,71]);
-  assert.ok(png.readUInt32BE(16)>=1200&&png.readUInt32BE(20)>=1000,name+' must retain production resolution');
- }
- for(const name of names.slice(1)){
-  const png=fs.readFileSync(path.join(__dirname,'../src/assets',name));
-  assert.equal(png[25],6,name+' must contain an alpha channel');
- }
+test('approved paper is one coherent transparent production frame',()=>{
+ const png=fs.readFileSync(path.join(__dirname,'../src/assets/postit-frame-9slice.png'));
+ assert.deepEqual(Array.from(png.subarray(1,4)),[80,78,71]);
+ assert.ok(png.readUInt32BE(16)>=2000,'frame must retain production resolution');
+ assert.equal(png[25],6,'frame must contain a real alpha channel');
+ assert.match(source,/border-image-source:url\('\.\/assets\/postit-frame-9slice\.png'\)/);
+ assert.doesNotMatch(source,/postit-curl-left-4k|postit-curl-right-bottom-4k|postit-edge-right-top-4k/);
 });
 
-test('approved curls and upper-right edge ignore every Post-it size change',()=>{
- for(const className of ['academy-postit-curl-left','academy-postit-curl-right','academy-postit-edge-right']){
-  assert.match(source,new RegExp('\\.'+className+'\\{[^}]*width:\\d+px;height:\\d+px'));
- }
- assert.match(source,/academy-postit-surface\{[^}]*background-image:url\('\.\/assets\/postit-paper-texture-4k\.png'\)/);
- assert.match(source,/paper\.append\(surface,leftCurl,text,rightEdge,rightCurl\)/);
- assert.doesNotMatch(source,/postit-paper-photoreal\.png/);
+test('nine-slice corners keep fixed pixel dimensions while only the paper centre grows',()=>{
+ assert.match(source,/border-image-slice:\d+ \d+ \d+ \d+/);
+ assert.match(source,/border-image-width:\d+px \d+px \d+px \d+px/);
+ assert.match(source,/border-image-repeat:stretch/);
+ assert.match(source,/paper\.append\(surface,frame,text,fold\)/);
+ assert.doesNotMatch(source,/leftCurl|rightEdge|rightCurl/);
 });

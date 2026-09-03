@@ -39,6 +39,14 @@ test('visual guard renders the approved Post-it control arrangement',()=>{
   assert.match(s,/deleteStyle\.width==='22px'&&resizeStyle\.width==='22px'/);
 });
 
+test('visual guard verifies that nine-slice corners do not scale with the Post-it',()=>{
+  const s=read('src/visual-check.js');
+  assert.match(s,/checkPostItFrameScaling/);
+  assert.match(s,/borderImageSource/);
+  assert.match(s,/borderImageWidth/);
+  assert.match(s,/Post-it-Rahmen skaliert seine Ecken/);
+});
+
 test('test launcher runs unit tests then visual screenshot guard before normal Creator start',()=>{
   const pkg=JSON.parse(read('package.json'));
   assert.equal(pkg.scripts['visual:check'],'electron src/visual-check.js');
