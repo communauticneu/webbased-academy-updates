@@ -42,8 +42,8 @@ test('visual guard renders the approved Post-it control arrangement',()=>{
 test('visual guard verifies that nine-slice corners do not scale with the Post-it',()=>{
   const s=read('src/visual-check.js');
   assert.match(s,/checkPostItFrameScaling/);
-  assert.match(s,/borderImageSource/);
-  assert.match(s,/borderImageWidth/);
+  assert.match(s,/gridTemplateColumns/);
+  assert.match(s,/gridTemplateRows/);
   assert.match(s,/Post-it-Rahmen skaliert seine Ecken/);
 });
 

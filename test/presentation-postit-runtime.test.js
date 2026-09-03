@@ -45,14 +45,17 @@ test('approved paper is one coherent transparent production frame',()=>{
  assert.deepEqual(Array.from(png.subarray(1,4)),[80,78,71]);
  assert.ok(png.readUInt32BE(16)>=2000,'frame must retain production resolution');
  assert.equal(png[25],6,'frame must contain a real alpha channel');
- assert.match(source,/border-image-source:url\('\.\/assets\/postit-frame-9slice\.png'\)/);
+ assert.match(source,/academy-postit-nine-tl/);
+ assert.match(source,/url\('\.\/assets\/postit-frame-9slice\.png'\)/);
  assert.doesNotMatch(source,/postit-curl-left-4k|postit-curl-right-bottom-4k|postit-edge-right-top-4k/);
 });
 
-test('nine-slice corners keep fixed pixel dimensions while only the paper centre grows',()=>{
- assert.match(source,/border-image-slice:\d+ \d+ \d+ \d+/);
- assert.match(source,/border-image-width:\d+px \d+px \d+px \d+px/);
- assert.match(source,/border-image-repeat:stretch/);
+test('nine independent grid areas keep fixed corners while only centre rows and columns grow',()=>{
+ assert.match(source,/grid-template-columns:30px minmax\(0,1fr\) 42px/);
+ assert.match(source,/grid-template-rows:28px minmax\(0,1fr\) 30px/);
+ for(const area of ['tl','t','tr','l','r','bl','b','br'])assert.match(source,new RegExp('academy-postit-nine-'+area));
+ assert.match(source,/frame\.append\(tl,t,tr,l,r,bl,b,br\)/);
  assert.match(source,/paper\.append\(surface,frame,text,fold\)/);
+ assert.doesNotMatch(source,/border-image/);
  assert.doesNotMatch(source,/leftCurl|rightEdge|rightCurl/);
 });
