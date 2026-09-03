@@ -59,3 +59,10 @@ test('nine independent grid areas keep fixed corners while only centre rows and 
  assert.doesNotMatch(source,/border-image/);
  assert.doesNotMatch(source,/leftCurl|rightEdge|rightCurl/);
 });
+
+test('short Post-it strips use one smaller fixed frame while normal Post-its keep the production frame',()=>{
+ assert.equal(postit.resolvePostItFrameScale(330,58),0.62);
+ assert.equal(postit.resolvePostItFrameScale(330,89),0.62);
+ assert.equal(postit.resolvePostItFrameScale(330,90),1);
+ assert.equal(postit.resolvePostItFrameScale(330,520),1);
+});
