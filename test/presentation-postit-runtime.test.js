@@ -66,3 +66,9 @@ test('short Post-it strips use one smaller fixed frame while normal Post-its kee
  assert.equal(postit.resolvePostItFrameScale(330,90),1);
  assert.equal(postit.resolvePostItFrameScale(330,520),1);
 });
+
+test('corner artwork is masked to paper folds and edges instead of opaque rectangles',()=>{
+ for(const corner of ['tl','tr','bl','br']){
+  assert.match(source,new RegExp(`academy-postit-nine-${corner}\\{[^}]*clip-path:polygon`));
+ }
+});
