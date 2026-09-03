@@ -99,11 +99,11 @@ async function checkPostItFrameScaling(win){
     const paper=document.querySelector('.academy-postit-paper'),frame=document.querySelector('.academy-postit-frame');
     if(!paper||!frame)return false;
     const oldWidth=paper.style.width,oldHeight=paper.style.height;
-    const before=getComputedStyle(frame),source=before.borderImageSource,width=before.borderImageWidth;
+    const before=getComputedStyle(frame),columns=before.gridTemplateColumns,rows=before.gridTemplateRows;
     paper.style.width='760px';paper.style.height='420px';
-    const after=getComputedStyle(frame),unchanged=after.borderImageWidth===width;
+    const after=getComputedStyle(frame),unchanged=after.gridTemplateColumns===columns&&after.gridTemplateRows===rows;
     paper.style.width=oldWidth;paper.style.height=oldHeight;
-    return source.includes('postit-frame-9slice.png')&&width==='18px 42px 22px 36px'&&unchanged;
+    return columns.startsWith('30px ')&&columns.endsWith(' 42px')&&rows.startsWith('28px ')&&rows.endsWith(' 30px')&&unchanged;
   })()`,true);
 }
 
