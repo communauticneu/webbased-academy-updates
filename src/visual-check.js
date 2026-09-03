@@ -94,7 +94,20 @@ async function checkPostItControls(win){
   })()`,true);
 }
 
-function validate(s,postItEditing,postItGrowth,postItControls){
+async function checkPostItFrameScaling(win){
+  return win.webContents.executeJavaScript(`(()=>{
+    const paper=document.querySelector('.academy-postit-paper'),frame=document.querySelector('.academy-postit-frame');
+    if(!paper||!frame)return false;
+    const oldWidth=paper.style.width,oldHeight=paper.style.height;
+    const before=getComputedStyle(frame),source=before.borderImageSource,width=before.borderImageWidth;
+    paper.style.width='760px';paper.style.height='420px';
+    const after=getComputedStyle(frame),unchanged=after.borderImageWidth===width;
+    paper.style.width=oldWidth;paper.style.height=oldHeight;
+    return source.includes('postit-frame-9slice.png')&&width==='18px 42px 22px 36px'&&unchanged;
+  })()`,true);
+}
+
+function validate(s,postItEditing,postItGrowth,postItControls,postItFrameScaling){
   const errors=[];
   const visible=r=>!!r&&r.display!=='none'&&r.visibility!=='hidden'&&r.opacity>0&&r.width>0&&r.height>0;
   if(!visible(s.stage))errors.push('Buehne ist nicht sichtbar.');
@@ -114,6 +127,7 @@ function validate(s,postItEditing,postItGrowth,postItControls){
   if(!postItEditing)errors.push('Post-it-Text wird durch einen echten Doppelklick nicht bearbeitbar.');
   if(!postItGrowth)errors.push('Post-it-Text laeuft ueber den Buehnenrand.');
   if(!postItControls)errors.push('Post-it-Funktionsleiste entspricht nicht dem Textrahmen-Design.');
+  if(!postItFrameScaling)errors.push('Post-it-Rahmen skaliert seine Ecken.');
   return errors;
 }
 
@@ -136,10 +150,11 @@ app.whenReady().then(async()=>{
     const postItEditing=await checkPostItDoubleClick(win);
     const postItGrowth=await checkPostItGrowth(win);
     const postItControls=await checkPostItControls(win);
+    const postItFrameScaling=await checkPostItFrameScaling(win);
     const state=await inspectCreator(win);
     const image=await win.webContents.capturePage();
     fs.writeFileSync(SCREENSHOT,image.toPNG());
-    const errors=validate(state,postItEditing,postItGrowth,postItControls);
+    const errors=validate(state,postItEditing,postItGrowth,postItControls,postItFrameScaling);
     console.log(`Visueller Screenshot: ${SCREENSHOT}`);
     if(errors.length){
       console.error('VISUAL CHECK FEHLER:');
