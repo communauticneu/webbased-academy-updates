@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const FRONT=6,BACK=5;
+const FRONT=5,BACK=4;
 const watched=new WeakSet();
 function textLayer(){return document.getElementById('academyTextObjectLayer');}
 function postitLayer(){return document.getElementById('academyPostitV29Host');}
