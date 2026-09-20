@@ -26,6 +26,7 @@ function startPresentationExtensions(){
     appendScript('presentation-stage-v16.17.js',()=>{
       appendScript('obsolete-background-controls.js');
       appendScript('presentation-medium-selection.js');
+      appendScript('presentation-content-stack.js');
       appendScript('presentation-text-system.js',()=>{
         appendScript('presentation-text-editor-guard.js',()=>{
           appendScript('presentation-text-miniature.js');
