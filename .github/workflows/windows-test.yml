@@ -1,0 +1,71 @@
+name: Windows Test - No Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev-stage-composition
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/windows-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (Test-Path package-lock.json) {
+            npm ci
+          } else {
+            npm install
+          }
+
+      - name: Run automated tests on Windows
+        run: npm test
+
+      - name: Build unpacked Windows application
+        run: npx electron-builder --win dir --publish never
+
+      - name: Verify packaged Windows executable
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = Get-ChildItem -Path releases -Recurse -Filter '*.exe' |
+            Where-Object { $_.Name -eq 'Webbased Academy Creator.exe' } |
+            Select-Object -First 1
+          if (-not $exe) {
+            Write-Error 'Packaged Windows executable was not created.'
+            exit 1
+          }
+          Write-Host "Windows executable verified: $($exe.FullName)"
+          Write-Host "Size: $($exe.Length) bytes"
+
+      - name: Upload Windows test package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webbased-academy-windows-test
+          path: releases/win-unpacked/
+          if-no-files-found: error
+          retention-days: 7
