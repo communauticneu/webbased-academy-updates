@@ -20,6 +20,8 @@ jobs:
   windows-test:
     runs-on: windows-latest
     timeout-minutes: 30
+    env:
+      ELECTRON_DISABLE_SECURITY_WARNINGS: 'true'
 
     steps:
       - name: Checkout
@@ -35,14 +37,20 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          if (Test-Path package-lock.json) {
-            npm ci
-          } else {
-            npm install
-          }
+          npm ci
 
       - name: Run automated tests on Windows
         run: npm test
+
+      - name: Run Creator visual/runtime check on Windows
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          npm run visual:check
+          if (-not (Test-Path 'academy-visual-latest.png')) {
+            Write-Error 'Visual/runtime check did not create its verification screenshot.'
+            exit 1
+          }
 
       - name: Build unpacked Windows application
         run: npx electron-builder --win dir --publish never
@@ -58,11 +66,24 @@ jobs:
             Write-Error 'Packaged Windows executable was not created.'
             exit 1
           }
+          if ($exe.Length -lt 1MB) {
+            Write-Error "Packaged executable is unexpectedly small: $($exe.Length) bytes"
+            exit 1
+          }
           Write-Host "Windows executable verified: $($exe.FullName)"
           Write-Host "Size: $($exe.Length) bytes"
 
-      - name: Upload Windows test package
+      - name: Upload Windows runtime evidence
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webbased-academy-windows-runtime-evidence
+          path: academy-visual-latest.png
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload Windows test package
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: webbased-academy-windows-test
