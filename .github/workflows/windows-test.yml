@@ -53,9 +53,11 @@ jobs:
           }
 
       - name: Build unpacked Windows application
+        if: always()
         run: npx electron-builder --win dir --publish never
 
       - name: Verify packaged Windows executable
+        if: always()
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -73,6 +75,28 @@ jobs:
           Write-Host "Windows executable verified: $($exe.FullName)"
           Write-Host "Size: $($exe.Length) bytes"
 
+      - name: Launch packaged Creator on Windows
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = Get-ChildItem -Path releases -Recurse -Filter '*.exe' |
+            Where-Object { $_.Name -eq 'Webbased Academy Creator.exe' } |
+            Select-Object -First 1
+          if (-not $exe) {
+            Write-Error 'Cannot launch packaged Creator because executable is missing.'
+            exit 1
+          }
+          $process = Start-Process -FilePath $exe.FullName -PassThru
+          Start-Sleep -Seconds 8
+          $process.Refresh()
+          if ($process.HasExited) {
+            Write-Error "Packaged Creator exited during Windows launch smoke test. Exit code: $($process.ExitCode)"
+            exit 1
+          }
+          Stop-Process -Id $process.Id -Force
+          Write-Host 'Packaged Creator remained alive during Windows launch smoke test.'
+
       - name: Upload Windows runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -83,7 +107,7 @@ jobs:
           retention-days: 7
 
       - name: Upload Windows test package
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: webbased-academy-windows-test
